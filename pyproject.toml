@@ -1,0 +1,18 @@
+[project]
+name = "pandas-query-generator"
+version = "0.0.0"
+description = "A synthetic pandas query generation tool"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "ruff>=0.6.7",
+]
+
+[tool.ruff]
+indent-width = 2
+line-length = 80
+
+[tool.ruff.format]
+docstring-code-format = true
+indent-style = "space"
+quote-style = "single"
