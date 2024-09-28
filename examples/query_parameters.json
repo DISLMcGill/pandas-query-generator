@@ -1,0 +1,9 @@
+{
+    "num_selections": 2,
+    "projection": "True",
+    "num_merges": 3,
+    "group by": "True",
+    "aggregation": "True",
+    "num_queries": 1000,
+    "multi_line": "False"
+}

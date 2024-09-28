@@ -5,7 +5,9 @@ description = "A synthetic pandas query generation tool"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "pandas>=2.2.3",
     "ruff>=0.6.7",
+    "tdqm>=0.0.1",
 ]
 
 [tool.ruff]
