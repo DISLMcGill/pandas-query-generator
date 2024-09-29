@@ -12,9 +12,7 @@ import pandas as pd
 from pandas import Series
 from tqdm import tqdm
 
-warnings.filterwarnings(
-  'ignore', 'Boolean Series key will be reindexed to match DataFrame index.'
-)
+warnings.filterwarnings('ignore', 'Boolean Series key will be reindexed to match DataFrame index.')
 
 
 # do we use this class? not used
@@ -69,9 +67,7 @@ class Source:
     :return: A new pandas_source object containing the merged DataFrame.
     """
     # Merge the two DataFrames on the specified columns
-    new_df = self.source_df.merge(
-      other.source_df, left_on=left_on, right_on=right_on
-    )
+    new_df = self.source_df.merge(other.source_df, left_on=left_on, right_on=right_on)
 
     # Return a new pandas_source object wrapping the merged DataFrame
     return Source(new_df)
@@ -189,47 +185,17 @@ class Condition:
     if self.col == other.col:
       # Check for logical consistency between the two conditions, avoid conditions like (x<3 and x>5)
       if (
-        (
-          self.op in [OP.le, OP.lt]
-          and other.op in [OP.ge, OP.gt]
-          and self.val <= other.val
-        )
-        or (
-          self.op in [OP.ge, OP.gt]
-          and other.op in [OP.le, OP.lt]
-          and self.val >= other.val
-        )
-        or (
-          self.op == OP.eq
-          and other.op in [OP.lt, OP.le]
-          and self.val >= other.val
-        )
-        or (
-          self.op == OP.eq
-          and other.op in [OP.gt, OP.ge]
-          and self.val <= other.val
-        )
-        or (
-          self.op in [OP.lt, OP.le]
-          and other.op == OP.eq
-          and self.val <= other.val
-        )
-        or (
-          self.op in [OP.gt, OP.ge]
-          and other.op == OP.eq
-          and self.val >= other.val
-        )
+        (self.op in [OP.le, OP.lt] and other.op in [OP.ge, OP.gt] and self.val <= other.val)
+        or (self.op in [OP.ge, OP.gt] and other.op in [OP.le, OP.lt] and self.val >= other.val)
+        or (self.op == OP.eq and other.op in [OP.lt, OP.le] and self.val >= other.val)
+        or (self.op == OP.eq and other.op in [OP.gt, OP.ge] and self.val <= other.val)
+        or (self.op in [OP.lt, OP.le] and other.op == OP.eq and self.val <= other.val)
+        or (self.op in [OP.gt, OP.ge] and other.op == OP.eq and self.val >= other.val)
         or (self.op == OP.eq and other.op in [OP.ne] and self.val == other.val)
         or (self.op in [OP.ne] and other.op == OP.eq and self.val == other.val)
         or (self.op == OP.eq and other.op == OP.eq and self.val != other.val)
-        or (
-          self.op == OP.startswith
-          and other.op == OP.startswith
-          and self.val != other.val
-        )
-        or (
-          self.op == OP.in_op and other.op == OP.in_op and self.val != other.val
-        )
+        or (self.op == OP.startswith and other.op == OP.startswith and self.val != other.val)
+        or (self.op == OP.in_op and other.op == OP.in_op and self.val != other.val)
       ):
         return False
 
@@ -265,9 +231,7 @@ class Selection(Operation):
     super().__init__(df_name, leading, count)
     self.conditions = conditions
 
-  def new_selection(
-    self, new_cond: List[Union[Condition, OP_cond]]
-  ) -> 'Selection':
+  def new_selection(self, new_cond: List[Union[Condition, OP_cond]]) -> 'Selection':
     """
     Create a new selection object with updated conditions.
 
@@ -298,47 +262,29 @@ class Selection(Operation):
     if len(self.conditions) == 1:
       cond = self.conditions[0]
       if df2.__eq__('F'):
-        if (
-          cond.op.value != OP.startswith.value
-          and cond.op.value != OP.in_op.value
-        ):
+        if cond.op.value != OP.startswith.value and cond.op.value != OP.in_op.value:
           if (
             isinstance(cond.val, str) and cond.val.count('-') == 2
           ):  # Check if value is a date string
-            cur_condition = (
-              f"({self.df_name}['{cond.col}'] {cond.op.value} '{cond.val}')"
-            )
+            cur_condition = f"({self.df_name}['{cond.col}'] {cond.op.value} '{cond.val}')"
           else:
-            cur_condition = (
-              f"({self.df_name}['{cond.col}'] {cond.op.value} {cond.val})"
-            )
+            cur_condition = f"({self.df_name}['{cond.col}'] {cond.op.value} {cond.val})"
         elif cond.op.value == OP.in_op.value:
           cur_condition = f"({self.df_name}['{cond.col}'].isin({cond.val}))"
         else:
-          cur_condition = (
-            f"({self.df_name}['{cond.col}']{cond.op.value}('{cond.val}'))"
-          )
+          cur_condition = f"({self.df_name}['{cond.col}']{cond.op.value}('{cond.val}'))"
       else:
-        if (
-          cond.op.value != OP.startswith.value
-          and cond.op.value != OP.in_op.value
-        ):
+        if cond.op.value != OP.startswith.value and cond.op.value != OP.in_op.value:
           if (
             isinstance(cond.val, str) and cond.val.count('-') == 2
           ):  # Check if value is a date string
-            cur_condition = (
-              f"({self.df_name}['{cond.col}'] {cond.op.value} '{cond.val}')"
-            )
+            cur_condition = f"({self.df_name}['{cond.col}'] {cond.op.value} '{cond.val}')"
           else:
-            cur_condition = (
-              f"({self.df_name}['{cond.col}'] {cond.op.value} {cond.val})"
-            )
+            cur_condition = f"({self.df_name}['{cond.col}'] {cond.op.value} {cond.val})"
         elif cond.op.value == OP.in_op.value:
           cur_condition = f"({df2}['{cond.col}'].isin({cond.val}))"
         else:
-          cur_condition = (
-            f"(df{df2}['{cond.col}']{cond.op.value}('{cond.val}'))"
-          )
+          cur_condition = f"(df{df2}['{cond.col}']{cond.op.value}('{cond.val}'))"
 
       res_str = res_str + '[' + cur_condition + ']'
       return res_str
@@ -350,47 +296,29 @@ class Selection(Operation):
         cur_condition += ' ' + cond.value + ' '
       else:
         if df2.__eq__('F'):
-          if (
-            cond.op.value != OP.startswith.value
-            and cond.op.value != OP.in_op.value
-          ):
+          if cond.op.value != OP.startswith.value and cond.op.value != OP.in_op.value:
             if (
               isinstance(cond.val, str) and cond.val.count('-') == 2
             ):  # Check if value is a date string
-              cur_condition = (
-                f"({self.df_name}['{cond.col}'] {cond.op.value} '{cond.val}')"
-              )
+              cur_condition = f"({self.df_name}['{cond.col}'] {cond.op.value} '{cond.val}')"
             else:
-              cur_condition = (
-                f"({self.df_name}['{cond.col}'] {cond.op.value} {cond.val})"
-              )
+              cur_condition = f"({self.df_name}['{cond.col}'] {cond.op.value} {cond.val})"
           elif cond.op.value == OP.in_op.value:
             cur_condition += f"({self.df_name}['{cond.col}'].isin({cond.val}))"
           else:
-            cur_condition += (
-              f"({self.df_name}['{cond.col}']{cond.op.value}('{cond.val}'))"
-            )
+            cur_condition += f"({self.df_name}['{cond.col}']{cond.op.value}('{cond.val}'))"
         else:
-          if (
-            cond.op.value != OP.startswith.value
-            and cond.op.value != OP.in_op.value
-          ):
+          if cond.op.value != OP.startswith.value and cond.op.value != OP.in_op.value:
             if (
               isinstance(cond.val, str) and cond.val.count('-') == 2
             ):  # Check if value is a date string
-              cur_condition = (
-                f"({self.df_name}['{cond.col}'] {cond.op.value} '{cond.val}')"
-              )
+              cur_condition = f"({self.df_name}['{cond.col}'] {cond.op.value} '{cond.val}')"
             else:
-              cur_condition = (
-                f"({self.df_name}['{cond.col}'] {cond.op.value} {cond.val})"
-              )
+              cur_condition = f"({self.df_name}['{cond.col}'] {cond.op.value} {cond.val})"
           elif cond.op.value == OP.in_op.value:
             cur_condition += f"(df{df2}['{cond.col}'].isin({cond.val}))"
           else:
-            cur_condition += (
-              f"(df{df2}['{cond.col}']{cond.op.value}('{cond.val}'))"
-            )
+            cur_condition += f"(df{df2}['{cond.col}']{cond.op.value}('{cond.val}'))"
 
     res_str = res_str + '[' + cur_condition + ']'
     return res_str
@@ -497,7 +425,9 @@ class Merge(Operation):
       res_str = f'{self.df_name}' if self.leading else ''
       operations_to_str = self.queries.query_string
 
-      res_str += f".merge({operations_to_str}, left_on='{self.left_on}', right_on='{self.right_on}')"
+      res_str += (
+        f".merge({operations_to_str}, left_on='{self.left_on}', right_on='{self.right_on}')"
+      )
       return res_str
 
   def new_merge(
@@ -552,9 +482,7 @@ class Projection(Operation):
 
   """
 
-  def __init__(
-    self, df_name: str, columns: List[str], count=None, leading=True
-  ):
+  def __init__(self, df_name: str, columns: List[str], count=None, leading=True):
     """
     Initialize a projection object.
 
@@ -778,9 +706,7 @@ class Query:
       target (pd.DataFrame): The resulting DataFrame after applying the query operations.
   """
 
-  def __init__(
-    self, q_gen_query: List[Operation], source: 'TableSource', verbose=False
-  ):
+  def __init__(self, q_gen_query: List[Operation], source: 'TableSource', verbose=False):
     """
     Initialize a pandas_query object.
 
@@ -807,9 +733,7 @@ class Query:
     ]
     self.query_string = self.get_query_string()
     self.merged = False
-    self.target = self.execute_query(
-      self.pre_gen_query
-    )  # target is the df after operation
+    self.target = self.execute_query(self.pre_gen_query)  # target is the df after operation
 
     self.source_tables = [
       self.get_TBL_source()
@@ -852,17 +776,12 @@ class Query:
     else:
       # select random number of cols to project on
       res = [
-        list(i)
-        for i in list(
-          itertools.combinations(columns, random.randrange(1, len(columns), 1))
-        )
+        list(i) for i in list(itertools.combinations(columns, random.randrange(1, len(columns), 1)))
       ]
       random.shuffle(res)
       return Projection(self.df_name, res[0])
 
-  def target_possible_selections(
-    self, length=50
-  ) -> Dict[str, List[Condition]]:  # not used
+  def target_possible_selections(self, length=50) -> Dict[str, List[Condition]]:  # not used
     """
     Generate a dictionary of possible selection conditions based on numerical columns.
 
@@ -897,8 +816,7 @@ class Query:
           )
         else:
           cur_val = float(
-            description[random.choice(stats)]
-            + random.randrange(0, description['std'] + 1, 1)
+            description[random.choice(stats)] + random.randrange(0, description['std'] + 1, 1)
           )
 
         OPs = [OP.gt, OP.ge, OP.le, OP.eq, OP.lt, OP.ne]
@@ -938,17 +856,13 @@ class Query:
         except ValueError:
           possible_selection_columns[col] = 'string'
       # enum values are stored as lists in data_ranges
-      elif col in data_ranges[self.df_name] and isinstance(
-        data_ranges[self.df_name][col], list
-      ):
+      elif col in data_ranges[self.df_name] and isinstance(data_ranges[self.df_name][col], list):
         possible_selection_columns[col] = 'enum'
 
     possible_condition_columns = {}
 
     for key in possible_selection_columns:
-      possible_condition_columns[
-        key
-      ] = []  # key: col name，value: condition object list
+      possible_condition_columns[key] = []  # key: col name，value: condition object list
       for i in range(length):
         if possible_selection_columns[key] == 'int':
           min_val, max_val = data_ranges[self.df_name][
@@ -968,9 +882,7 @@ class Query:
 
         elif possible_selection_columns[key] == 'float':
           min_val, max_val = data_ranges[self.df_name][key]
-          cur_val = round(
-            random.uniform(min_val, max_val), 2
-          )  # Assume 2 decimal places
+          cur_val = round(random.uniform(min_val, max_val), 2)  # Assume 2 decimal places
           # Ensure no conditions are created with values out of range, no == or != operators for floats
           if min_val == max_val:
             op = OP.eq
@@ -984,18 +896,16 @@ class Query:
           cur_condition = Condition(key, op, cur_val)
 
         elif possible_selection_columns[key] == 'string':
-          cur_val = random.choice(
-            data_ranges[self.df_name][key][0]
-          )  # starting char
+          cur_val = random.choice(data_ranges[self.df_name][key][0])  # starting char
           cur_condition = Condition(key, OP.startswith, cur_val)
 
         elif possible_selection_columns[key] == 'date':
           min_val, max_val = data_ranges[self.df_name][key]
           min_date = pd.to_datetime(min_val, format='%Y-%m-%d')
           max_date = pd.to_datetime(max_val, format='%Y-%m-%d')
-          cur_val = pd.to_datetime(
-            random.choice(pd.date_range(min_date, max_date))
-          ).strftime('%Y-%m-%d')
+          cur_val = pd.to_datetime(random.choice(pd.date_range(min_date, max_date))).strftime(
+            '%Y-%m-%d'
+          )
           if min_val == max_val:
             op = OP.eq
           elif cur_val == min_val:
@@ -1007,21 +917,14 @@ class Query:
           cur_condition = Condition(key, op, cur_val)
 
         elif possible_selection_columns[key] == 'enum':
-          if random.choice(
-            [True, False]
-          ):  # Randomly choose between == and IN condition
+          if random.choice([True, False]):  # Randomly choose between == and IN condition
             cur_val = f"'{random.choice(data_ranges[self.df_name][key])}'"
             op = random.choice([OP.eq, OP.ne])
             cur_condition = Condition(key, op, cur_val)
           else:
-            num_in_values = random.randint(
-              2, len(data_ranges[self.df_name][key])
-            )
+            num_in_values = random.randint(2, len(data_ranges[self.df_name][key]))
             in_values = [
-              val
-              for val in random.sample(
-                data_ranges[self.df_name][key], num_in_values
-              )
+              val for val in random.sample(data_ranges[self.df_name][key], num_in_values)
             ]
             cur_condition = Condition(key, OP.in_op, in_values)
 
@@ -1083,9 +986,7 @@ class Query:
     # source_cols is the columns available after the projection
     for i, operation_ in enumerate(list_operation):
       if isinstance(operation_, Projection):
-        source_cols = operation_.desire_columns[
-          :
-        ]  # desire_col: col to be projected
+        source_cols = operation_.desire_columns[:]  # desire_col: col to be projected
         changed = True
       # group_by must only use columns available after projections
       elif isinstance(operation_, GroupBy):
@@ -1111,7 +1012,9 @@ class Query:
       possible_new_operations = []  # expanded possible new operations for each category of original operation
 
       if isinstance(operation, Selection):
-        possible_conditions_dict = self.possible_selections()  # return a condition dict, col name is key, list of conditions is value
+        possible_conditions_dict = (
+          self.possible_selections()
+        )  # return a condition dict, col name is key, list of conditions is value
 
         possible_selection_operations = []
         possible_selection_operationsSrting = []
@@ -1124,9 +1027,7 @@ class Query:
             cur_conditionsString = []
             and_count = 0  # count the number of & operators
             for j in range(selection_length):
-              cur_key = random.choice(
-                list(possible_conditions_dict.keys())
-              )  # key is col name
+              cur_key = random.choice(list(possible_conditions_dict.keys()))  # key is col name
               cur_condition = random.choice(
                 possible_conditions_dict[cur_key]
               )  # cur_condition is list of conditions
@@ -1134,9 +1035,7 @@ class Query:
               if cur_condition.op != OP.startswith:  # int or float col
                 cur_conditions.append(cur_condition)
                 if and_count < 2:
-                  cur_conditions.append(
-                    random.choice([OP_cond.OR, OP_cond.AND])
-                  )
+                  cur_conditions.append(random.choice([OP_cond.OR, OP_cond.AND]))
                   if cur_conditions[-1] == OP_cond.AND:
                     and_count += 1
                 else:
@@ -1144,9 +1043,7 @@ class Query:
               else:
                 cur_conditionsString.append(cur_condition)
                 if and_count < 2:
-                  cur_conditionsString.append(
-                    random.choice([OP_cond.OR, OP_cond.AND])
-                  )
+                  cur_conditionsString.append(random.choice([OP_cond.OR, OP_cond.AND]))
                   if cur_conditionsString[-1] == OP_cond.AND:
                     and_count += 1
                 else:
@@ -1191,9 +1088,7 @@ class Query:
       print('===== possible operations generated =====')
 
     new_generated_queries = []
-    new_generated_queries = itertools.product(
-      *generated_queries
-    )  # op1.1*op2.3*op3.2
+    new_generated_queries = itertools.product(*generated_queries)  # op1.1*op2.3*op3.2
 
     print('======= *** start iterating generated queries *** ======')
     l = [item for item in new_generated_queries]
@@ -1214,9 +1109,7 @@ class Query:
       params
     )  # list of tuples, each tuple contains a combination of query operations
 
-    random.shuffle(
-      new_queries
-    )  # Shuffle to avoid bias towards conditions of the first column
+    random.shuffle(new_queries)  # Shuffle to avoid bias towards conditions of the first column
     new_queries = new_queries[:out]
 
     print(f' ==== Testing source with {len(new_queries)} queries ==== ')
@@ -1224,9 +1117,7 @@ class Query:
     tbl = (
       self.get_TBL_source()
     )  # Assuming this gets some source necessary for query object creation
-    progress_interval = max(
-      1, len(new_queries) // 10
-    )  # Ensure no division by zero
+    progress_interval = max(1, len(new_queries) // 10)  # Ensure no division by zero
 
     for i, new_query in enumerate(new_queries):
       if i % progress_interval == 0:
@@ -1265,9 +1156,7 @@ class Query:
         false_count += 1
         continue
       true_count += 1
-    print(
-      f'%%%%%%%%%% truecount = {true_count}; false count = {false_count} %%%%%%%%%%%%'
-    )
+    print(f'%%%%%%%%%% truecount = {true_count}; false count = {false_count} %%%%%%%%%%%%')
     return True
 
   def execute_query(self, query) -> pd.DataFrame:
@@ -1279,9 +1168,7 @@ class Query:
     """
     # Ensure 'query' is a DataFrame here; the exact implementation may vary.
     # 'query_string' should be a string that represents a pandas operation.
-    query_string = (
-      self.get_query_string()
-    )  # Ensure this returns a safe, valid pandas expression.
+    query_string = self.get_query_string()  # Ensure this returns a safe, valid pandas expression.
     local_dict = {
       'dataframes': dataframes,
       'data_ranges': data_ranges,
@@ -1311,9 +1198,7 @@ class Query:
             raise ValueError(f"Failed to execute query due to: {e}")"""
 
   # helper functions for gen_queries
-  def generate_possible_groupby_combinations(
-    self, operation: GroupBy, generate_num=5
-  ) -> List[str]:
+  def generate_possible_groupby_combinations(self, operation: GroupBy, generate_num=5) -> List[str]:
     """
     Generate possible combinations of columns for groupby operations.
 
@@ -1489,9 +1374,7 @@ class QueryPool:
         un_merged_queries (List[pandas_query]): List of queries that haven't been merged.
     """
 
-  def __init__(
-    self, queries: List[Query], count=0, self_join=False, verbose=True
-  ):
+  def __init__(self, queries: List[Query], count=0, self_join=False, verbose=True):
     """
     Initialize a QueryPool object.
 
@@ -1522,9 +1405,7 @@ class QueryPool:
     filepath.parent.mkdir(parents=True, exist_ok=True)
 
     # Generate new content
-    new_content = '\n'.join(
-      f'df{i} = {q.query_string}' for i, q in enumerate(self.result_queries)
-    )
+    new_content = '\n'.join(f'df{i} = {q.query_string}' for i, q in enumerate(self.result_queries))
 
     # Write new content
     with open(filepath, 'w') as f:
@@ -1532,9 +1413,7 @@ class QueryPool:
 
     print(f'Successfully wrote the merged queries into file {filepath}')
 
-  def save_merged_examples_multiline(
-    self, directory: str, filename: str
-  ) -> None:
+  def save_merged_examples_multiline(self, directory: str, filename: str) -> None:
     count = 0
     try:
       f = open(f'{directory}/{filename}.txt', 'a')
@@ -1618,9 +1497,7 @@ class QueryPool:
     :param q2: Second query of type pandas_query.
     :return: List of column names that can be used for merging.
     """
-    if 'series' in str(type(q1.get_target())) or 'series' in str(
-      type(q2.get_target())
-    ):
+    if 'series' in str(type(q1.get_target())) or 'series' in str(type(q2.get_target())):
       return []
     cols = q1.get_target().columns.intersection(q2.get_target().columns)
     if len(cols) == 0 or len(cols) == min(
@@ -1635,12 +1512,12 @@ class QueryPool:
       range2 = data_ranges[q2.df_name].get(col, None)
       if range1 and range2:
         # Check if column types are int or float
-        if pd.api.types.is_integer_dtype(
+        if pd.api.types.is_integer_dtype(q1.get_source()[col]) or pd.api.types.is_float_dtype(
           q1.get_source()[col]
-        ) or pd.api.types.is_float_dtype(q1.get_source()[col]):
-          if pd.api.types.is_integer_dtype(
+        ):
+          if pd.api.types.is_integer_dtype(q2.get_source()[col]) or pd.api.types.is_float_dtype(
             q2.get_source()[col]
-          ) or pd.api.types.is_float_dtype(q2.get_source()[col]):
+          ):
             if self.ranges_overlap(range1, range2):
               valid_cols.append(col)
 
@@ -1655,9 +1532,7 @@ class QueryPool:
     :return: List of two column names if a relationship is found, otherwise an empty list.
     """
 
-    if isinstance(q1.get_target(), Series) or isinstance(
-      q2.get_target(), Series
-    ):
+    if isinstance(q1.get_target(), Series) or isinstance(q2.get_target(), Series):
       return []
 
     col1 = list(q1.get_target().columns)
@@ -1681,9 +1556,9 @@ class QueryPool:
           if pd.api.types.is_integer_dtype(
             q1.get_source()[foreign_list[col]]
           ) or pd.api.types.is_float_dtype(q1.get_source()[foreign_list[col]]):
-            if pd.api.types.is_integer_dtype(
+            if pd.api.types.is_integer_dtype(q2.get_source()[col]) or pd.api.types.is_float_dtype(
               q2.get_source()[col]
-            ) or pd.api.types.is_float_dtype(q2.get_source()[col]):
+            ):
               if self.ranges_overlap(range1, range2):
                 return [foreign_list[col], col]
 
@@ -1745,12 +1620,8 @@ class QueryPool:
           GroupBy(query.df_name, query.get_source().columns), generate_num=1
         )
 
-        operations_with_groupby_agg.append(
-          GroupBy(query.df_name, groupby_column)
-        )
-        operations_with_groupby_agg.append(
-          Aggregate(query.df_name, random.choice(stats))
-        )
+        operations_with_groupby_agg.append(GroupBy(query.df_name, groupby_column))
+        operations_with_groupby_agg.append(Aggregate(query.df_name, random.choice(stats)))
 
         new_query_with_groupby_agg = Query(
           operations_with_groupby_agg, query.get_TBL_source(), verbose=False
@@ -1765,13 +1636,9 @@ class QueryPool:
         operations = list(query.pre_gen_query)[:]
         operations_with_agg = operations[:]
 
-        operations_with_agg.append(
-          Aggregate(query.df_name, random.choice(stats))
-        )
+        operations_with_agg.append(Aggregate(query.df_name, random.choice(stats)))
 
-        new_query_with_agg = Query(
-          operations_with_agg, query.get_TBL_source(), verbose=False
-        )
+        new_query_with_agg = Query(operations_with_agg, query.get_TBL_source(), verbose=False)
         self.result_queries.append(new_query_with_agg)
 
       else:
@@ -1800,16 +1667,13 @@ class QueryPool:
               if q1_index != q2_index:
                 break
             q1 = categorized_queries[0][q1_index]  # first query (unmerged)
-            q2 = categorized_queries[k][
-              q2_index
-            ]  # second query (merged with k merges)
+            q2 = categorized_queries[k][q2_index]  # second query (merged with k merges)
 
             # print(f"q1 df name = {q1}")
             # print(f"q2 df_name = {q2}")
 
             if any(
-              q2_source.equals(q1.get_source())
-              for q2_source in q2.get_source_dataframes()
+              q2_source.equals(q1.get_source()) for q2_source in q2.get_source_dataframes()
             ) and (not self.self_join):
               # print("#### queries with same source detected, skipping to the next queries ####")
               continue
@@ -1863,11 +1727,7 @@ class QueryPool:
                 rand = random.random()
 
                 # Add a projection operation to the merged query
-                if (
-                  rand > 0.5
-                  and len(columns)
-                  and params.get('projection', 'True') == 'True'
-                ):
+                if rand > 0.5 and len(columns) and params.get('projection', 'True') == 'True':
                   num = random.randint(max(len(columns) - 2, 3), len(columns))
                   sample_columns = random.sample(columns, num)
                   operations.append(Projection(q1.df_name, sample_columns))
@@ -1878,9 +1738,7 @@ class QueryPool:
                   print('Exception occurred')
                 continue
               if self.verbose:
-                print(
-                  '++++++++++ add the result query to template +++++++++++++'
-                )
+                print('++++++++++ add the result query to template +++++++++++++')
               new_query = Query(operations, q1.get_TBL_source(), verbose=False)
 
               new_query.target = res_df
@@ -1915,12 +1773,8 @@ class QueryPool:
                       break
 
                   stats = ['min', 'max', 'count', 'mean']
-                  operations_with_groupby_agg.append(
-                    GroupBy(df_name, group_by_column)
-                  )
-                  operations_with_groupby_agg.append(
-                    Aggregate(df_name, random.choice(stats))
-                  )
+                  operations_with_groupby_agg.append(GroupBy(df_name, group_by_column))
+                  operations_with_groupby_agg.append(Aggregate(df_name, random.choice(stats)))
 
                   new_query_with_groupby_agg = Query(
                     operations_with_groupby_agg,
@@ -1929,13 +1783,9 @@ class QueryPool:
                   )
                   new_query_with_groupby_agg.target = res_df
                   new_query_with_groupby_agg.num_merges = new_query.num_merges
-                  new_query_with_groupby_agg.source_tables.extend(
-                    q2.get_source_tables()
-                  )
+                  new_query_with_groupby_agg.source_tables.extend(q2.get_source_tables())
 
-                  merged_queries_groupby_agg[k + 1].append(
-                    new_query_with_groupby_agg
-                  )
+                  merged_queries_groupby_agg[k + 1].append(new_query_with_groupby_agg)
                   # self.result_queries.append(new_query_with_groupby_agg)
                   q_generated += 1
 
@@ -1944,9 +1794,7 @@ class QueryPool:
                   and params.get('group by', 'True') == 'False'
                   and params.get('aggregation', 'True') == 'True'
                 ):
-                  operations_with_groupby_agg.append(
-                    Aggregate(df_name, random.choice(stats))
-                  )
+                  operations_with_groupby_agg.append(Aggregate(df_name, random.choice(stats)))
 
                   new_query_with_agg = Query(
                     operations_with_groupby_agg,
@@ -1955,13 +1803,9 @@ class QueryPool:
                   )
                   new_query_with_agg.target = res_df
                   new_query_with_agg.num_merges = new_query.num_merges
-                  new_query_with_agg.source_tables.extend(
-                    q2.get_source_tables()
-                  )
+                  new_query_with_agg.source_tables.extend(q2.get_source_tables())
 
-                  merged_queries_groupby_agg[k + 1].append(
-                    new_query_with_groupby_agg
-                  )
+                  merged_queries_groupby_agg[k + 1].append(new_query_with_groupby_agg)
                   # self.result_queries.append(new_query_with_agg)
                   q_generated += 1
 
@@ -1977,17 +1821,11 @@ class QueryPool:
               ###################################################
               cols = self.check_merge_on(q1, q2)
 
-              if (
-                cols
-                and max(q1.num_merges, q2.num_merges) < max_merge
-                and self.self_join
-              ):
+              if cols and max(q1.num_merges, q2.num_merges) < max_merge and self.self_join:
                 # print(cols)
                 operations = list(q1.pre_gen_query)[:]
 
-                operations.append(
-                  Merge(df_name=q1.df_name, queries=q2, on=cols)
-                )
+                operations.append(Merge(df_name=q1.df_name, queries=q2, on=cols))
 
                 strs = ''
 
@@ -2016,13 +1854,9 @@ class QueryPool:
                     print('Exception occurred')
                   continue
                 if self.verbose:
-                  print(
-                    '++++++++++ add the result query to template +++++++++++++'
-                  )
+                  print('++++++++++ add the result query to template +++++++++++++')
 
-                new_query = Query(
-                  operations, q1.get_TBL_source(), verbose=False
-                )
+                new_query = Query(operations, q1.get_TBL_source(), verbose=False)
                 new_query.merged = True
                 new_query.target = res_df
                 new_query.num_merges = max(q1.num_merges, q2.num_merges) + 1
@@ -2030,9 +1864,7 @@ class QueryPool:
                 # Add the source tables of q2 to the new query
                 new_query.source_tables.extend(q2.get_source_tables())
 
-                if (
-                  new_query.num_merges == k + 1
-                ):  # Check if number of merges exceeds max_merge
+                if new_query.num_merges == k + 1:  # Check if number of merges exceeds max_merge
                   cur_queries.append(new_query)
                   categorized_queries[k + 1].append(new_query)
                   self.result_queries.append(new_query)
@@ -2093,9 +1925,7 @@ class TableSource:
       raise ValueError('No suitable numerical columns available for selection.')
     choice_col = random.choice(possible_selection_columns)
 
-    if (
-      self.source[choice_col].dtype.kind in 'if'
-    ):  # Check if the column is float or int
+    if self.source[choice_col].dtype.kind in 'if':  # Check if the column is float or int
       min_val, max_val = data_ranges[entity][choice_col]
       num = random.uniform(min_val, max_val)
       if self.source[choice_col].dtype.kind == 'i':  # If it's an int, round it
@@ -2122,8 +1952,7 @@ class TableSource:
         op_choice = random.choice([OP.gt, OP.ge, OP.lt, OP.le])
 
     elif (
-      self.source[choice_col].dtype == 'object'
-      or self.source[choice_col].dtype == 'string'
+      self.source[choice_col].dtype == 'object' or self.source[choice_col].dtype == 'string'
     ) and not isinstance(data_ranges[self.name][choice_col], list):
       # Check if the string column contains dates
       sample_value = self.source[choice_col].iloc[0]
@@ -2132,9 +1961,7 @@ class TableSource:
         min_val, max_val = data_ranges[self.name][choice_col]
         min_date = pd.to_datetime(min_val, format='%Y-%m-%d')
         max_date = pd.to_datetime(max_val, format='%Y-%m-%d')
-        num = pd.to_datetime(
-          random.choice(pd.date_range(min_date, max_date))
-        ).strftime('%Y-%m-%d')
+        num = pd.to_datetime(random.choice(pd.date_range(min_date, max_date))).strftime('%Y-%m-%d')
         if min_date == max_date:
           op_choice = OP.eq
         elif num == min_date:
@@ -2150,21 +1977,15 @@ class TableSource:
 
     # enum values are stored in lists in data ranges
     elif (
-      self.source[choice_col].dtype == 'object'
-      or self.source[choice_col].dtype == 'string'
+      self.source[choice_col].dtype == 'object' or self.source[choice_col].dtype == 'string'
     ) and isinstance(data_ranges[self.name][choice_col], list):
       if random.choice([True, False]):
         num = f"'{random.choice(data_ranges[self.name][choice_col])}'"
         op_choice = random.choice([OP.eq, OP.ne])
       else:
-        num_in_values = random.randint(
-          2, len(data_ranges[self.name][choice_col])
-        )
+        num_in_values = random.randint(2, len(data_ranges[self.name][choice_col]))
         in_values = [
-          val
-          for val in random.sample(
-            data_ranges[self.name][choice_col], num_in_values
-          )
+          val for val in random.sample(data_ranges[self.name][choice_col], num_in_values)
         ]
         op_choice = OP.in_op
         num = in_values
@@ -2201,9 +2022,7 @@ class TableSource:
 
   def get_a_groupby(self):
     columns = self.source.columns
-    res_col = [
-      random.choice(list(columns))
-    ]  # selects a single column from columns list
+    res_col = [random.choice(list(columns))]  # selects a single column from columns list
     return GroupBy(self.name, res_col)
 
   def add_edge(self, col_name, other_col_name, other: 'TableSource'):
@@ -2239,29 +2058,20 @@ class TableSource:
     q_gen_query_3 = []
     q_gen_query_4 = []
 
-    if (
-      params.get('num_selections', 3) > 0
-      and params.get('projection', 'True') == 'True'
-    ):
+    if params.get('num_selections', 3) > 0 and params.get('projection', 'True') == 'True':
       q_gen_query_1.append(self.get_a_projection())
       q_gen_query_2.append(self.get_a_selection())
       q_gen_query_3.append(self.get_a_selection())
       q_gen_query_3.append(self.get_a_projection())
       q_gen_query_4.append(self.get_a_selection())
 
-    elif (
-      params.get('num_selections', 3) == 0
-      and params.get('projection', 'True') == 'True'
-    ):
+    elif params.get('num_selections', 3) == 0 and params.get('projection', 'True') == 'True':
       q_gen_query_1.append(self.get_a_projection())
       q_gen_query_2.append(self.get_a_projection())
       q_gen_query_3.append(self.get_a_projection())
       q_gen_query_4.append(self.get_a_projection())
 
-    elif (
-      params.get('num_selections', 3) > 0
-      and params.get('projection', 'True') == 'False'
-    ):
+    elif params.get('num_selections', 3) > 0 and params.get('projection', 'True') == 'False':
       q_gen_query_1.append(self.get_a_selection())
       q_gen_query_2.append(self.get_a_selection())
       q_gen_query_3.append(self.get_a_selection())
@@ -2320,37 +2130,21 @@ def test_patients():
   pq1 = Query(q1, source=df)
   pq2 = Query(q2, source=df)
 
-  res = (
-    pq1.get_new_pandas_queries()[:1000] + pq2.get_new_pandas_queries()[:1000]
-  )
+  res = pq1.get_new_pandas_queries()[:1000] + pq2.get_new_pandas_queries()[:1000]
 
   queries = QueryPool(res)
   queries.generate_possible_merge_operations(3)
 
 
 def run_TPCH():
-  customer = TableSource(
-    pd.read_csv('./../../../benchmarks/customer.csv'), 'customer'
-  )
-  lineitem = TableSource(
-    pd.read_csv('./../../../benchmarks/lineitem.csv'), 'lineitem'
-  )
-  nation = TableSource(
-    pd.read_csv('./../../../benchmarks/nation.csv'), 'nation'
-  )
-  orders = TableSource(
-    pd.read_csv('./../../../benchmarks/orders.csv'), 'orders'
-  )
+  customer = TableSource(pd.read_csv('./../../../benchmarks/customer.csv'), 'customer')
+  lineitem = TableSource(pd.read_csv('./../../../benchmarks/lineitem.csv'), 'lineitem')
+  nation = TableSource(pd.read_csv('./../../../benchmarks/nation.csv'), 'nation')
+  orders = TableSource(pd.read_csv('./../../../benchmarks/orders.csv'), 'orders')
   part = TableSource(pd.read_csv('./../../../benchmarks/part.csv'), 'part')
-  partsupp = TableSource(
-    pd.read_csv('./../../../benchmarks/partsupp.csv'), 'partsupp'
-  )
-  region = TableSource(
-    pd.read_csv('./../../../benchmarks/region.csv'), 'region'
-  )
-  supplier = TableSource(
-    pd.read_csv('./../../../benchmarks/supplier.csv'), 'supplier'
-  )
+  partsupp = TableSource(pd.read_csv('./../../../benchmarks/partsupp.csv'), 'partsupp')
+  region = TableSource(pd.read_csv('./../../../benchmarks/region.csv'), 'region')
+  supplier = TableSource(pd.read_csv('./../../../benchmarks/supplier.csv'), 'supplier')
 
   q1 = [
     Selection(
@@ -2361,9 +2155,7 @@ def run_TPCH():
         Condition('CUSTKEY', OP.le, 70),
       ],
     ),
-    Projection(
-      'customer', ['CUSTKEY', 'NATIONKEY', 'PHONE', 'ACCTBAL', 'MKTSEGMENT']
-    ),
+    Projection('customer', ['CUSTKEY', 'NATIONKEY', 'PHONE', 'ACCTBAL', 'MKTSEGMENT']),
   ]
   q2 = [
     Selection(
@@ -2374,9 +2166,7 @@ def run_TPCH():
         Condition('CUSTKEY', OP.le, 70),
       ],
     ),
-    Projection(
-      'customer', ['CUSTKEY', 'NATIONKEY', 'PHONE', 'ACCTBAL', 'MKTSEGMENT']
-    ),
+    Projection('customer', ['CUSTKEY', 'NATIONKEY', 'PHONE', 'ACCTBAL', 'MKTSEGMENT']),
     GroupBy('customer', 'NATIONKEY'),
     Aggregate('customer', 'max'),
   ]
@@ -2502,9 +2292,7 @@ def run_TPCH():
   ]
   q12 = [Selection('part', conditions=[Condition('RETAILPRICE', OP.gt, 500)])]
 
-  q13 = [
-    Selection('partsupp', conditions=[Condition('SUPPLYCOST', OP.le, 1000)])
-  ]
+  q13 = [Selection('partsupp', conditions=[Condition('SUPPLYCOST', OP.le, 1000)])]
 
   pq1 = Query(q1, source=customer)
   pq2 = Query(q2, source=customer)
@@ -2620,9 +2408,7 @@ if __name__ == '__main__':
   def extract_data_ranges(properties):
     ranges = {}
     for prop, info in properties.items():
-      if (
-        'min' in info and 'max' in info
-      ):  # Check if min and max values are defined
+      if 'min' in info and 'max' in info:  # Check if min and max values are defined
         ranges[prop] = (info['min'], info['max'])
       elif info['type'] == 'string':
         ranges[prop] = (info.get('starting character'),)
@@ -2656,9 +2442,7 @@ if __name__ == '__main__':
           else:
             row[column] = random.randint(properties['min'], properties['max'])
         elif properties['type'] == 'float':  # For 'number', assuming float
-          row[column] = round(
-            random.uniform(properties['min'], properties['max']), 2
-          )
+          row[column] = round(random.uniform(properties['min'], properties['max']), 2)
         elif properties['type'] == 'string':
           # Ensure the string starts with one of the starting characters
           starting_char = random.choice(properties['starting character'])
@@ -2671,9 +2455,9 @@ if __name__ == '__main__':
         elif properties['type'] == 'date':
           min_date = pd.to_datetime(properties['min'])
           max_date = pd.to_datetime(properties['max'])
-          row[column] = pd.to_datetime(
-            random.choice(pd.date_range(min_date, max_date))
-          ).strftime('%Y-%m-%d')
+          row[column] = pd.to_datetime(random.choice(pd.date_range(min_date, max_date))).strftime(
+            '%Y-%m-%d'
+          )
       rows.append(row)
     return pd.DataFrame(rows)
 
@@ -2686,14 +2470,10 @@ if __name__ == '__main__':
 
     # dynamic create variable names to reference df with globals()[entity]
     if not isinstance(entity_schema['primary_key'], list):
-      globals()[entity] = create_dataframe(
-        entity_schema, num_rows=200, primary_key_unique=True
-      )
+      globals()[entity] = create_dataframe(entity_schema, num_rows=200, primary_key_unique=True)
 
     else:
-      globals()[entity] = create_dataframe(
-        entity_schema, num_rows=200, primary_key_unique=False
-      )
+      globals()[entity] = create_dataframe(entity_schema, num_rows=200, primary_key_unique=False)
 
     dataframes[entity] = globals()[entity]
 
@@ -2718,9 +2498,7 @@ if __name__ == '__main__':
   for entity, listT in foreign_keys.items():
     for tuple in listT:
       col, other_col, other = tuple
-      add_foreignkeys(
-        table_sources[entity], col, table_sources[other], other_col
-      )
+      add_foreignkeys(table_sources[entity], col, table_sources[other], other_col)
 
   end2 = time.time()
 
@@ -2761,17 +2539,13 @@ if __name__ == '__main__':
       directory=args.export_directory, filename='merged_queries_auto_sf0000'
     )
   else:
-    pandas_queries_list.save_merged_examples(
-      args.export_directory, 'merged_queries_auto_sf0000'
-    )
+    pandas_queries_list.save_merged_examples(args.export_directory, 'merged_queries_auto_sf0000')
 
   end = time.time()
 
   # print total time taken at each step of the query generation process
   print(f'Total time taken: {end - start} seconds')
-  print(
-    f'Time taken to create dataframes and parse relational schema: {end2 - start} seconds'
-  )
+  print(f'Time taken to create dataframes and parse relational schema: {end2 - start} seconds')
   print(f'Time taken to generate base queries: {end3 - end2} seconds')
   print(f'Time taken to generate unmerged queries: {end4 - end3} seconds')
   print(f'Time taken to generate merged queries: {end5 - end4} seconds')
