@@ -132,7 +132,7 @@ class Operation:
     return eval(self.to_str())
 
 
-class OP(Enum):
+class Operator(Enum):
   ge = '>='
   gt = '>'
   le = '<='
@@ -143,7 +143,7 @@ class OP(Enum):
   in_op = 'in'
 
 
-class OP_cond(Enum):
+class ConditionalOperator(Enum):
   AND = '&'
   OR = '|'
   # NOT = "-"
@@ -154,7 +154,7 @@ class Condition:
   Refers to conditions like 'col1 > 20' in a particular dataframe
   """
 
-  def __init__(self, col_name, op: OP, num):
+  def __init__(self, col_name, op: Operator, num):
     """
 
     :param col_name: str
@@ -185,17 +185,45 @@ class Condition:
     if self.col == other.col:
       # Check for logical consistency between the two conditions, avoid conditions like (x<3 and x>5)
       if (
-        (self.op in [OP.le, OP.lt] and other.op in [OP.ge, OP.gt] and self.val <= other.val)
-        or (self.op in [OP.ge, OP.gt] and other.op in [OP.le, OP.lt] and self.val >= other.val)
-        or (self.op == OP.eq and other.op in [OP.lt, OP.le] and self.val >= other.val)
-        or (self.op == OP.eq and other.op in [OP.gt, OP.ge] and self.val <= other.val)
-        or (self.op in [OP.lt, OP.le] and other.op == OP.eq and self.val <= other.val)
-        or (self.op in [OP.gt, OP.ge] and other.op == OP.eq and self.val >= other.val)
-        or (self.op == OP.eq and other.op in [OP.ne] and self.val == other.val)
-        or (self.op in [OP.ne] and other.op == OP.eq and self.val == other.val)
-        or (self.op == OP.eq and other.op == OP.eq and self.val != other.val)
-        or (self.op == OP.startswith and other.op == OP.startswith and self.val != other.val)
-        or (self.op == OP.in_op and other.op == OP.in_op and self.val != other.val)
+        (
+          self.op in [Operator.le, Operator.lt]
+          and other.op in [Operator.ge, Operator.gt]
+          and self.val <= other.val
+        )
+        or (
+          self.op in [Operator.ge, Operator.gt]
+          and other.op in [Operator.le, Operator.lt]
+          and self.val >= other.val
+        )
+        or (
+          self.op == Operator.eq
+          and other.op in [Operator.lt, Operator.le]
+          and self.val >= other.val
+        )
+        or (
+          self.op == Operator.eq
+          and other.op in [Operator.gt, Operator.ge]
+          and self.val <= other.val
+        )
+        or (
+          self.op in [Operator.lt, Operator.le]
+          and other.op == Operator.eq
+          and self.val <= other.val
+        )
+        or (
+          self.op in [Operator.gt, Operator.ge]
+          and other.op == Operator.eq
+          and self.val >= other.val
+        )
+        or (self.op == Operator.eq and other.op in [Operator.ne] and self.val == other.val)
+        or (self.op in [Operator.ne] and other.op == Operator.eq and self.val == other.val)
+        or (self.op == Operator.eq and other.op == Operator.eq and self.val != other.val)
+        or (
+          self.op == Operator.startswith
+          and other.op == Operator.startswith
+          and self.val != other.val
+        )
+        or (self.op == Operator.in_op and other.op == Operator.in_op and self.val != other.val)
       ):
         return False
 
@@ -216,7 +244,7 @@ class Selection(Operation):
   def __init__(
     self,
     df_name: str,
-    conditions: List[Union[Condition, OP_cond]],
+    conditions: List[Union[Condition, ConditionalOperator]],
     count=None,
     leading=True,
   ):
@@ -231,7 +259,7 @@ class Selection(Operation):
     super().__init__(df_name, leading, count)
     self.conditions = conditions
 
-  def new_selection(self, new_cond: List[Union[Condition, OP_cond]]) -> 'Selection':
+  def new_selection(self, new_cond: List[Union[Condition, ConditionalOperator]]) -> 'Selection':
     """
     Create a new selection object with updated conditions.
 
@@ -262,26 +290,26 @@ class Selection(Operation):
     if len(self.conditions) == 1:
       cond = self.conditions[0]
       if df2.__eq__('F'):
-        if cond.op.value != OP.startswith.value and cond.op.value != OP.in_op.value:
+        if cond.op.value != Operator.startswith.value and cond.op.value != Operator.in_op.value:
           if (
             isinstance(cond.val, str) and cond.val.count('-') == 2
           ):  # Check if value is a date string
             cur_condition = f"({self.df_name}['{cond.col}'] {cond.op.value} '{cond.val}')"
           else:
             cur_condition = f"({self.df_name}['{cond.col}'] {cond.op.value} {cond.val})"
-        elif cond.op.value == OP.in_op.value:
+        elif cond.op.value == Operator.in_op.value:
           cur_condition = f"({self.df_name}['{cond.col}'].isin({cond.val}))"
         else:
           cur_condition = f"({self.df_name}['{cond.col}']{cond.op.value}('{cond.val}'))"
       else:
-        if cond.op.value != OP.startswith.value and cond.op.value != OP.in_op.value:
+        if cond.op.value != Operator.startswith.value and cond.op.value != Operator.in_op.value:
           if (
             isinstance(cond.val, str) and cond.val.count('-') == 2
           ):  # Check if value is a date string
             cur_condition = f"({self.df_name}['{cond.col}'] {cond.op.value} '{cond.val}')"
           else:
             cur_condition = f"({self.df_name}['{cond.col}'] {cond.op.value} {cond.val})"
-        elif cond.op.value == OP.in_op.value:
+        elif cond.op.value == Operator.in_op.value:
           cur_condition = f"({df2}['{cond.col}'].isin({cond.val}))"
         else:
           cur_condition = f"(df{df2}['{cond.col}']{cond.op.value}('{cond.val}'))"
@@ -292,30 +320,30 @@ class Selection(Operation):
     # Multiple Conditions Case
     for i, condition in enumerate(self.conditions):
       cond = self.conditions[i]
-      if isinstance(cond, OP_cond):
+      if isinstance(cond, ConditionalOperator):
         cur_condition += ' ' + cond.value + ' '
       else:
         if df2.__eq__('F'):
-          if cond.op.value != OP.startswith.value and cond.op.value != OP.in_op.value:
+          if cond.op.value != Operator.startswith.value and cond.op.value != Operator.in_op.value:
             if (
               isinstance(cond.val, str) and cond.val.count('-') == 2
             ):  # Check if value is a date string
               cur_condition = f"({self.df_name}['{cond.col}'] {cond.op.value} '{cond.val}')"
             else:
               cur_condition = f"({self.df_name}['{cond.col}'] {cond.op.value} {cond.val})"
-          elif cond.op.value == OP.in_op.value:
+          elif cond.op.value == Operator.in_op.value:
             cur_condition += f"({self.df_name}['{cond.col}'].isin({cond.val}))"
           else:
             cur_condition += f"({self.df_name}['{cond.col}']{cond.op.value}('{cond.val}'))"
         else:
-          if cond.op.value != OP.startswith.value and cond.op.value != OP.in_op.value:
+          if cond.op.value != Operator.startswith.value and cond.op.value != Operator.in_op.value:
             if (
               isinstance(cond.val, str) and cond.val.count('-') == 2
             ):  # Check if value is a date string
               cur_condition = f"({self.df_name}['{cond.col}'] {cond.op.value} '{cond.val}')"
             else:
               cur_condition = f"({self.df_name}['{cond.col}'] {cond.op.value} {cond.val})"
-          elif cond.op.value == OP.in_op.value:
+          elif cond.op.value == Operator.in_op.value:
             cur_condition += f"(df{df2}['{cond.col}'].isin({cond.val}))"
           else:
             cur_condition += f"(df{df2}['{cond.col}']{cond.op.value}('{cond.val}'))"
@@ -350,7 +378,7 @@ class Selection(Operation):
 
     # Separates the conditions based on | operators
     for cond in self.conditions:
-      if isinstance(cond, OP_cond) and cond == OP_cond.OR:
+      if isinstance(cond, ConditionalOperator) and cond == ConditionalOperator.OR:
         if current_segment:
           and_segments.append(current_segment)
           current_segment = []
@@ -819,7 +847,7 @@ class Query:
             description[random.choice(stats)] + random.randrange(0, description['std'] + 1, 1)
           )
 
-        OPs = [OP.gt, OP.ge, OP.le, OP.eq, OP.lt, OP.ne]
+        OPs = [Operator.gt, Operator.ge, Operator.le, Operator.eq, Operator.lt, Operator.ne]
 
         cur_condition = Condition(key, random.choice(OPs), cur_val)
         possible_condition_columns[key].append(cur_condition)
@@ -871,13 +899,15 @@ class Query:
           cur_val = random.randint(min_val, max_val)
           # Ensure no conditions are created with values out of range
           if min_val == max_val:
-            op = OP.eq
+            op = Operator.eq
           elif cur_val == min_val:
-            op = random.choice([OP.gt, OP.ge, OP.eq, OP.ne])
+            op = random.choice([Operator.gt, Operator.ge, Operator.eq, Operator.ne])
           elif cur_val == max_val:
-            op = random.choice([OP.lt, OP.le, OP.eq, OP.ne])
+            op = random.choice([Operator.lt, Operator.le, Operator.eq, Operator.ne])
           else:
-            op = random.choice([OP.gt, OP.ge, OP.lt, OP.le, OP.eq, OP.ne])
+            op = random.choice(
+              [Operator.gt, Operator.ge, Operator.lt, Operator.le, Operator.eq, Operator.ne]
+            )
           cur_condition = Condition(key, op, cur_val)
 
         elif possible_selection_columns[key] == 'float':
@@ -885,19 +915,19 @@ class Query:
           cur_val = round(random.uniform(min_val, max_val), 2)  # Assume 2 decimal places
           # Ensure no conditions are created with values out of range, no == or != operators for floats
           if min_val == max_val:
-            op = OP.eq
+            op = Operator.eq
           elif cur_val == min_val:
-            op = random.choice([OP.gt, OP.ge])
+            op = random.choice([Operator.gt, Operator.ge])
           elif cur_val == max_val:
-            op = random.choice([OP.lt, OP.le])
+            op = random.choice([Operator.lt, Operator.le])
           else:
-            op = random.choice([OP.gt, OP.ge, OP.lt, OP.le])
+            op = random.choice([Operator.gt, Operator.ge, Operator.lt, Operator.le])
 
           cur_condition = Condition(key, op, cur_val)
 
         elif possible_selection_columns[key] == 'string':
           cur_val = random.choice(data_ranges[self.df_name][key][0])  # starting char
-          cur_condition = Condition(key, OP.startswith, cur_val)
+          cur_condition = Condition(key, Operator.startswith, cur_val)
 
         elif possible_selection_columns[key] == 'date':
           min_val, max_val = data_ranges[self.df_name][key]
@@ -907,26 +937,26 @@ class Query:
             '%Y-%m-%d'
           )
           if min_val == max_val:
-            op = OP.eq
+            op = Operator.eq
           elif cur_val == min_val:
-            op = random.choice([OP.gt, OP.ge])
+            op = random.choice([Operator.gt, Operator.ge])
           elif cur_val == max_val:
-            op = random.choice([OP.lt, OP.le])
+            op = random.choice([Operator.lt, Operator.le])
           else:
-            op = random.choice([OP.gt, OP.ge, OP.lt, OP.le])
+            op = random.choice([Operator.gt, Operator.ge, Operator.lt, Operator.le])
           cur_condition = Condition(key, op, cur_val)
 
         elif possible_selection_columns[key] == 'enum':
           if random.choice([True, False]):  # Randomly choose between == and IN condition
             cur_val = f"'{random.choice(data_ranges[self.df_name][key])}'"
-            op = random.choice([OP.eq, OP.ne])
+            op = random.choice([Operator.eq, Operator.ne])
             cur_condition = Condition(key, op, cur_val)
           else:
             num_in_values = random.randint(2, len(data_ranges[self.df_name][key]))
             in_values = [
               val for val in random.sample(data_ranges[self.df_name][key], num_in_values)
             ]
-            cur_condition = Condition(key, OP.in_op, in_values)
+            cur_condition = Condition(key, Operator.in_op, in_values)
 
         possible_condition_columns[key].append(cur_condition)
 
@@ -1032,22 +1062,26 @@ class Query:
                 possible_conditions_dict[cur_key]
               )  # cur_condition is list of conditions
 
-              if cur_condition.op != OP.startswith:  # int or float col
+              if cur_condition.op != Operator.startswith:  # int or float col
                 cur_conditions.append(cur_condition)
                 if and_count < 2:
-                  cur_conditions.append(random.choice([OP_cond.OR, OP_cond.AND]))
-                  if cur_conditions[-1] == OP_cond.AND:
+                  cur_conditions.append(
+                    random.choice([ConditionalOperator.OR, ConditionalOperator.AND])
+                  )
+                  if cur_conditions[-1] == ConditionalOperator.AND:
                     and_count += 1
                 else:
-                  cur_conditions.append(OP_cond.OR)
+                  cur_conditions.append(ConditionalOperator.OR)
               else:
                 cur_conditionsString.append(cur_condition)
                 if and_count < 2:
-                  cur_conditionsString.append(random.choice([OP_cond.OR, OP_cond.AND]))
-                  if cur_conditionsString[-1] == OP_cond.AND:
+                  cur_conditionsString.append(
+                    random.choice([ConditionalOperator.OR, ConditionalOperator.AND])
+                  )
+                  if cur_conditionsString[-1] == ConditionalOperator.AND:
                     and_count += 1
                 else:
-                  cur_conditionsString.append(OP_cond.OR)
+                  cur_conditionsString.append(ConditionalOperator.OR)
 
             cur_conditions = cur_conditions[:-1]
             cur_conditionsString = cur_conditionsString[:-1]
@@ -1269,7 +1303,7 @@ class Query:
 
   def generate_possible_selection_operations(
     self, possible_new_conditions, generate_num=100
-  ) -> List[List[Union[Condition, OP_cond]]]:
+  ) -> List[List[Union[Condition, ConditionalOperator]]]:
     """
     Generate possible combinations of selection conditions.
 
@@ -1286,14 +1320,14 @@ class Query:
     for c in range(generate_num):
       possible_cond = []  # stores individual selection conditions for each combination
       for i, new_cond in enumerate(possible_new_conditions):
-        if isinstance(new_cond, OP_cond):
+        if isinstance(new_cond, ConditionalOperator):
           # Limit number of & operators to 2 in each seleciton
-          if new_cond == OP_cond.AND:
+          if new_cond == ConditionalOperator.AND:
             if and_count >= 2:
               continue
             else:
               and_count += 1
-          cur = random.choice([OP_cond.OR, OP_cond.AND])
+          cur = random.choice([ConditionalOperator.OR, ConditionalOperator.AND])
           possible_cond.append(cur)
           continue
         if clocks[i] < len(new_cond):  # what does clocks[i] do?
@@ -1305,7 +1339,7 @@ class Query:
 
         # Ensure only valid conditions for floats
         if (
-          possible_new_ith_condition.op in [OP.eq, OP.ne]
+          possible_new_ith_condition.op in [Operator.eq, Operator.ne]
           and possible_new_ith_condition.val == float
         ):
           continue
@@ -1933,23 +1967,25 @@ class TableSource:
 
     if self.source[choice_col].dtype.kind == 'i':
       if min_val == max_val:
-        op_choice = OP.eq
+        op_choice = Operator.eq
       elif num == min_val:
-        op_choice = random.choice([OP.gt, OP.ge, OP.eq, OP.ne])
+        op_choice = random.choice([Operator.gt, Operator.ge, Operator.eq, Operator.ne])
       elif num == max_val:
-        op_choice = random.choice([OP.lt, OP.le, OP.eq, OP.ne])
+        op_choice = random.choice([Operator.lt, Operator.le, Operator.eq, Operator.ne])
       else:
-        op_choice = random.choice([OP.gt, OP.ge, OP.lt, OP.le, OP.eq, OP.ne])
+        op_choice = random.choice(
+          [Operator.gt, Operator.ge, Operator.lt, Operator.le, Operator.eq, Operator.ne]
+        )
 
     elif self.source[choice_col].dtype.kind == 'f':
       if min_val == max_val:
-        op_choice = OP.eq
+        op_choice = Operator.eq
       elif num == min_val:
-        op_choice = random.choice([OP.gt, OP.ge])
+        op_choice = random.choice([Operator.gt, Operator.ge])
       elif num == max_val:
-        op_choice = random.choice([OP.lt, OP.le])
+        op_choice = random.choice([Operator.lt, Operator.le])
       else:
-        op_choice = random.choice([OP.gt, OP.ge, OP.lt, OP.le])
+        op_choice = random.choice([Operator.gt, Operator.ge, Operator.lt, Operator.le])
 
     elif (
       self.source[choice_col].dtype == 'object' or self.source[choice_col].dtype == 'string'
@@ -1963,17 +1999,17 @@ class TableSource:
         max_date = pd.to_datetime(max_val, format='%Y-%m-%d')
         num = pd.to_datetime(random.choice(pd.date_range(min_date, max_date))).strftime('%Y-%m-%d')
         if min_date == max_date:
-          op_choice = OP.eq
+          op_choice = Operator.eq
         elif num == min_date:
-          op_choice = random.choice([OP.gt, OP.ge])
+          op_choice = random.choice([Operator.gt, Operator.ge])
         elif num == max_date:
-          op_choice = random.choice([OP.lt, OP.le])
+          op_choice = random.choice([Operator.lt, Operator.le])
         else:
-          op_choice = random.choice([OP.gt, OP.ge, OP.lt, OP.le])
+          op_choice = random.choice([Operator.gt, Operator.ge, Operator.lt, Operator.le])
       except ValueError:
         startL = data_ranges[self.name][choice_col][0]
         num = random.choice(startL)  # starting char
-        op_choice = OP.startswith
+        op_choice = Operator.startswith
 
     # enum values are stored in lists in data ranges
     elif (
@@ -1981,13 +2017,13 @@ class TableSource:
     ) and isinstance(data_ranges[self.name][choice_col], list):
       if random.choice([True, False]):
         num = f"'{random.choice(data_ranges[self.name][choice_col])}'"
-        op_choice = random.choice([OP.eq, OP.ne])
+        op_choice = random.choice([Operator.eq, Operator.ne])
       else:
         num_in_values = random.randint(2, len(data_ranges[self.name][choice_col]))
         in_values = [
           val for val in random.sample(data_ranges[self.name][choice_col], num_in_values)
         ]
-        op_choice = OP.in_op
+        op_choice = Operator.in_op
         num = in_values
 
     cur_condition = Condition(
@@ -2103,9 +2139,9 @@ def test_patients():
     Selection(
       'df',
       conditions=[
-        Condition('Age', OP.gt, 50),
-        OP_cond.OR,
-        Condition('Age', OP.le, 70),
+        Condition('Age', Operator.gt, 50),
+        ConditionalOperator.OR,
+        Condition('Age', Operator.le, 70),
       ],
     ),
     Projection('df', ['Age', 'Sex', 'operation', 'P1200', 'P1600', 'Smoking']),
@@ -2116,11 +2152,11 @@ def test_patients():
     Selection(
       'df',
       conditions=[
-        Condition('Age', OP.gt, 50),
-        OP_cond.AND,
-        Condition('Height', OP.le, 160),
-        OP_cond.AND,
-        Condition('TNM_distribution', OP.eq, 1),
+        Condition('Age', Operator.gt, 50),
+        ConditionalOperator.AND,
+        Condition('Height', Operator.le, 160),
+        ConditionalOperator.AND,
+        Condition('TNM_distribution', Operator.eq, 1),
       ],
     ),
     Projection('df', ['Age', 'Sex', 'P1210', 'P100', 'Smoking', 'Weight']),
@@ -2150,9 +2186,9 @@ def run_TPCH():
     Selection(
       'customer',
       conditions=[
-        Condition('ACCTBAL', OP.gt, 100),
-        OP_cond.OR,
-        Condition('CUSTKEY', OP.le, 70),
+        Condition('ACCTBAL', Operator.gt, 100),
+        ConditionalOperator.OR,
+        Condition('CUSTKEY', Operator.le, 70),
       ],
     ),
     Projection('customer', ['CUSTKEY', 'NATIONKEY', 'PHONE', 'ACCTBAL', 'MKTSEGMENT']),
@@ -2161,9 +2197,9 @@ def run_TPCH():
     Selection(
       'customer',
       conditions=[
-        Condition('ACCTBAL', OP.gt, 100),
-        OP_cond.OR,
-        Condition('CUSTKEY', OP.le, 70),
+        Condition('ACCTBAL', Operator.gt, 100),
+        ConditionalOperator.OR,
+        Condition('CUSTKEY', Operator.le, 70),
       ],
     ),
     Projection('customer', ['CUSTKEY', 'NATIONKEY', 'PHONE', 'ACCTBAL', 'MKTSEGMENT']),
@@ -2175,9 +2211,9 @@ def run_TPCH():
     Selection(
       'lineitem',
       conditions=[
-        Condition('SUPPKEY', OP.gt, 100),
-        OP_cond.OR,
-        Condition('QUANTITY', OP.gt, 5),
+        Condition('SUPPKEY', Operator.gt, 100),
+        ConditionalOperator.OR,
+        Condition('QUANTITY', Operator.gt, 5),
       ],
     ),
   ]
@@ -2185,11 +2221,11 @@ def run_TPCH():
     Selection(
       'lineitem',
       conditions=[
-        Condition('SUPPKEY', OP.gt, 100),
-        OP_cond.OR,
-        Condition('QUANTITY', OP.gt, 5),
-        OP_cond.AND,
-        Condition('DISCOUNT', OP.gt, 0.05),
+        Condition('SUPPKEY', Operator.gt, 100),
+        ConditionalOperator.OR,
+        Condition('QUANTITY', Operator.gt, 5),
+        ConditionalOperator.AND,
+        Condition('DISCOUNT', Operator.gt, 0.05),
       ],
     ),
     Projection(
@@ -2210,11 +2246,11 @@ def run_TPCH():
     Selection(
       'lineitem',
       conditions=[
-        Condition('SUPPKEY', OP.gt, 100),
-        OP_cond.OR,
-        Condition('QUANTITY', OP.gt, 5),
-        OP_cond.AND,
-        Condition('DISCOUNT', OP.gt, 0.05),
+        Condition('SUPPKEY', Operator.gt, 100),
+        ConditionalOperator.OR,
+        Condition('QUANTITY', Operator.gt, 5),
+        ConditionalOperator.AND,
+        Condition('DISCOUNT', Operator.gt, 0.05),
       ],
     ),
     Projection(
@@ -2235,19 +2271,19 @@ def run_TPCH():
     Aggregate('lineitem', 'min'),
   ]
   q6 = [
-    Selection('nation', conditions=[Condition('REGIONKEY', OP.gt, 0)]),
+    Selection('nation', conditions=[Condition('REGIONKEY', Operator.gt, 0)]),
     Projection('nation', ['REGIONKEY', 'N_NAME', 'N_COMMENT']),
   ]
 
-  q7 = [Selection('region', conditions=[Condition('REGIONKEY', OP.ge, 0)])]
+  q7 = [Selection('region', conditions=[Condition('REGIONKEY', Operator.ge, 0)])]
 
   q8 = [
     Selection(
       'orders',
       conditions=[
-        Condition('TOTALPRICE', OP.gt, 50000.0),
-        OP_cond.OR,
-        Condition('SHIPPRIORITY', OP.eq, 0),
+        Condition('TOTALPRICE', Operator.gt, 50000.0),
+        ConditionalOperator.OR,
+        Condition('SHIPPRIORITY', Operator.eq, 0),
       ],
     ),
     Projection('orders', ['CUSTKEY', 'TOTALPRICE', 'ORDERPRIORITY', 'CLERK']),
@@ -2257,9 +2293,9 @@ def run_TPCH():
     Selection(
       'orders',
       conditions=[
-        Condition('TOTALPRICE', OP.gt, 50000.0),
-        OP_cond.OR,
-        Condition('SHIPPRIORITY', OP.eq, 0),
+        Condition('TOTALPRICE', Operator.gt, 50000.0),
+        ConditionalOperator.OR,
+        Condition('SHIPPRIORITY', Operator.eq, 0),
       ],
     ),
     Projection(
@@ -2273,9 +2309,9 @@ def run_TPCH():
     Selection(
       'supplier',
       conditions=[
-        Condition('NATIONKEY', OP.gt, 10),
-        OP_cond.OR,
-        Condition('ACCTBAL', OP.le, 5000),
+        Condition('NATIONKEY', Operator.gt, 10),
+        ConditionalOperator.OR,
+        Condition('ACCTBAL', Operator.le, 5000),
       ],
     ),
     Projection('supplier', ['S_NAME', 'NATIONKEY', 'ACCTBAL']),
@@ -2284,15 +2320,15 @@ def run_TPCH():
     Selection(
       'supplier',
       conditions=[
-        Condition('NATIONKEY', OP.gt, 10),
-        OP_cond.OR,
-        Condition('ACCTBAL', OP.le, 5000),
+        Condition('NATIONKEY', Operator.gt, 10),
+        ConditionalOperator.OR,
+        Condition('ACCTBAL', Operator.le, 5000),
       ],
     ),
   ]
-  q12 = [Selection('part', conditions=[Condition('RETAILPRICE', OP.gt, 500)])]
+  q12 = [Selection('part', conditions=[Condition('RETAILPRICE', Operator.gt, 500)])]
 
-  q13 = [Selection('partsupp', conditions=[Condition('SUPPLYCOST', OP.le, 1000)])]
+  q13 = [Selection('partsupp', conditions=[Condition('SUPPLYCOST', Operator.le, 1000)])]
 
   pq1 = Query(q1, source=customer)
   pq2 = Query(q2, source=customer)
