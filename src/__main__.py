@@ -288,65 +288,100 @@ class Selection(Operation):
 
     # Single Condition Case
     if len(self.conditions) == 1:
-      cond = self.conditions[0]
+      condition = self.conditions[0]
+
+      assert isinstance(condition, Condition)
+
       if df2.__eq__('F'):
-        if cond.op.value != Operator.startswith.value and cond.op.value != Operator.in_op.value:
+        if (
+          condition.op.value != Operator.startswith.value
+          and condition.op.value != Operator.in_op.value
+        ):
           if (
-            isinstance(cond.val, str) and cond.val.count('-') == 2
+            isinstance(condition.val, str) and condition.val.count('-') == 2
           ):  # Check if value is a date string
-            cur_condition = f"({self.df_name}['{cond.col}'] {cond.op.value} '{cond.val}')"
+            cur_condition = (
+              f"({self.df_name}['{condition.col}'] {condition.op.value} '{condition.val}')"
+            )
           else:
-            cur_condition = f"({self.df_name}['{cond.col}'] {cond.op.value} {cond.val})"
-        elif cond.op.value == Operator.in_op.value:
-          cur_condition = f"({self.df_name}['{cond.col}'].isin({cond.val}))"
+            cur_condition = (
+              f"({self.df_name}['{condition.col}'] {condition.op.value} {condition.val})"
+            )
+        elif condition.op.value == Operator.in_op.value:
+          cur_condition = f"({self.df_name}['{condition.col}'].isin({condition.val}))"
         else:
-          cur_condition = f"({self.df_name}['{cond.col}']{cond.op.value}('{cond.val}'))"
+          cur_condition = (
+            f"({self.df_name}['{condition.col}']{condition.op.value}('{condition.val}'))"
+          )
       else:
-        if cond.op.value != Operator.startswith.value and cond.op.value != Operator.in_op.value:
+        if (
+          condition.op.value != Operator.startswith.value
+          and condition.op.value != Operator.in_op.value
+        ):
           if (
-            isinstance(cond.val, str) and cond.val.count('-') == 2
+            isinstance(condition.val, str) and condition.val.count('-') == 2
           ):  # Check if value is a date string
-            cur_condition = f"({self.df_name}['{cond.col}'] {cond.op.value} '{cond.val}')"
+            cur_condition = (
+              f"({self.df_name}['{condition.col}'] {condition.op.value} '{condition.val}')"
+            )
           else:
-            cur_condition = f"({self.df_name}['{cond.col}'] {cond.op.value} {cond.val})"
-        elif cond.op.value == Operator.in_op.value:
-          cur_condition = f"({df2}['{cond.col}'].isin({cond.val}))"
+            cur_condition = (
+              f"({self.df_name}['{condition.col}'] {condition.op.value} {condition.val})"
+            )
+        elif condition.op.value == Operator.in_op.value:
+          cur_condition = f"({df2}['{condition.col}'].isin({condition.val}))"
         else:
-          cur_condition = f"(df{df2}['{cond.col}']{cond.op.value}('{cond.val}'))"
+          cur_condition = f"(df{df2}['{condition.col}']{condition.op.value}('{condition.val}'))"
 
       res_str = res_str + '[' + cur_condition + ']'
       return res_str
 
     # Multiple Conditions Case
     for i, condition in enumerate(self.conditions):
-      cond = self.conditions[i]
-      if isinstance(cond, ConditionalOperator):
-        cur_condition += ' ' + cond.value + ' '
+      condition = self.conditions[i]
+      if isinstance(condition, ConditionalOperator):
+        cur_condition += ' ' + condition.value + ' '
       else:
         if df2.__eq__('F'):
-          if cond.op.value != Operator.startswith.value and cond.op.value != Operator.in_op.value:
+          if (
+            condition.op.value != Operator.startswith.value
+            and condition.op.value != Operator.in_op.value
+          ):
             if (
-              isinstance(cond.val, str) and cond.val.count('-') == 2
+              isinstance(condition.val, str) and condition.val.count('-') == 2
             ):  # Check if value is a date string
-              cur_condition = f"({self.df_name}['{cond.col}'] {cond.op.value} '{cond.val}')"
+              cur_condition = (
+                f"({self.df_name}['{condition.col}'] {condition.op.value} '{condition.val}')"
+              )
             else:
-              cur_condition = f"({self.df_name}['{cond.col}'] {cond.op.value} {cond.val})"
-          elif cond.op.value == Operator.in_op.value:
-            cur_condition += f"({self.df_name}['{cond.col}'].isin({cond.val}))"
+              cur_condition = (
+                f"({self.df_name}['{condition.col}'] {condition.op.value} {condition.val})"
+              )
+          elif condition.op.value == Operator.in_op.value:
+            cur_condition += f"({self.df_name}['{condition.col}'].isin({condition.val}))"
           else:
-            cur_condition += f"({self.df_name}['{cond.col}']{cond.op.value}('{cond.val}'))"
+            cur_condition += (
+              f"({self.df_name}['{condition.col}']{condition.op.value}('{condition.val}'))"
+            )
         else:
-          if cond.op.value != Operator.startswith.value and cond.op.value != Operator.in_op.value:
+          if (
+            condition.op.value != Operator.startswith.value
+            and condition.op.value != Operator.in_op.value
+          ):
             if (
-              isinstance(cond.val, str) and cond.val.count('-') == 2
+              isinstance(condition.val, str) and condition.val.count('-') == 2
             ):  # Check if value is a date string
-              cur_condition = f"({self.df_name}['{cond.col}'] {cond.op.value} '{cond.val}')"
+              cur_condition = (
+                f"({self.df_name}['{condition.col}'] {condition.op.value} '{condition.val}')"
+              )
             else:
-              cur_condition = f"({self.df_name}['{cond.col}'] {cond.op.value} {cond.val})"
-          elif cond.op.value == Operator.in_op.value:
-            cur_condition += f"(df{df2}['{cond.col}'].isin({cond.val}))"
+              cur_condition = (
+                f"({self.df_name}['{condition.col}'] {condition.op.value} {condition.val})"
+              )
+          elif condition.op.value == Operator.in_op.value:
+            cur_condition += f"(df{df2}['{condition.col}'].isin({condition.val}))"
           else:
-            cur_condition += f"(df{df2}['{cond.col}']{cond.op.value}('{cond.val}'))"
+            cur_condition += f"(df{df2}['{condition.col}']{condition.op.value}('{condition.val}'))"
 
     res_str = res_str + '[' + cur_condition + ']'
     return res_str
