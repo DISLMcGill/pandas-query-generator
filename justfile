@@ -13,7 +13,11 @@ check:
 
 example:
   rm -rf results/*
-  uv run src --export-path results --params examples/query_parameters.json --schema examples/data_structure_tpch_csv.json
+
+  uv run src  \
+    --export-path results \
+    --params examples/query_parameters.json \
+    --schema examples/data_structure_tpch_csv.json
 
 fmt:
   ruff check --select I --fix
