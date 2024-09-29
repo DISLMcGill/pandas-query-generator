@@ -5,6 +5,7 @@ import time
 import warnings
 from collections import defaultdict
 from enum import Enum
+from pathlib import Path
 from typing import Any, Dict, List, Union
 
 import pandas as pd
@@ -1285,7 +1286,7 @@ class Query:
       'dataframes': dataframes,
       'data_ranges': data_ranges,
       'foreign_keys': foreign_keys,
-      'tbl_sources': tbl_sources,  # tbl_source = wrapper class for df with its foreign keys
+      'tbl_sources': table_sources,  # tbl_source = wrapper class for df with its foreign keys
     }
     return pd.eval(query_string, local_dict=local_dict)
     """try:
@@ -1475,6 +1476,7 @@ class Query:
 
 class QueryPool:
   result_queries: list[Any]
+
   """
     Class for managing and processing a pool of pandas queries, including generating merged queries.
 
@@ -1491,56 +1493,55 @@ class QueryPool:
     self, queries: List[Query], count=0, self_join=False, verbose=True
   ):
     """
-    Initialize a pandas_query_pool object.
+    Initialize a QueryPool object.
 
     :param queries: List of queries in type pandas_query.
     :param count: Counter for generating DataFrame names.
     :param self_join: Whether to allow self-joins.
     :param verbose: Whether to print the processing steps.
     """
-    self.queries = queries  # can be shuffled and manipulated independantly
     self.count = count
-    self.self_join = self_join
+    self.queries = queries  # Can be shuffled and manipulated independantly
     self.result_queries = []
-    self.verbose = verbose
-
+    self.self_join = self_join
     self.un_merged_queries = queries[
       :
     ]  # Stores a copy of the original queries to generate unmerged examples
+    self.verbose = verbose
 
-  def save_merged_examples(self, dir, filename):
+  def save_merged_examples(self, directory: str, filename: str) -> None:
     """
-    Save the merged queries into a text file.
+    Save the merged queries into a text file if the content has changed.
 
-    :param dir: Directory path where the file should be saved.
+    :param directory: Directory path where the file should be saved.
     :param filename: Name of the file to save.
     """
-    try:
-      f = open(f'{dir}/{filename}.txt', 'a')
-    except:
-      filepath = f'{dir}/{filename}.txt'
-      os.makedirs(os.path.dirname(filepath), exist_ok=True)
-      f = open(f'{dir}/{filename}.txt', 'a')
-    count = 0
-    f = open(f'{dir}/{filename}.txt', 'a')
-    for q in self.result_queries:
-      # strs = q.
-      strs = q.query_string
-      f.write(f'df{count} = {strs} \n')
-      count += 1
-    print(
-      f' ##### Successfully write the merged queries into file {dir}/{filename}.txt #####'
-    )
-    f.close()
+    filepath = Path(directory) / f'{filename}.txt'
 
-  def save_merged_examples_multiline(self, dir, filename):
+    # Create directory if it doesn't exist
+    filepath.parent.mkdir(parents=True, exist_ok=True)
+
+    # Generate new content
+    new_content = '\n'.join(
+      f'df{i} = {q.query_string}' for i, q in enumerate(self.result_queries)
+    )
+
+    # Write new content
+    with open(filepath, 'w') as f:
+      f.write(new_content)
+
+    print(f'Successfully wrote the merged queries into file {filepath}')
+
+  def save_merged_examples_multiline(
+    self, directory: str, filename: str
+  ) -> None:
     count = 0
     try:
-      f = open(f'{dir}/{filename}.txt', 'a')
+      f = open(f'{directory}/{filename}.txt', 'a')
     except:
-      filepath = f'{dir}/{filename}.txt'
+      filepath = f'{directory}/{filename}.txt'
       os.makedirs(os.path.dirname(filepath), exist_ok=True)
-      f = open(f'{dir}/{filename}.txt', 'a')
+      f = open(f'{directory}/{filename}.txt', 'a')
     res = {}
     q = []
     exception_count = [0]
@@ -1587,7 +1588,7 @@ class QueryPool:
       f.write('Next \n')
 
     print(
-      f' ##### Successfully write the merged queries into file {dir}/{filename}.txt #####'
+      f' ##### Successfully write the merged queries into file {directory}/{filename}.txt #####'
     )
     f.close()
 
@@ -2560,12 +2561,10 @@ if __name__ == '__main__':
   import json
   import string
 
-  import pandas as pd
-
   # To measure total execution time of the query generator
   start = time.time()
 
-  parser = argparse.ArgumentParser(description='Query Generator CLI')
+  parser = argparse.ArgumentParser(description='Pandas Query Generator CLI')
 
   parser.add_argument(
     '--schema',
@@ -2582,7 +2581,7 @@ if __name__ == '__main__':
   )
 
   parser.add_argument(
-    '--export-path',
+    '--export-directory',
     type=str,
     required=False,
     default='./results',
@@ -2614,7 +2613,7 @@ if __name__ == '__main__':
   dataframes = {}
   data_ranges = {}
   foreign_keys = {}
-  tbl_sources = {}
+  table_sources = {}
   primary_keys = {}
 
   # Function to extract and store data ranges from JSON schema properties
@@ -2700,7 +2699,7 @@ if __name__ == '__main__':
 
     # tbl_source for each dataframe
     tbl = TableSource(globals()[entity], entity)
-    tbl_sources[entity] = tbl
+    table_sources[entity] = tbl
 
     # extract_data_ranges
     ranges = extract_data_ranges(entity_info['properties'])
@@ -2719,13 +2718,15 @@ if __name__ == '__main__':
   for entity, listT in foreign_keys.items():
     for tuple in listT:
       col, other_col, other = tuple
-      add_foreignkeys(tbl_sources[entity], col, tbl_sources[other], other_col)
+      add_foreignkeys(
+        table_sources[entity], col, table_sources[other], other_col
+      )
 
   end2 = time.time()
 
   # Base queries
   allqueries = []
-  for entity, source in tbl_sources.items():
+  for entity, source in table_sources.items():
     allqueries += source.gen_base_queries(params)
 
   res = []
@@ -2757,11 +2758,11 @@ if __name__ == '__main__':
 
   if multi_line:
     pandas_queries_list.save_merged_examples_multiline(
-      dir=args.export_path, filename='merged_queries_auto_sf0000'
+      directory=args.export_directory, filename='merged_queries_auto_sf0000'
     )
   else:
     pandas_queries_list.save_merged_examples(
-      dir=args.export_path, filename='merged_queries_auto_sf0000'
+      args.export_directory, 'merged_queries_auto_sf0000'
     )
 
   end = time.time()

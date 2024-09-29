@@ -8,20 +8,23 @@ default:
 build:
   uv build
 
+dev-deps:
+  cargo install present
+
 check:
   uv run ruff check
 
 example:
-  rm -rf results/*
-
   uv run src  \
-    --export-path results \
+    --export-directory results \
     --params examples/query_parameters.json \
     --schema examples/data_structure_tpch_csv.json
 
 fmt:
-  ruff check --select I --fix
-  ruff format
+  ruff check --select I --fix && ruff format
+
+readme:
+  present --in-place README.md
 
 run *args:
   uv run src {{args}}
