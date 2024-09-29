@@ -16,5 +16,6 @@ line-length = 100
 
 [tool.ruff.format]
 docstring-code-format = true
+docstring-code-line-length = 20
 indent-style = "space"
 quote-style = "single"

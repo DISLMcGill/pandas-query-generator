@@ -1,43 +1,631 @@
 {
-    "entities": {
-        "customer": {
-            "properties": { "C_CUSTKEY": { "type": "int", "min": 1, "max": 100 }, "C_NAME": { "type": "string", "starting character": ["C"] }, "C_ADDRESS": { "type": "string", "starting character": ["I", "H", "X", "s", "9", "n", "z", "K", "T", "u", "Q", "O", "7", "o", "M", "c", "i", "3", "8", "L", "g", "4", "m", "S", "E", "x", "6", "P", "Y", "J", "j", "q", "a", "e", "b", "0", ",", "B", "F", "R", "r", "p", "D", "l", "U", "h", "w", "d", "v", "f"] }, "C_NATIONKEY": { "type": "int", "min": 0, "max": 23 }, "C_PHONE": { "type": "string", "starting character": ["1", "2", "3", "25-", "13-", "27-", "18-", "22-"] }, "C_ACCTBAL": { "type": "float", "min": -917.25, "max": 9983.38 }, "MKTSEGMENT": { "type": "enum", "values": ["BUILDING", "AUTOMOBILE", "MACHINERY", "HOUSEHOLD", "FURNITURE"] }, "C_COMMENT": { "type": "string", "starting character": ["i", " ", "s", "l", "r", "c", "t", "e", "o", "n", "a", "p", "h", "u", "k", "g", "y", ".", ",", "d", "f", "q", "w"] } },
-            "primary_key": "C_CUSTKEY",
-            "foreign_keys": { "C_NATIONKEY": ["N_NATIONKEY","nation"] }
+  "entities": {
+    "customer": {
+      "properties": {
+        "C_CUSTKEY": { "type": "int", "min": 1, "max": 100 },
+        "C_NAME": { "type": "string", "starting_character": ["C"] },
+        "C_ADDRESS": {
+          "type": "string",
+          "starting_character": [
+            "I",
+            "H",
+            "X",
+            "s",
+            "9",
+            "n",
+            "z",
+            "K",
+            "T",
+            "u",
+            "Q",
+            "O",
+            "7",
+            "o",
+            "M",
+            "c",
+            "i",
+            "3",
+            "8",
+            "L",
+            "g",
+            "4",
+            "m",
+            "S",
+            "E",
+            "x",
+            "6",
+            "P",
+            "Y",
+            "J",
+            "j",
+            "q",
+            "a",
+            "e",
+            "b",
+            "0",
+            ",",
+            "B",
+            "F",
+            "R",
+            "r",
+            "p",
+            "D",
+            "l",
+            "U",
+            "h",
+            "w",
+            "d",
+            "v",
+            "f"
+          ]
         },
-        "lineitem": {
-            "properties": { "L_ORDERKEY": { "type": "int", "min": 1, "max": 194 }, "L_PARTKEY": { "type": "int", "min": 450, "max": 198344 }, "L_SUPPKEY": { "type": "int", "min": 22, "max": 9983 }, "LINENUMBER": { "type": "int", "min": 1, "max": 7 }, "QUANTITY": { "type": "int", "min": 1, "max": 50 }, "EXTENDEDPRICE": { "type": "float", "min": 1606.52, "max": 88089.08 }, "DISCOUNT": { "type": "float", "min": 0.00, "max": 0.10 }, "TAX": { "type": "float", "min": 0.00, "max": 0.08 }, "RETURNFLAG": { "type": "enum", "values": ["N", "R", "A"] }, "LINESTATUS": { "type": "enum", "values": ["O", "F"] }, "SHIPDATE": { "type": "date", "min": "1992-04-27", "max": "1998-10-30"  }, "COMMITDATE": { "type": "date", "min": "1992-05-15", "max": "1998-10-16" }, "RECEIPTDATE": { "type": "date", "min": "1992-05-02", "max": "1998-11-06" }, "SHIPINSTRUCT": { "type": "enum", "values": ["DELIVER IN PERSON", "TAKE BACK RETURN", "NONE", "COLLECT COD"] }, "SHIPMODE": { "type": "enum", "values": ["TRUCK", "MAIL", "REG AIR", "AIR", "FOB", "RAIL", "SHIP"] }, "L_COMMENT": { "type": "string", "starting character": [" ", "e", "s", "l", "t", "a", "n", "u", "y", "c", "i", ".", "r", "g", "p", "f", "o", "h", "q", "k", "j", ",", "b", "v", "-", "d", "ly ", " ca", " re", "s. ", "lit"] } },
-            "primary_key": ["L_ORDERKEY", "L_PARTKEY", "L_SUPPKEY"],
-            "foreign_keys": { "L_ORDERKEY": ["O_ORDERKEY","orders"], "L_PARTKEY": ["PS_PARTKEY","partsupp"], "L_SUPPKEY": ["PS_SUPPKEY","partsupp"] }
+        "C_NATIONKEY": { "type": "int", "min": 0, "max": 23 },
+        "C_PHONE": {
+          "type": "string",
+          "starting_character": [
+            "1",
+            "2",
+            "3",
+            "25-",
+            "13-",
+            "27-",
+            "18-",
+            "22-"
+          ]
         },
-
-        "nation": {
-            "properties": { "N_NATIONKEY": { "type": "int", "min": 0, "max": 24 }, "N_NAME": { "type": "string", "starting character": ["I", "A", "C", "E", "J", "M", "R", "U", "B", "F", "G", "K", "P", "S", "V"] }, "N_REGIONKEY": { "type": "int", "min": 0, "max": 4 }, "N_COMMENT": { "type": "string", "starting character": [" ", "y", "e", "r", "s", "a", "v", "l", "n", "o", "i", "p", "c", "u", "t", "h"] } },
-            "primary_key": "N_NATIONKEY",
-            "foreign_keys": { "N_REGIONKEY": ["R_REGIONKEY","region"] }
+        "C_ACCTBAL": { "type": "float", "min": -917.25, "max": 9983.38 },
+        "MKTSEGMENT": {
+          "type": "enum",
+          "values": [
+            "BUILDING",
+            "AUTOMOBILE",
+            "MACHINERY",
+            "HOUSEHOLD",
+            "FURNITURE"
+          ]
         },
-        "orders": {
-            "properties": { "O_ORDERKEY": { "type": "int", "min": 1, "max": 800 }, "O_CUSTKEY": { "type": "int", "min": 302, "max": 149641 }, "ORDERSTATUS": { "type": "enum", "values": ["O", "F", "P"] }, "TOTALPRICE": { "type": "float", "min": 1156.67, "max": 355180.76 }, "ORDERDATE": { "type": "date", "min": "1992-01-13", "max": "1998-07-21" }, "ORDERPRIORITY": { "type": "enum", "values": ["1-URGENT", "2-HIGH", "3-MEDIUM", "4-NOT SPECIFIED", "5-LOW"] }, "CLERK": { "type": "string", "starting character": ["C"] }, "SHIPPRIORITY": { "type": "int", "min": 0, "max": 0 }, "O_COMMENT": { "type": "string", "starting character" : [" ", "l", "e", "t", "s", "a", "i", "o", "n", "g", "u", "h", "c", "d", "r", "k", "y", "q", "b", ".", "f", "x", "z", "w", ",", "-", "j", "ly ", " re", "the", "egu", "uri"] } },
-            "primary_key": "O_ORDERKEY",
-            "foreign_keys": { "O_CUSTKEY": ["C_CUSTKEY","customer"] }
-        },
-        "part": {
-            "properties": { "P_PARTKEY": { "type": "int", "min": 1, "max": 200 }, "P_NAME": { "type": "string", "starting character": ["b", "s", "l", "c", "m", "p", "g", "t", "a", "d", "h", "f", "i", "w", "n", "r", "o", "k", "v", "y", "cor", "bis", "blu", "lin", "lem"] }, "MFGR": { "type": "enum", "values": ["Manufacturer#1", "Manufacturer#2", "Manufacturer#3", "Manufacturer#4", "Manufacturer#5"] }, "BRAND": { "type": "enum", "values": ["Brand#13", "Brand#42", "Brand#34", "Brand#32", "Brand#24", "Brand#11", "Brand#44", "Brand#43", "Brand#54", "Brand#25", "Brand#33", "Brand#55", "Brand#15", "Brand#23", "Brand#12", "Brand#35", "Brand#52", "Brand#14", "Brand#53", "Brand#22", "Brand#45", "Brand#21", "Brand#41", "Brand#51", "Brand#31"] }, "TYPE": { "type": "string", "starting character": ["S", "M", "E", "P", "L", "STA", "SMA"] }, "SIZE": { "type": "int", "min": 1, "max": 49 }, "CONTAINER": { "type": "string", "starting character": ["JUMBO", "LG", "WRAP", "MED", "SM"] }, "RETAILPRICE": { "type": "float", "min": 901.00, "max": 1100.2 }, "PT_COMMENT": { "type": "string", "starting character": [" ", "e", "l", "s", "u", "i", "n", "o", "t", "a", "c", "p", "r", "k", "y", "h", "f", "m", "d", "b", "x", "!", "g", "w", "q", "ly ", "the", "kag", "ss ", " fi"] } },
-            "primary_key": "P_PARTKEY"
-        },
-        "partsupp": {
-            "properties": { "PS_PARTKEY": { "type": "int", "min": 1, "max": 50 }, "PS_SUPPKEY": { "type": "int", "min": 2, "max": 7551 }, "AVAILQTY": { "type": "int", "min": 43, "max": 9988 }, "SUPPLYCOST": { "type": "float", "min": 14.78, "max": 996.12 }, "P_COMMENT": { "type": "string", "starting character": [" ", "s", "l", "e", "r", "a", "t", "n", "i", "o", "u", "p", "b", "h", "y", "f", "g", "c", ",", "v", ".", "d", "x", "j", "k", "q", ";", "bli", "ly ", "are", " th", "the"] } },
-            "primary_key": ["PS_PARTKEY", "PS_SUPPKEY"],
-            "foreign_keys": { "PS_PARTKEY": ["P_PARTKEY","part"], "PS_SUPPKEY": ["S_SUPPKEY","supplier"] }
-        },
-        "region": {
-            "properties": { "R_REGIONKEY": { "type": "int", "min": 0, "max": 4 }, "R_NAME": { "type": "string", "starting character": ["A", "E", "M", "AFR", "AME", "ASI"] }, "R_COMMENT": { "type": "string", "starting character": ["l", "h", "g", "u"] } },
-            "primary_key": "R_REGIONKEY"
-        },
-        "supplier": {
-            "properties": { "S_SUPPKEY": { "type": "int", "min": 1, "max": 200 }, "S_NAME": { "type": "string", "starting character": ["S"] }, "S_ADDRESS": { "type": "string", "starting character": ["N", "e", "f", "J", "o", "c", "b", "u", "p", "8", "q", "S", "Y", "i", "C", "g", "m", "L", "r", "W", "O", "7", "T", " ", "B", "G", "s", "9", "1", "H", "R", "y", "x", "Z", "z", "k", "j", "w", "I", "n", "M", "4", "5", "V", "F", "a", "l", "Q", "0", "U", "D", "h", "v", "2", "X", ",", "t", "E", "P", "6", "3", "d", "K"] }, "S_NATIONKEY": { "type": "int", "min": 0, "max": 24 }, "S_PHONE": { "type": "string", "starting character": ["1", "2", "3", "28-", "32-", "26-", "14-", "17-"] }, "S_ACCTBAL": { "type": "float", "min": -966.20, "max": 9915.24 }, "S_COMMENT": { "type": "string", "starting character": ["e", " ", "s", "a", "i", "r", "l", "u", "y", "n", "t", "c", "g", "h", "o", "d", "f", "x", "b", "k", ",", ".", "w", "!", "j", "v", "q", "the", "es ", " sl", "bli", "al "]  } },
-            "primary_key": "S_SUPPKEY",
-            "foreign_keys": { "S_NATIONKEY": ["N_NATIONKEY","nation"]}
+        "C_COMMENT": {
+          "type": "string",
+          "starting_character": [
+            "i",
+            " ",
+            "s",
+            "l",
+            "r",
+            "c",
+            "t",
+            "e",
+            "o",
+            "n",
+            "a",
+            "p",
+            "h",
+            "u",
+            "k",
+            "g",
+            "y",
+            ".",
+            ",",
+            "d",
+            "f",
+            "q",
+            "w"
+          ]
         }
+      },
+      "primary_key": "C_CUSTKEY",
+      "foreign_keys": { "C_NATIONKEY": ["N_NATIONKEY", "nation"] }
+    },
+    "lineitem": {
+      "properties": {
+        "L_ORDERKEY": { "type": "int", "min": 1, "max": 194 },
+        "L_PARTKEY": { "type": "int", "min": 450, "max": 198344 },
+        "L_SUPPKEY": { "type": "int", "min": 22, "max": 9983 },
+        "LINENUMBER": { "type": "int", "min": 1, "max": 7 },
+        "QUANTITY": { "type": "int", "min": 1, "max": 50 },
+        "EXTENDEDPRICE": { "type": "float", "min": 1606.52, "max": 88089.08 },
+        "DISCOUNT": { "type": "float", "min": 0.0, "max": 0.1 },
+        "TAX": { "type": "float", "min": 0.0, "max": 0.08 },
+        "RETURNFLAG": { "type": "enum", "values": ["N", "R", "A"] },
+        "LINESTATUS": { "type": "enum", "values": ["O", "F"] },
+        "SHIPDATE": {
+          "type": "date",
+          "min": "1992-04-27",
+          "max": "1998-10-30"
+        },
+        "COMMITDATE": {
+          "type": "date",
+          "min": "1992-05-15",
+          "max": "1998-10-16"
+        },
+        "RECEIPTDATE": {
+          "type": "date",
+          "min": "1992-05-02",
+          "max": "1998-11-06"
+        },
+        "SHIPINSTRUCT": {
+          "type": "enum",
+          "values": [
+            "DELIVER IN PERSON",
+            "TAKE BACK RETURN",
+            "NONE",
+            "COLLECT COD"
+          ]
+        },
+        "SHIPMODE": {
+          "type": "enum",
+          "values": ["TRUCK", "MAIL", "REG AIR", "AIR", "FOB", "RAIL", "SHIP"]
+        },
+        "L_COMMENT": {
+          "type": "string",
+          "starting_character": [
+            " ",
+            "e",
+            "s",
+            "l",
+            "t",
+            "a",
+            "n",
+            "u",
+            "y",
+            "c",
+            "i",
+            ".",
+            "r",
+            "g",
+            "p",
+            "f",
+            "o",
+            "h",
+            "q",
+            "k",
+            "j",
+            ",",
+            "b",
+            "v",
+            "-",
+            "d",
+            "ly ",
+            " ca",
+            " re",
+            "s. ",
+            "lit"
+          ]
+        }
+      },
+      "primary_key": ["L_ORDERKEY", "L_PARTKEY", "L_SUPPKEY"],
+      "foreign_keys": {
+        "L_ORDERKEY": ["O_ORDERKEY", "orders"],
+        "L_PARTKEY": ["PS_PARTKEY", "partsupp"],
+        "L_SUPPKEY": ["PS_SUPPKEY", "partsupp"]
+      }
+    },
+
+    "nation": {
+      "properties": {
+        "N_NATIONKEY": { "type": "int", "min": 0, "max": 24 },
+        "N_NAME": {
+          "type": "string",
+          "starting_character": [
+            "I",
+            "A",
+            "C",
+            "E",
+            "J",
+            "M",
+            "R",
+            "U",
+            "B",
+            "F",
+            "G",
+            "K",
+            "P",
+            "S",
+            "V"
+          ]
+        },
+        "N_REGIONKEY": { "type": "int", "min": 0, "max": 4 },
+        "N_COMMENT": {
+          "type": "string",
+          "starting_character": [
+            " ",
+            "y",
+            "e",
+            "r",
+            "s",
+            "a",
+            "v",
+            "l",
+            "n",
+            "o",
+            "i",
+            "p",
+            "c",
+            "u",
+            "t",
+            "h"
+          ]
+        }
+      },
+      "primary_key": "N_NATIONKEY",
+      "foreign_keys": { "N_REGIONKEY": ["R_REGIONKEY", "region"] }
+    },
+    "orders": {
+      "properties": {
+        "O_ORDERKEY": { "type": "int", "min": 1, "max": 800 },
+        "O_CUSTKEY": { "type": "int", "min": 302, "max": 149641 },
+        "ORDERSTATUS": { "type": "enum", "values": ["O", "F", "P"] },
+        "TOTALPRICE": { "type": "float", "min": 1156.67, "max": 355180.76 },
+        "ORDERDATE": {
+          "type": "date",
+          "min": "1992-01-13",
+          "max": "1998-07-21"
+        },
+        "ORDERPRIORITY": {
+          "type": "enum",
+          "values": [
+            "1-URGENT",
+            "2-HIGH",
+            "3-MEDIUM",
+            "4-NOT SPECIFIED",
+            "5-LOW"
+          ]
+        },
+        "CLERK": { "type": "string", "starting_character": ["C"] },
+        "SHIPPRIORITY": { "type": "int", "min": 0, "max": 0 },
+        "O_COMMENT": {
+          "type": "string",
+          "starting_character": [
+            " ",
+            "l",
+            "e",
+            "t",
+            "s",
+            "a",
+            "i",
+            "o",
+            "n",
+            "g",
+            "u",
+            "h",
+            "c",
+            "d",
+            "r",
+            "k",
+            "y",
+            "q",
+            "b",
+            ".",
+            "f",
+            "x",
+            "z",
+            "w",
+            ",",
+            "-",
+            "j",
+            "ly ",
+            " re",
+            "the",
+            "egu",
+            "uri"
+          ]
+        }
+      },
+      "primary_key": "O_ORDERKEY",
+      "foreign_keys": { "O_CUSTKEY": ["C_CUSTKEY", "customer"] }
+    },
+    "part": {
+      "properties": {
+        "P_PARTKEY": { "type": "int", "min": 1, "max": 200 },
+        "P_NAME": {
+          "type": "string",
+          "starting_character": [
+            "b",
+            "s",
+            "l",
+            "c",
+            "m",
+            "p",
+            "g",
+            "t",
+            "a",
+            "d",
+            "h",
+            "f",
+            "i",
+            "w",
+            "n",
+            "r",
+            "o",
+            "k",
+            "v",
+            "y",
+            "cor",
+            "bis",
+            "blu",
+            "lin",
+            "lem"
+          ]
+        },
+        "MFGR": {
+          "type": "enum",
+          "values": [
+            "Manufacturer#1",
+            "Manufacturer#2",
+            "Manufacturer#3",
+            "Manufacturer#4",
+            "Manufacturer#5"
+          ]
+        },
+        "BRAND": {
+          "type": "enum",
+          "values": [
+            "Brand#13",
+            "Brand#42",
+            "Brand#34",
+            "Brand#32",
+            "Brand#24",
+            "Brand#11",
+            "Brand#44",
+            "Brand#43",
+            "Brand#54",
+            "Brand#25",
+            "Brand#33",
+            "Brand#55",
+            "Brand#15",
+            "Brand#23",
+            "Brand#12",
+            "Brand#35",
+            "Brand#52",
+            "Brand#14",
+            "Brand#53",
+            "Brand#22",
+            "Brand#45",
+            "Brand#21",
+            "Brand#41",
+            "Brand#51",
+            "Brand#31"
+          ]
+        },
+        "TYPE": {
+          "type": "string",
+          "starting_character": ["S", "M", "E", "P", "L", "STA", "SMA"]
+        },
+        "SIZE": { "type": "int", "min": 1, "max": 49 },
+        "CONTAINER": {
+          "type": "string",
+          "starting_character": ["JUMBO", "LG", "WRAP", "MED", "SM"]
+        },
+        "RETAILPRICE": { "type": "float", "min": 901.0, "max": 1100.2 },
+        "PT_COMMENT": {
+          "type": "string",
+          "starting_character": [
+            " ",
+            "e",
+            "l",
+            "s",
+            "u",
+            "i",
+            "n",
+            "o",
+            "t",
+            "a",
+            "c",
+            "p",
+            "r",
+            "k",
+            "y",
+            "h",
+            "f",
+            "m",
+            "d",
+            "b",
+            "x",
+            "!",
+            "g",
+            "w",
+            "q",
+            "ly ",
+            "the",
+            "kag",
+            "ss ",
+            " fi"
+          ]
+        }
+      },
+      "primary_key": "P_PARTKEY"
+    },
+    "partsupp": {
+      "properties": {
+        "PS_PARTKEY": { "type": "int", "min": 1, "max": 50 },
+        "PS_SUPPKEY": { "type": "int", "min": 2, "max": 7551 },
+        "AVAILQTY": { "type": "int", "min": 43, "max": 9988 },
+        "SUPPLYCOST": { "type": "float", "min": 14.78, "max": 996.12 },
+        "P_COMMENT": {
+          "type": "string",
+          "starting_character": [
+            " ",
+            "s",
+            "l",
+            "e",
+            "r",
+            "a",
+            "t",
+            "n",
+            "i",
+            "o",
+            "u",
+            "p",
+            "b",
+            "h",
+            "y",
+            "f",
+            "g",
+            "c",
+            ",",
+            "v",
+            ".",
+            "d",
+            "x",
+            "j",
+            "k",
+            "q",
+            ";",
+            "bli",
+            "ly ",
+            "are",
+            " th",
+            "the"
+          ]
+        }
+      },
+      "primary_key": ["PS_PARTKEY", "PS_SUPPKEY"],
+      "foreign_keys": {
+        "PS_PARTKEY": ["P_PARTKEY", "part"],
+        "PS_SUPPKEY": ["S_SUPPKEY", "supplier"]
+      }
+    },
+    "region": {
+      "properties": {
+        "R_REGIONKEY": { "type": "int", "min": 0, "max": 4 },
+        "R_NAME": {
+          "type": "string",
+          "starting_character": ["A", "E", "M", "AFR", "AME", "ASI"]
+        },
+        "R_COMMENT": {
+          "type": "string",
+          "starting_character": ["l", "h", "g", "u"]
+        }
+      },
+      "primary_key": "R_REGIONKEY"
+    },
+    "supplier": {
+      "properties": {
+        "S_SUPPKEY": { "type": "int", "min": 1, "max": 200 },
+        "S_NAME": { "type": "string", "starting_character": ["S"] },
+        "S_ADDRESS": {
+          "type": "string",
+          "starting_character": [
+            "N",
+            "e",
+            "f",
+            "J",
+            "o",
+            "c",
+            "b",
+            "u",
+            "p",
+            "8",
+            "q",
+            "S",
+            "Y",
+            "i",
+            "C",
+            "g",
+            "m",
+            "L",
+            "r",
+            "W",
+            "O",
+            "7",
+            "T",
+            " ",
+            "B",
+            "G",
+            "s",
+            "9",
+            "1",
+            "H",
+            "R",
+            "y",
+            "x",
+            "Z",
+            "z",
+            "k",
+            "j",
+            "w",
+            "I",
+            "n",
+            "M",
+            "4",
+            "5",
+            "V",
+            "F",
+            "a",
+            "l",
+            "Q",
+            "0",
+            "U",
+            "D",
+            "h",
+            "v",
+            "2",
+            "X",
+            ",",
+            "t",
+            "E",
+            "P",
+            "6",
+            "3",
+            "d",
+            "K"
+          ]
+        },
+        "S_NATIONKEY": { "type": "int", "min": 0, "max": 24 },
+        "S_PHONE": {
+          "type": "string",
+          "starting_character": [
+            "1",
+            "2",
+            "3",
+            "28-",
+            "32-",
+            "26-",
+            "14-",
+            "17-"
+          ]
+        },
+        "S_ACCTBAL": { "type": "float", "min": -966.2, "max": 9915.24 },
+        "S_COMMENT": {
+          "type": "string",
+          "starting_character": [
+            "e",
+            " ",
+            "s",
+            "a",
+            "i",
+            "r",
+            "l",
+            "u",
+            "y",
+            "n",
+            "t",
+            "c",
+            "g",
+            "h",
+            "o",
+            "d",
+            "f",
+            "x",
+            "b",
+            "k",
+            ",",
+            ".",
+            "w",
+            "!",
+            "j",
+            "v",
+            "q",
+            "the",
+            "es ",
+            " sl",
+            "bli",
+            "al "
+          ]
+        }
+      },
+      "primary_key": "S_SUPPKEY",
+      "foreign_keys": { "S_NATIONKEY": ["N_NATIONKEY", "nation"] }
     }
+  }
 }

@@ -6,12 +6,14 @@ import random
 import string
 import sys
 import time
+import typing as t
 import warnings
 from collections import defaultdict
+from contextlib import contextmanager
 from dataclasses import dataclass
+from datetime import date
 from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, List, Union
 
 import pandas as pd
 from pandas import Series
@@ -22,6 +24,10 @@ warnings.filterwarnings('ignore', 'Boolean Series key will be reindexed to match
 
 @dataclass
 class Arguments:
+  """
+  A wrapper class providing concrete types for parsed command-line arguments.
+  """
+
   output_directory: str
   params: str
   schema: str
@@ -66,6 +72,10 @@ class Arguments:
 
 @dataclass
 class QueryStructure:
+  """
+  A high-level structure describing meta-information about the generated queries.
+  """
+
   aggregation: bool
   group_by: bool
   multi_line: bool
@@ -87,6 +97,175 @@ class QueryStructure:
       num_queries=content.get('num_queries', 2),
       num_selections=content.get('num_selections', 3),
       projection=content.get('projection', False),
+    )
+
+
+@dataclass
+class PropertyInt:
+  min: int
+  max: int
+  type: str = 'int'
+
+
+@dataclass
+class PropertyFloat:
+  min: float
+  max: float
+  type: str = 'float'
+
+
+@dataclass
+class PropertyEnum:
+  values: t.List[str]
+  type: str = 'enum'
+
+
+@dataclass
+class PropertyString:
+  starting_character: t.List[str]
+  type: str = 'string'
+
+
+@dataclass
+class PropertyDate:
+  min: date
+  max: date
+  type: str = 'date'
+
+
+Property = t.Union[PropertyInt, PropertyFloat, PropertyEnum, PropertyString, PropertyDate]
+
+
+@dataclass
+class Entity:
+  """
+  Represents entity information parsed from schema files.
+
+  We use entity information, in addition to a high-level structure describing
+  how queries should generally look like (see `QueryStructure`), in order to generate
+  well-formed and meaningful queries.
+  """
+
+  primary_key: str | t.List[str] | None
+  properties: t.Dict[str, Property]
+  foreign_keys: t.Dict[str, t.List[str]]
+
+  @staticmethod
+  def from_configuration(config: t.Dict) -> 'Entity':
+    properties = {}
+
+    for name, data in config.get('properties', {}).items():
+      prop_type = data['type']
+
+      if prop_type == 'int':
+        properties[name] = PropertyInt(min=data['min'], max=data['max'])
+      elif prop_type == 'float':
+        properties[name] = PropertyFloat(min=data['min'], max=data['max'])
+      elif prop_type == 'enum':
+        properties[name] = PropertyEnum(values=data['values'])
+      elif prop_type == 'string':
+        properties[name] = PropertyString(starting_character=data['starting_character'])
+      elif prop_type == 'date':
+        properties[name] = PropertyDate(
+          min=date.fromisoformat(data['min']), max=date.fromisoformat(data['max'])
+        )
+      else:
+        raise ValueError(f'Unknown property type: {prop_type}')
+
+    return Entity(
+      primary_key=config.get('primary_key', None),
+      properties=properties,
+      foreign_keys=config.get('foreign_keys', {}),
+    )
+
+  @property
+  def has_unique_primary_key(self) -> bool:
+    return isinstance(self.primary_key, str)
+
+  @property
+  def data_ranges(self) -> t.Dict[str, t.Tuple[int, int] | t.List[str]]:
+    ranges = {}
+
+    for name, property in self.properties.items():
+      match property:
+        case PropertyInt(min, max) | PropertyFloat(min, max):
+          ranges[name] = (min, max)
+        case PropertyString(starting_character):
+          ranges[name] = (starting_character,)
+        case PropertyEnum(values):
+          ranges[name] = values
+        case PropertyDate(min, max):
+          ranges[name] = (min.isoformat(), max.isoformat())
+
+    return ranges
+
+  def generate_dataframe(self, num_rows=200) -> pd.DataFrame:
+    """
+    Generate a Pandas dataframe using this entities' information, pre-populated
+    with a fixed number of randomly generated rows.
+    """
+
+    rows = []
+
+    if self.has_unique_primary_key:
+      assert isinstance(self.primary_key, str)
+
+      primary_key_property = self.properties[self.primary_key]
+
+      if isinstance(primary_key_property, PropertyInt):
+        constraint = primary_key_property.max - primary_key_property.min + 1
+        num_rows = constraint if constraint < num_rows else num_rows
+
+    for i in range(num_rows):
+      row = {}
+
+      for name, property in self.properties.items():
+        match property:
+          case PropertyInt(min, max):
+            if (
+              self.has_unique_primary_key
+              and name == self.primary_key
+              and num_rows == (max - min + 1)
+            ):
+              row[name] = i + min
+            else:
+              row[name] = random.randint(min, max)
+          case PropertyFloat(min, max):
+            row[name] = round(random.uniform(min, max), 2)
+          case PropertyString(starting_character):
+            starting_char = random.choice(starting_character)
+            random_string = ''.join(random.choices(string.ascii_letters, k=9))
+            row[name] = starting_char + random_string
+          case PropertyEnum(values):
+            row[name] = random.choice(values)
+          case PropertyDate(min, max):
+            row[name] = pd.to_datetime(
+              random.choice(pd.date_range(pd.to_datetime(min), pd.to_datetime(max)))
+            ).strftime('%Y-%m-%d')
+
+      rows.append(row)
+
+    return pd.DataFrame(rows)
+
+
+@dataclass
+class Schema:
+  entities: t.Dict[str, Entity]
+
+  @staticmethod
+  def from_file(path: str) -> 'Schema':
+    with open(path, 'r') as file:
+      content = json.load(file)
+
+    if 'entities' not in content:
+      return Schema(entities={})
+
+    entities = content['entities']
+
+    return Schema(
+      entities={
+        name: Entity.from_configuration(configuration) for name, configuration in entities.items()
+      }
     )
 
 
@@ -138,7 +317,7 @@ class Operation:
     """
     self.count = c
 
-  def exec(self) -> Any:
+  def exec(self) -> t.Any:
     """
     Execute the operation.
 
@@ -261,7 +440,7 @@ class Selection(Operation):
   def __init__(
     self,
     df_name: str,
-    conditions: List[Union[Condition, ConditionalOperator]],
+    conditions: t.List[t.Union[Condition, ConditionalOperator]],
     count=None,
     leading=True,
   ):
@@ -276,7 +455,7 @@ class Selection(Operation):
     super().__init__(df_name, leading, count)
     self.conditions = conditions
 
-  def new_selection(self, new_cond: List[Union[Condition, ConditionalOperator]]) -> 'Selection':
+  def new_selection(self, new_cond: t.List[t.Union[Condition, ConditionalOperator]]) -> 'Selection':
     """
     Create a new selection object with updated conditions.
 
@@ -412,7 +591,7 @@ class Selection(Operation):
     conditions_ = [str(c) for c in self.conditions]
     return f'selection: df_name = {self.df_name} conditions = {conditions_}'
 
-  def exec(self) -> Any:
+  def exec(self) -> t.Any:
     """
     Execute the selection operation.
 
@@ -536,7 +715,7 @@ class Merge(Operation):
       leading=self.leading,
     )
 
-  def exec(self) -> Any:
+  def exec(self) -> t.Any:
     """
     Execute the merge operation.
 
@@ -562,7 +741,7 @@ class Projection(Operation):
 
   """
 
-  def __init__(self, df_name: str, columns: List[str], count=None, leading=True):
+  def __init__(self, df_name: str, columns: t.List[str], count=None, leading=True):
     """
     Initialize a projection object.
 
@@ -595,7 +774,7 @@ class Projection(Operation):
 
     return res_str
 
-  def new_projection(self, columns: List[str]) -> 'Projection':
+  def new_projection(self, columns: t.List[str]) -> 'Projection':
     """
     Create a new projection object with updated columns.
 
@@ -612,7 +791,7 @@ class Projection(Operation):
     """
     return f'projection: df_name = {self.df_name}, col = {self.desire_columns}'
 
-  def exec(self) -> Any:
+  def exec(self) -> t.Any:
     """
     Execute the projection operation.
 
@@ -633,7 +812,7 @@ class GroupBy(Operation):
   def __init__(
     self,
     df_name: str,
-    columns: Union[str, List[str]],
+    columns: t.Union[str, t.List[str]],
     count=None,
     other_args=None,
     leading=False,
@@ -648,16 +827,16 @@ class GroupBy(Operation):
     :param leading: Whether it is the leading operation.
     """
     super().__init__(df_name, leading, count)
-    self.columns = columns if isinstance(columns, List) else [columns]
+    self.columns = columns if isinstance(columns, t.List) else [columns]
     self.other_args = other_args
 
-  def set_columns(self, columns: Union[str, List[str]]):
+  def set_columns(self, columns: t.Union[str, t.List[str]]):
     """
     Set the columns to group by.
 
     :param columns: The columns to group by.
     """
-    self.columns = columns if isinstance(columns, List) else [columns]
+    self.columns = columns if isinstance(columns, t.List) else [columns]
 
   def to_str(self) -> str:
     """
@@ -670,7 +849,7 @@ class GroupBy(Operation):
     res_str += f'.groupby(by={self.columns}{other_args})'
     return res_str
 
-  def new_groupby(self, columns: Union[str, List[str]]) -> 'GroupBy':
+  def new_groupby(self, columns: t.Union[str, t.List[str]]) -> 'GroupBy':
     """
     Create a new group_by object with updated columns.
 
@@ -693,7 +872,7 @@ class GroupBy(Operation):
     """
     return f'groupby: {self.columns}'
 
-  def exec(self) -> Any:
+  def exec(self) -> t.Any:
     """
     Execute the groupby operation.
 
@@ -714,7 +893,7 @@ class Aggregate(Operation):
   def __init__(
     self,
     df_name: str,
-    dict_columns: Union[str, Dict[str, str]],
+    dict_columns: t.Union[str, t.Dict[str, str]],
     count=None,
     leading=True,
   ):
@@ -745,7 +924,7 @@ class Aggregate(Operation):
 
     return res_str
 
-  def new_agg(self, dict_cols: Union[str, Dict[str, str]]) -> 'Aggregate':
+  def new_agg(self, dict_cols: t.Union[str, t.Dict[str, str]]) -> 'Aggregate':
     """
     Create a new agg object with updated aggregation functions.
 
@@ -762,7 +941,7 @@ class Aggregate(Operation):
     """
     return f'agg: {str(self.dict_key_vals)}'
 
-  def exec(self) -> Any:
+  def exec(self) -> t.Any:
     """
     Execute the aggregation operation.
 
@@ -786,7 +965,7 @@ class Query:
       target (pd.DataFrame): The resulting DataFrame after applying the query operations.
   """
 
-  def __init__(self, q_gen_query: List[Operation], source: 'TableSource', verbose=False):
+  def __init__(self, q_gen_query: t.List[Operation], source: 'TableSource', verbose=False):
     """
     Initialize a pandas_query object.
 
@@ -797,13 +976,17 @@ class Query:
 
     if verbose:
       print(self.get_query_string())
-    # self._source_ = source # df
+
     self._source_ = source  ### TODO: modify to list of dataframes
     self._source_pandas_q = ''
-    self.pre_gen_query = self.setup_query(q_gen_query)
     self.df_name = q_gen_query[0].df_name
+    self.merged = False
     self.num_merges = 0
-    self.operations = [  # not used
+    self.pre_gen_query = self.setup_query(q_gen_query)
+    self.query_string = self.get_query_string()
+    self.target = self.execute_query()
+
+    self.operations = [
       'select',
       'merge',
       'order',
@@ -811,16 +994,12 @@ class Query:
       'rename',
       'groupby',
     ]
-    self.query_string = self.get_query_string()
-    self.merged = False
-    self.target = self.execute_query(self.pre_gen_query)  # target is the df after operation
 
-    self.source_tables = [
-      self.get_table_source()
-    ]  # Initialize list of source tables for merged queries
-    self.source_dataframes = [
-      self.get_source()
-    ]  # Initialize list of source dataframes for merged queries
+    # Initialize list of source tables for merged queries
+    self.source_tables = [self.get_table_source()]
+
+    # Initialize list of source dataframes for merged queries
+    self.source_dataframes = [self.get_source()]
 
   def can_do_merge(self):  # you can always do merge and groupby on df?
     """
@@ -840,12 +1019,9 @@ class Query:
 
     :return: True if there are columns left, otherwise False.
     """
-    if len(self.target.columns) > 0:
-      return True
+    return len(self.target.columns) > 0
 
-    return False
-
-  def do_a_projection(self) -> Projection:
+  def do_a_projection(self) -> Projection | t.List[pd.Index]:
     """
     Create a projection operation with a random selection of columns.
 
@@ -855,16 +1031,17 @@ class Query:
 
     if len(columns) == 1:
       return [columns]
-
     else:
-      # select random number of cols to project on
+      # Select a random number of columns to project on
       res = [
         list(i) for i in list(itertools.combinations(columns, random.randrange(1, len(columns), 1)))
       ]
+
       random.shuffle(res)
+
       return Projection(self.df_name, res[0])
 
-  def target_possible_selections(self, length=50) -> Dict[str, List[Condition]]:  # not used
+  def target_possible_selections(self, length=50) -> t.Dict[str, t.List[Condition]]:  # not used
     """
     Generate a dictionary of possible selection conditions based on numerical columns.
 
@@ -873,7 +1050,9 @@ class Query:
     """
     # dictionary with col name as key and its data type as value
     possible_selection_columns = {}
+
     source_df = self.get_target()
+
     for _, col in enumerate(source_df.columns):
       # if first element of target df column is an int or float
       if 'int' in str(type(source_df[col][0])):
@@ -909,7 +1088,7 @@ class Query:
     return possible_condition_columns
 
   # difference with previous method?
-  def possible_selections(self, length=50) -> Dict[str, List[Condition]]:
+  def possible_selections(self, length=50) -> t.Dict[str, t.List[Condition]]:
     """
     Generate a dictionary of possible selection conditions for each numerical column.
 
@@ -1057,7 +1236,7 @@ class Query:
     """
     return self.source_dataframes
 
-  def setup_query(self, list_op: List[Operation]) -> List[Operation]:
+  def setup_query(self, list_op: t.List[Operation]) -> t.List[Operation]:
     """
     Test if the list of operations works for this query, and modify it to a working format if not.
 
@@ -1086,7 +1265,9 @@ class Query:
         operation_.set_leading(False)
     return list_operation
 
-  def gen_queries(self, query_structure: QueryStructure, max_range=1000) -> List[List[Operation]]:
+  def gen_queries(
+    self, query_structure: QueryStructure, max_range=1000
+  ) -> t.List[t.List[Operation]]:
     """
     :param query_structure: How the generated query should be structured
     :param maxrange: threshold for selection
@@ -1173,7 +1354,7 @@ class Query:
         for conds in chosen_operations:
           possible_new_operations.append(operation.new_selection(conds))
       elif isinstance(operation, Projection):
-        new_operations = self.generate_possible_column_combinations(operation)
+        new_operations = self.generate_possible_column_combinations()
 
         for ops in new_operations:
           possible_new_operations.append(operation.new_projection(ops))
@@ -1185,15 +1366,9 @@ class Query:
     new_generated_queries = []
     new_generated_queries = itertools.product(*generated_queries)  # op1.1*op2.3*op3.2
 
-    print('======= *** start iterating generated queries *** ======')
+    return [item for item in new_generated_queries]
 
-    l = [item for item in new_generated_queries]
-
-    print(' *** done ***')
-
-    return l
-
-  def get_new_pandas_queries(self, query_structure: QueryStructure, out=100) -> List['Query']:
+  def get_new_pandas_queries(self, query_structure: QueryStructure, out=100) -> t.List['Query']:
     """
     Generate new pandas queries based on the existing operations.
 
@@ -1240,15 +1415,15 @@ class Query:
 
     return res  # returns list of pandas query objects
 
-  def check_res(self, res: List['Query']):
+  def validate_results(self, res: t.List['Query']) -> bool:
     """
     Check if the queries are in good grammar.
 
     :param res: List of pandas_query objects.
     :return: True
     """
-    true_count = 0
-    false_count = 0
+    true_count = false_count = 0
+
     for r in res:
       try:
         eval(r.query_string)
@@ -1256,10 +1431,12 @@ class Query:
         false_count += 1
         continue
       true_count += 1
+
     print(f'%%%%%%%%%% truecount = {true_count}; false count = {false_count} %%%%%%%%%%%%')
+
     return True
 
-  def execute_query(self, query) -> pd.DataFrame:
+  def execute_query(self) -> pd.DataFrame:
     """
     Execute the provided query operations.
 
@@ -1279,47 +1456,27 @@ class Query:
 
     return pd.eval(query_string, local_dict=local_dict)
 
-  # helper functions for gen_queries
-  def generate_possible_groupby_combinations(self, operation: GroupBy, generate_num=5) -> List[str]:
+  def generate_possible_groupby_combinations(self, limit=5) -> t.List[str]:
     """
     Generate possible combinations of columns for groupby operations.
 
-    :param operation: A group_by operation.
     :param generate_num: Maximum number of combinations to generate.
     :return: List of column names to group by.
     """
-    print('===== generating groupby combinations =====')
     columns = self.get_source().columns
+
     possible_groupby_columns = []
+
     for col in columns:
       possible_groupby_columns.append(col)
+
     random.shuffle(possible_groupby_columns)
-    return possible_groupby_columns[:generate_num]
 
-  def generate_possible_agg_combinations(
-    self, operation: Aggregate, generate_num=5
-  ) -> List[Union[str, Dict[str, str]]]:
-    """
-    Generate possible combinations of aggregation functions.
-
-    :param operation: An agg operation.
-    :param generate_num: Maximum number of combinations to generate.
-    :return: List of possible aggregation dictionaries or strings.
-    """
-    stats = ['min', 'max', 'count', 'mean']
-
-    possible_dicts = []
-
-    cur_dict = operation.dict_key_vals
-
-    print('===== generating agg combinations =====')
-
-    if isinstance(cur_dict, str):
-      return stats
+    return possible_groupby_columns[:limit]
 
   def generate_possible_column_combinations(
-    self, operation: Projection, generate_num=50
-  ) -> List[List[str]]:
+    self, limit=50
+  ) -> t.List[t.List[str]] | t.List[pd.Index]:
     """
     Generate possible combinations of columns for projection operations.
 
@@ -1328,30 +1485,22 @@ class Query:
     :return: List of lists of column combinations.
     """
     columns = self.get_source().columns
-    possible_columns = []
-
-    print('===== generating column combinations =====')
 
     if len(columns) == 1:
       return [columns]
-
     else:
       res = []
+
       for length in range(1, len(columns) + 1):
         res += [list(i) for i in list(itertools.combinations(columns, length))]
-      """
-            res = [list(i) for i in
-                   list(itertools.combinations(columns, operation.length))]
-            if operation.length > 1 and operation.length < len(list(columns)):
-                res = res + [list(i) for i in list(itertools.combinations(columns, operation.length - 1))]
-                res = res + [list(i) for i in list(itertools.combinations(columns, operation.length + 1))]
-            """
+
       random.shuffle(res)
-      return res[:generate_num]
+
+      return res[:limit]
 
   def generate_possible_selection_operations(
     self, possible_new_conditions, generate_num=100
-  ) -> List[List[Union[Condition, ConditionalOperator]]]:
+  ) -> t.List[t.List[t.Union[Condition, ConditionalOperator]]]:
     """
     Generate possible combinations of selection conditions.
 
@@ -1438,7 +1587,7 @@ class Query:
 
 
 class QueryPool:
-  result_queries: list[Any]
+  result_queries: t.List[t.Any]
 
   """
     Class for managing and processing a pool of pandas queries, including generating merged queries.
@@ -1452,7 +1601,7 @@ class QueryPool:
         un_merged_queries (List[pandas_query]): List of queries that haven't been merged.
     """
 
-  def __init__(self, queries: List[Query], count=0, self_join=False, verbose=True):
+  def __init__(self, queries: t.List[Query], count=0, self_join=False, verbose=True):
     """
     Initialize a QueryPool object.
 
@@ -1547,6 +1696,7 @@ class QueryPool:
     print(
       f' ##### Successfully write the merged queries into file {directory}/{filename}.txt #####'
     )
+
     f.close()
 
   def shuffle_queries(self):
@@ -1692,9 +1842,7 @@ class QueryPool:
         operations = list(query.pre_gen_query)[:]
         operations_with_groupby_agg = operations[:]
 
-        groupby_column = query.generate_possible_groupby_combinations(
-          GroupBy(query.df_name, query.get_source().columns), generate_num=1
-        )
+        groupby_column = query.generate_possible_groupby_combinations(limit=1)
 
         operations_with_groupby_agg.append(GroupBy(query.df_name, groupby_column))
         operations_with_groupby_agg.append(Aggregate(query.df_name, random.choice(stats)))
@@ -1985,7 +2133,7 @@ class TableSource:
     num_columns = numerical_df.columns.tolist()
     return num_columns
 
-  def get_a_selection(self):
+  def generate_selection(self) -> Selection:
     """
     perform a random selection on the dataframe
     :return: an object of type selection
@@ -2074,7 +2222,7 @@ class TableSource:
 
     return Selection(self.name, [cur_condition])
 
-  def get_a_projection(self):
+  def generate_projection(self) -> Projection:
     """
     perform a random projection on the dataframe
     :return: an object of type projection
@@ -2125,7 +2273,7 @@ class TableSource:
   def equals(self, o: 'TableSource'):
     return self.source.equals(o.source)
 
-  def gen_base_queries(self, query_structure: QueryStructure) -> List[Query]:
+  def generate_base_queries(self, query_structure: QueryStructure) -> t.List[Query]:
     """
     Customized generation with base queries, can be modified to fit in various circumstances
     param query_types: types of queries specified by the user
@@ -2138,21 +2286,21 @@ class TableSource:
     q_gen_query_4 = []
 
     if query_structure.num_selections > 0 and query_structure.projection:
-      q_gen_query_1.append(self.get_a_projection())
-      q_gen_query_2.append(self.get_a_selection())
-      q_gen_query_3.append(self.get_a_selection())
-      q_gen_query_3.append(self.get_a_projection())
-      q_gen_query_4.append(self.get_a_selection())
+      q_gen_query_1.append(self.generate_projection())
+      q_gen_query_2.append(self.generate_selection())
+      q_gen_query_3.append(self.generate_selection())
+      q_gen_query_3.append(self.generate_projection())
+      q_gen_query_4.append(self.generate_selection())
     elif query_structure.num_selections == 0 and query_structure.projection:
-      q_gen_query_1.append(self.get_a_projection())
-      q_gen_query_2.append(self.get_a_projection())
-      q_gen_query_3.append(self.get_a_projection())
-      q_gen_query_4.append(self.get_a_projection())
+      q_gen_query_1.append(self.generate_projection())
+      q_gen_query_2.append(self.generate_projection())
+      q_gen_query_3.append(self.generate_projection())
+      q_gen_query_4.append(self.generate_projection())
     elif query_structure.num_selections > 0 and not query_structure.projection:
-      q_gen_query_1.append(self.get_a_selection())
-      q_gen_query_2.append(self.get_a_selection())
-      q_gen_query_3.append(self.get_a_selection())
-      q_gen_query_4.append(self.get_a_selection())
+      q_gen_query_1.append(self.generate_selection())
+      q_gen_query_2.append(self.generate_selection())
+      q_gen_query_3.append(self.generate_selection())
+      q_gen_query_4.append(self.generate_selection())
     else:
       sys.exit(
         'Invalid parameters for generating base queries. Must have at least one selection or projection operation.'
@@ -2421,170 +2569,82 @@ def run_TPCH():
   pandas_queries_list.generate_possible_merge_operations()
 
 
-def add_foreignkeys(TBL1: TableSource, col1, TBL2: TableSource, col2):
-  TBL1.add_edge(col1, col2, TBL2)
-  TBL2.add_edge(col2, col1, TBL1)
-
-
 if __name__ == '__main__':
-  # To measure total execution time of the query generator
-  start = time.time()
+  start_time = time.time()
 
-  arguments = Arguments.from_args()
+  @contextmanager
+  def timer(description):
+    start = time.time()
+    yield
+    elapsed_time = time.time() - start
+    print(f'Time taken for {description}: {elapsed_time:.2f} seconds')
 
-  with open(arguments.schema, 'r') as sf:
-    schema_info = json.load(sf)
+  with timer('the entire query generation flow'):
+    arguments = Arguments.from_args()
 
-  query_structure = QueryStructure.from_file(arguments.params)
-
-  # Initialize dictionaries to store DataFrames and their respective meta information
-  dataframes = {}
-  data_ranges = {}
-  foreign_keys = {}
-  table_sources = {}
-  primary_keys = {}
-
-  # Function to extract and store data ranges from JSON schema properties
-  def extract_data_ranges(properties):
-    ranges = {}
-    for prop, info in properties.items():
-      if 'min' in info and 'max' in info:  # Check if min and max values are defined
-        ranges[prop] = (info['min'], info['max'])
-      elif info['type'] == 'string':
-        ranges[prop] = (info.get('starting character'),)
-      elif info['type'] == 'enum':
-        ranges[prop] = info['values']
-    return ranges
-
-  # Function to populate DataFrame with rows of random data based on schema
-  def create_dataframe(entity_schema, num_rows=100, primary_key_unique=True):
-    rows = []
-
-    # If the primary key is unique, then num_rows for that dataframe = min(properties['max'] - properties['min'] + 1, 200)
-    if primary_key_unique:
-      num_rows = min(
-        entity_schema['properties'][entity_schema['primary_key']]['max']
-        - entity_schema['properties'][entity_schema['primary_key']]['min']
-        + 1,
-        200,
+    with timer('creating dataframes and parsing relational schema'):
+      schema, query_structure = (
+        Schema.from_file(arguments.schema),
+        QueryStructure.from_file(arguments.params),
       )
 
-    for i in range(num_rows):
-      row = {}
-      for column, properties in entity_schema['properties'].items():
-        if properties['type'] == 'int':
-          # Generate unique values for primary key
-          if (
-            primary_key_unique
-            and column == entity_schema['primary_key']
-            and num_rows == (properties['max'] - properties['min'] + 1)
-          ):
-            row[column] = i + properties['min']
-          else:
-            row[column] = random.randint(properties['min'], properties['max'])
-        elif properties['type'] == 'float':  # For 'number', assuming float
-          row[column] = round(random.uniform(properties['min'], properties['max']), 2)
-        elif properties['type'] == 'string':
-          # Ensure the string starts with one of the starting characters
-          starting_char = random.choice(properties['starting character'])
-          random_string = ''.join(
-            random.choices(string.ascii_letters, k=9)
-          )  # Generate 9 random characters
-          row[column] = starting_char + random_string
-        elif properties['type'] == 'enum':
-          row[column] = random.choice(properties['values'])
-        elif properties['type'] == 'date':
-          min_date = pd.to_datetime(properties['min'])
-          max_date = pd.to_datetime(properties['max'])
-          row[column] = pd.to_datetime(random.choice(pd.date_range(min_date, max_date))).strftime(
-            '%Y-%m-%d'
-          )
-      rows.append(row)
+      # TODO(liam): Centralize data access in a single top-level structure.
+      dataframes = {}
+      data_ranges = {}
+      foreign_keys = {}
+      table_sources = {}
+      primary_keys = {}
 
-    return pd.DataFrame(rows)
+      for name, entity in schema.entities.items():
+        # TODO(liam): Can we get rid of this globals hack?
+        globals()[name] = dataframes[name] = entity.generate_dataframe(num_rows=200)
 
-  for entity, entity_info in schema_info['entities'].items():
-    entity_schema = {
-      'properties': entity_info['properties'],
-      'primary_key': entity_info.get('primary_key', None),
-      'foreign_keys': entity_info.get('foreign_keys', {}),
-    }
+        table_sources[name] = TableSource(dataframes[name], name)
+        data_ranges[name] = entity.data_ranges
+        primary_keys[name] = entity.primary_key
+        foreign_keys[name] = []
 
-    # TODO(liam): Can we get rid of this `globals` hack?
-    globals()[entity] = dataframes[entity] = create_dataframe(
-      entity_schema,
-      num_rows=200,
-      primary_key_unique=not isinstance(entity_schema['primary_key'], list),
-    )
+        for column, refers_to in entity.foreign_keys.items():
+          foreign_keys[name].append((column, refers_to[0], refers_to[1]))
 
-    table_sources[entity] = TableSource(dataframes[entity], entity)
+      for entity, elements in foreign_keys.items():
+        for element in elements:
+          col, other_col, other = element
+          table_sources[entity].add_edge(col, other_col, table_sources[other])
+          table_sources[other].add_edge(other_col, col, table_sources[entity])
 
-    data_ranges[entity] = extract_data_ranges(entity_info['properties'])
+    with timer('generating base queries'):
+      queries = []
 
-    primary_keys[entity] = entity_info['primary_key']
+      for entity, source in table_sources.items():
+        queries += source.generate_base_queries(query_structure)
 
-    if 'foreign_keys' in entity_info:
-      foreign_keys[entity] = []
+    with timer('generating unmerged queries'):
+      res, count = [], 1
 
-      for fk_column, refers_to in entity_info['foreign_keys'].items():
-        foreign_keys[entity].append((fk_column, refers_to[0], refers_to[1]))
+      for query in queries:
+        count += 1
+        res += query.get_new_pandas_queries(query_structure)[:100]
 
-  # Add foreign keys info to table sources
-  for entity, listT in foreign_keys.items():
-    for tuple in listT:
-      col, other_col, other = tuple
-      add_foreignkeys(table_sources[entity], col, table_sources[other], other_col)
+    with timer('generating merged queries'):
+      pandas_queries_list = QueryPool(res, verbose=arguments.verbose)
 
-  end2 = time.time()
+      pandas_queries_list.shuffle_queries()
 
-  # Base queries
-  all_queries = []
-  for entity, source in table_sources.items():
-    all_queries += source.gen_base_queries(query_structure)
+      pandas_queries_list.generate_possible_merge_operations(
+        query_structure, max_merge=query_structure.num_merges, max_q=query_structure.num_queries
+      )
 
-  res = []
-  count = 1
+    with timer('saving merged queries'):
+      if query_structure.multi_line:
+        pandas_queries_list.save_merged_examples_multiline(
+          directory=arguments.output_directory, filename='merged_queries_auto_sf0000'
+        )
+      else:
+        pandas_queries_list.save_merged_examples(
+          arguments.output_directory, 'merged_queries_auto_sf0000'
+        )
 
-  end3 = time.time()
+  total_time = time.time() - start_time
 
-  # for data_structure.json, generates 4 queries for each of the 5 entities, so 20 pandas query objects
-  for query in all_queries:
-    print(f'*** query #{count} is generating ***')
-    count += 1
-    # each pandas query object generates up to 100 unmerged pandas queries (depending on how many valid queries from gen_queries)
-    res += query.get_new_pandas_queries(query_structure)[:100]
-
-  end4 = time.time()
-
-  print('done')
-
-  # create pandas_query_pool object with list of unmerged queries and generate merge operations on them
-  pandas_queries_list = QueryPool(res, verbose=arguments.verbose)
-  pandas_queries_list.shuffle_queries()
-
-  # can't be merged if data schema is too simple (too few columns), generates 1000 merged queries with 3 merges each by default
-  # Some of the merged queries are invalid (outputs “Exception occurred” and not saved in merged_queries.txt)
-  pandas_queries_list.generate_possible_merge_operations(
-    query_structure, max_merge=query_structure.num_merges, max_q=query_structure.num_queries
-  )
-
-  end5 = time.time()
-
-  if query_structure.multi_line:
-    pandas_queries_list.save_merged_examples_multiline(
-      directory=arguments.output_directory, filename='merged_queries_auto_sf0000'
-    )
-  else:
-    pandas_queries_list.save_merged_examples(
-      arguments.output_directory, 'merged_queries_auto_sf0000'
-    )
-
-  end = time.time()
-
-  # print total time taken at each step of the query generation process
-  print(f'Total time taken: {end - start} seconds')
-  print(f'Time taken to create dataframes and parse relational schema: {end2 - start} seconds')
-  print(f'Time taken to generate base queries: {end3 - end2} seconds')
-  print(f'Time taken to generate unmerged queries: {end4 - end3} seconds')
-  print(f'Time taken to generate merged queries: {end5 - end4} seconds')
-  print(f'Time taken to save merged queries: {end - end5} seconds')
+  print(f'Total time taken: {total_time:.2f} seconds')
