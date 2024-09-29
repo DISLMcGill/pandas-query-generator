@@ -15,8 +15,6 @@ warnings.filterwarnings(
   'ignore', 'Boolean Series key will be reindexed to match DataFrame index.'
 )
 
-EXPORT_PATH = './results'
-
 
 # do we use this class? not used
 class Source:
@@ -1475,7 +1473,7 @@ class Query:
     cur = ''
 
 
-class pandas_query_pool:
+class QueryPool:
   result_queries: list[Any]
   """
     Class for managing and processing a pool of pandas queries, including generating merged queries.
@@ -2325,7 +2323,7 @@ def test_patients():
     pq1.get_new_pandas_queries()[:1000] + pq2.get_new_pandas_queries()[:1000]
   )
 
-  queries = pandas_query_pool(res)
+  queries = QueryPool(res)
   queries.generate_possible_merge_operations(3)
 
 
@@ -2547,7 +2545,7 @@ def run_TPCH():
 
   print('done')
 
-  pandas_queries_list = pandas_query_pool(res)
+  pandas_queries_list = QueryPool(res)
   pandas_queries_list.generate_possible_merge_operations()
 
 
@@ -2569,18 +2567,37 @@ if __name__ == '__main__':
   start = time.time()
 
   parser = argparse.ArgumentParser(description='Query Generator CLI')
+
   parser.add_argument(
     '--schema',
     type=str,
     required=True,
     help='Path to the relational schema JSON file',
   )
+
   parser.add_argument(
     '--params',
     type=str,
     required=True,
     help='Path to the user-defined parameters JSON file',
   )
+
+  parser.add_argument(
+    '--export-path',
+    type=str,
+    required=False,
+    default='./results',
+    help='Path to export results to',
+  )
+
+  parser.add_argument(
+    '--verbose',
+    type=bool,
+    required=False,
+    default=False,
+    help='Whether or not to print extra generation information',
+  )
+
   args = parser.parse_args()
 
   with open(args.schema, 'r') as sf:
@@ -2706,6 +2723,7 @@ if __name__ == '__main__':
       add_foreignkeys(tbl_sources[entity], col, tbl_sources[other], other_col)
 
   end2 = time.time()
+
   # Base queries
   allqueries = []
   for entity, source in tbl_sources.items():
@@ -2723,9 +2741,11 @@ if __name__ == '__main__':
     res += pq.get_new_pandas_queries(params)[:100]
 
   end4 = time.time()
+
   print('done')
+
   # create pandas_query_pool object with list of unmerged queries and generate merge operations on them
-  pandas_queries_list = pandas_query_pool(res)
+  pandas_queries_list = QueryPool(res, verbose=args.verbose)
   pandas_queries_list.shuffle_queries()
 
   # can't be merged if data schema is too simple (too few columns), generates 1000 merged queries with 3 merges each by default
@@ -2733,14 +2753,16 @@ if __name__ == '__main__':
   pandas_queries_list.generate_possible_merge_operations(
     params, max_merge=num_merges, max_q=num_queries
   )
+
   end5 = time.time()
+
   if multi_line:
     pandas_queries_list.save_merged_examples_multiline(
-      dir=EXPORT_PATH, filename='merged_queries_auto_sf0000'
+      dir=args.export_path, filename='merged_queries_auto_sf0000'
     )
   else:
     pandas_queries_list.save_merged_examples(
-      dir=EXPORT_PATH, filename='merged_queries_auto_sf0000'
+      dir=args.export_path, filename='merged_queries_auto_sf0000'
     )
 
   end = time.time()
