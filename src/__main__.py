@@ -2558,7 +2558,6 @@ def add_foreignkeys(TBL1: TableSource, col1, TBL2: TableSource, col2):
 if __name__ == '__main__':
   import argparse
   import json
-  import re
   import string
 
   import pandas as pd
