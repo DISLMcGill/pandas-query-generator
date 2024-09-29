@@ -16,7 +16,7 @@ check:
 
 example:
   uv run src  \
-    --export-directory results \
+    --output-directory results \
     --params examples/query_parameters.json \
     --schema examples/data_structure_tpch_csv.json
 

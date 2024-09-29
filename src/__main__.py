@@ -1,9 +1,14 @@
+import argparse
 import itertools
+import json
 import os
 import random
+import string
+import sys
 import time
 import warnings
 from collections import defaultdict
+from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
 from typing import Any, Dict, List, Union
@@ -15,62 +20,74 @@ from tqdm import tqdm
 warnings.filterwarnings('ignore', 'Boolean Series key will be reindexed to match DataFrame index.')
 
 
-# do we use this class? not used
-class Source:
-  def __init__(self, df: pd.DataFrame):
-    """
-    Initialize a pandas_source object.
+@dataclass
+class Arguments:
+  output_directory: str
+  params: str
+  schema: str
+  verbose: bool
 
-    :param df: The DataFrame to wrap.
-    """
-    self.source_df = df
+  @staticmethod
+  def from_args() -> 'Arguments':
+    parser = argparse.ArgumentParser(description='Pandas Query Generator CLI')
 
-    self.columns = df.columns
-    self.range = self.generate_range()
-    self.shape = df.shape
-    self.description = df.describe()
+    parser.add_argument(
+      '--schema',
+      type=str,
+      required=True,
+      help='Path to the relational schema JSON file',
+    )
 
-  def generate_range(self) -> Dict[str, Union[str, List[Union[int, float]]]]:
-    """
-    Generate the data range (min and max values) for each numerical column.
+    parser.add_argument(
+      '--params',
+      type=str,
+      required=True,
+      help='Path to the user-defined parameters JSON file',
+    )
 
-    Iterates through each column in the DataFrame and checks its data type.
-    If the column is numerical (integer, float, or date), it finds the minimum
-    and maximum values in that column. Otherwise, it marks the range as "None".
+    parser.add_argument(
+      '--output-directory',
+      type=str,
+      required=False,
+      default='./results',
+      help='Directory to write results to',
+    )
 
-    :return: A dictionary mapping column names to their data ranges.
-             - Numerical columns have a range in the form of [min, max].
-             - Non-numerical columns are mapped to the string "None".
-    """
-    column_data_range = {}
+    parser.add_argument(
+      '--verbose',
+      type=bool,
+      required=False,
+      default=False,
+      help='Whether or not to print extra generation information',
+    )
 
-    for col in self.columns:
-      dtype = self.source_df[col].dtypes
-      if 'int' in str(dtype) or 'float' in str(dtype) or 'date' in str(dtype):
-        cur_col_max = self.source_df[col].max()
-        cur_col_min = self.source_df[col].min()
-        column_data_range[col] = [cur_col_min, cur_col_max]
-      else:
-        column_data_range[col] = 'None'
-    return column_data_range
+    return Arguments(**vars(parser.parse_args()))
 
-  def merge(self, other: 'Source', left_on: str, right_on: str) -> 'Source':
-    """
-    Merge this DataFrame with another pandas_source object based on specified columns.
 
-    This method wraps the Pandas `merge` method, merging the source DataFrame with
-    another DataFrame on the specified columns.
+@dataclass
+class QueryStructure:
+  aggregation: bool
+  group_by: bool
+  multi_line: bool
+  num_merges: int
+  num_queries: int
+  num_selections: int
+  projection: bool
 
-    :param other: Another pandas_source object to merge with.
-    :param left_on: The column name in this DataFrame to merge on.
-    :param right_on: The column name in the other DataFrame to merge on.
-    :return: A new pandas_source object containing the merged DataFrame.
-    """
-    # Merge the two DataFrames on the specified columns
-    new_df = self.source_df.merge(other.source_df, left_on=left_on, right_on=right_on)
+  @staticmethod
+  def from_file(path: str) -> 'QueryStructure':
+    with open(path, 'r') as file:
+      content = json.load(file)
 
-    # Return a new pandas_source object wrapping the merged DataFrame
-    return Source(new_df)
+    return QueryStructure(
+      aggregation=content.get('aggregation', False),
+      group_by=content.get('group_by', False),
+      multi_line=content.get('multi_line', False),
+      num_merges=content.get('num_merges', 2),
+      num_queries=content.get('num_queries', 2),
+      num_selections=content.get('num_selections', 3),
+      projection=content.get('projection', False),
+    )
 
 
 class Operation:
@@ -83,7 +100,7 @@ class Operation:
       count (int or None): An optional count value for the operation.
   """
 
-  def __init__(self, df_name: str, leading: bool, count: int = None):
+  def __init__(self, df_name: str, leading: bool, count: int | None = None):
     """
     Initialize an operation object.
 
@@ -446,8 +463,8 @@ class Merge(Operation):
     queries: 'Query',
     count=None,
     on=None,
-    left_on: str = None,
-    right_on: str = None,
+    left_on: str | None = None,
+    right_on: str | None = None,
     leading=False,
   ):
     """
@@ -799,7 +816,7 @@ class Query:
     self.target = self.execute_query(self.pre_gen_query)  # target is the df after operation
 
     self.source_tables = [
-      self.get_TBL_source()
+      self.get_table_source()
     ]  # Initialize list of source tables for merged queries
     self.source_dataframes = [
       self.get_source()
@@ -826,6 +843,8 @@ class Query:
     if len(self.target.columns) > 0:
       return True
 
+    return False
+
   def do_a_projection(self) -> Projection:
     """
     Create a projection operation with a random selection of columns.
@@ -833,6 +852,7 @@ class Query:
     :return: A projection operation object.
     """
     columns = self.get_target().columns
+
     if len(columns) == 1:
       return [columns]
 
@@ -854,7 +874,7 @@ class Query:
     # dictionary with col name as key and its data type as value
     possible_selection_columns = {}
     source_df = self.get_target()
-    for i, col in enumerate(source_df.columns):
+    for _, col in enumerate(source_df.columns):
       # if first element of target df column is an int or float
       if 'int' in str(type(source_df[col][0])):
         possible_selection_columns[col] = 'int'
@@ -871,7 +891,7 @@ class Query:
       description = self.get_source_description(source_df, key)
 
       # generate length=50 possible selection conditions for each column
-      for i in range(length):
+      for _ in range(length):
         if possible_selection_columns[key] == 'int':
           # add up to one std to randomly chosen statistic
           cur_val = round(description[random.choice(stats)]) + random.randrange(
@@ -900,7 +920,7 @@ class Query:
 
     source_df = self.get_source()
 
-    for i, col in enumerate(source_df.columns):
+    for _, col in enumerate(source_df.columns):
       # This checks if the dtype of the entire column is an integer type.
       if pd.api.types.is_integer_dtype(source_df[col]):
         possible_selection_columns[col] = 'int'
@@ -926,7 +946,7 @@ class Query:
 
     for key in possible_selection_columns:
       possible_condition_columns[key] = []  # key: col name，value: condition object list
-      for i in range(length):
+      for _ in range(length):
         if possible_selection_columns[key] == 'int':
           min_val, max_val = data_ranges[self.df_name][
             key
@@ -997,7 +1017,7 @@ class Query:
 
     return possible_condition_columns
 
-  def get_TBL_source(self) -> 'TableSource':
+  def get_table_source(self) -> 'TableSource':
     """
     Get the source table object.
 
@@ -1066,13 +1086,14 @@ class Query:
         operation_.set_leading(False)
     return list_operation
 
-  def gen_queries(self, params, maxrange=1000) -> List[List[Operation]]:
+  def gen_queries(self, query_structure: QueryStructure, max_range=1000) -> List[List[Operation]]:
     """
-    :param params: Dictionary storing user-defined query parameters
+    :param query_structure: How the generated query should be structured
     :param maxrange: threshold for selection
     :return: Nested List of operation lists; an operation list can be directly transferred into a pandas query
     """
     generated_queries = []
+
     for operation in self.pre_gen_query:
       possible_new_operations = []  # expanded possible new operations for each category of original operation
 
@@ -1083,15 +1104,18 @@ class Query:
 
         possible_selection_operations = []
         possible_selection_operationsSrting = []
+
         print('===== generating selection combinations =====')
-        num_selections = params.get('num_selections', 3)
-        for i in range(maxrange):
+
+        num_selections = query_structure.num_selections
+
+        for _ in range(max_range):
           while True:
             selection_length = random.randint(0, num_selections)
             cur_conditions = []
             cur_conditionsString = []
             and_count = 0  # count the number of & operators
-            for j in range(selection_length):
+            for _ in range(selection_length):
               cur_key = random.choice(list(possible_conditions_dict.keys()))  # key is col name
               cur_condition = random.choice(
                 possible_conditions_dict[cur_key]
@@ -1134,6 +1158,7 @@ class Query:
           possible_selection_operations.append(
             cur_conditions
           )  # nested list [[<__main__.condition object at 0x1193dead0>, <OP_cond.OR: '|'>, <__main__.condition object at 0x1193df650>]]
+
           possible_selection_operationsSrting.append(cur_conditionsString)
 
         # Create a list that includes both lists of operations
@@ -1141,12 +1166,12 @@ class Query:
           possible_selection_operations,
           possible_selection_operationsSrting,
         ]
+
         # Randomly choose one of the lists (either the list containing string operations or numerical operations)
         chosen_operations = random.choice(options)
 
         for conds in chosen_operations:
           possible_new_operations.append(operation.new_selection(conds))
-
       elif isinstance(operation, Projection):
         new_operations = self.generate_possible_column_combinations(operation)
 
@@ -1154,18 +1179,21 @@ class Query:
           possible_new_operations.append(operation.new_projection(ops))
 
       generated_queries.append(possible_new_operations)
+
       print('===== possible operations generated =====')
 
     new_generated_queries = []
     new_generated_queries = itertools.product(*generated_queries)  # op1.1*op2.3*op3.2
 
     print('======= *** start iterating generated queries *** ======')
+
     l = [item for item in new_generated_queries]
 
     print(' *** done ***')
+
     return l
 
-  def get_new_pandas_queries(self, params, out=100) -> List['Query']:
+  def get_new_pandas_queries(self, query_structure: QueryStructure, out=100) -> List['Query']:
     """
     Generate new pandas queries based on the existing operations.
 
@@ -1174,18 +1202,20 @@ class Query:
     :return: List of pandas_query objects.
     """
     res = []  # stores pandas query objects generated
+
     new_queries = self.gen_queries(
-      params
+      query_structure
     )  # list of tuples, each tuple contains a combination of query operations
 
     random.shuffle(new_queries)  # Shuffle to avoid bias towards conditions of the first column
     new_queries = new_queries[:out]
 
     print(f' ==== Testing source with {len(new_queries)} queries ==== ')
-    df = self.get_source()  # Assuming this gets a pandas DataFrame
+
     tbl = (
-      self.get_TBL_source()
+      self.get_table_source()
     )  # Assuming this gets some source necessary for query object creation
+
     progress_interval = max(1, len(new_queries) // 10)  # Ensure no division by zero
 
     for i, new_query in enumerate(new_queries):
@@ -1196,17 +1226,18 @@ class Query:
 
       # Assume execute_query() is a method that takes a query and executes it against the DataFrame
       try:
-        result_df = self.execute_query(new_query)  # Execute and get result
         new_q_obj = Query(
           new_query, tbl
         )  # create pandas_query object for each query executed on source tbl
 
         res.append(new_q_obj)
-      except Exception as e:
+      except:
         continue
 
     random.shuffle(res)  # shuffle result to ensure diverse order of queries
+
     print(f' ======= {len(res)} new queries generated =======')
+
     return res  # returns list of pandas query objects
 
   def check_res(self, res: List['Query']):
@@ -1220,7 +1251,7 @@ class Query:
     false_count = 0
     for r in res:
       try:
-        df = eval(r.query_string)
+        eval(r.query_string)
       except Exception:
         false_count += 1
         continue
@@ -1238,33 +1269,15 @@ class Query:
     # Ensure 'query' is a DataFrame here; the exact implementation may vary.
     # 'query_string' should be a string that represents a pandas operation.
     query_string = self.get_query_string()  # Ensure this returns a safe, valid pandas expression.
+
     local_dict = {
       'dataframes': dataframes,
       'data_ranges': data_ranges,
       'foreign_keys': foreign_keys,
-      'tbl_sources': table_sources,  # tbl_source = wrapper class for df with its foreign keys
+      'tbl_sources': table_sources,
     }
+
     return pd.eval(query_string, local_dict=local_dict)
-    """try:
-            # Assuming get_query_string() validates and sanitizes the input query string
-            query_string = self.get_query_string()
-
-            # Local dictionary defining the context for pd.eval()
-            local_dict = {
-                'dataframes': dataframes,
-                'data_ranges': data_ranges,
-                'foreign_keys': foreign_keys,
-                'tbl_sources': tbl_sources
-            }
-
-            # Evaluate the query string in the context of local_dict
-            result = pd.eval(query_string, local_dict=local_dict)
-            if not isinstance(result, pd.DataFrame):
-                result = pd.DataFrame([result])  # Convert Series or scalar to DataFrame
-
-            return result
-        except Exception as e:
-            raise ValueError(f"Failed to execute query due to: {e}")"""
 
   # helper functions for gen_queries
   def generate_possible_groupby_combinations(self, operation: GroupBy, generate_num=5) -> List[str]:
@@ -1352,7 +1365,7 @@ class Query:
       [0] * len(possible_new_conditions)
     )  # list of zero-initialized counters to keep track of the progress of conditions for each column.
 
-    for c in range(generate_num):
+    for _ in range(generate_num):
       possible_cond = []  # stores individual selection conditions for each combination
       for i, new_cond in enumerate(possible_new_conditions):
         if isinstance(new_cond, ConditionalOperator):
@@ -1422,10 +1435,6 @@ class Query:
     des = dfa.describe()
 
     return des[col]
-
-  # What is this method used for?
-  def to_pandas_template(self):
-    cur = ''
 
 
 class QueryPool:
@@ -1607,8 +1616,8 @@ class QueryPool:
     col1 = list(q1.get_target().columns)
     col2 = list(q2.get_target().columns)
 
-    q1_foreign_keys = q1.get_TBL_source().get_foreign_keys()
-    q2_foreign_keys = q2.get_TBL_source().get_foreign_keys()
+    q1_foreign_keys = q1.get_table_source().get_foreign_keys()
+    q2_foreign_keys = q2.get_table_source().get_foreign_keys()
 
     foreign_list = {}
     for key in q1_foreign_keys:
@@ -1636,7 +1645,9 @@ class QueryPool:
   # TODO: function currently merges all unmerged queries in cur_queries first and only once there are no more unmerged queries, it uses the merged queries that it generated
   # TODO: this function should be modified to merge queries in a more balanced way (first use all unmerged queries to generate new queries with one or two merges, shuffle the queries in cur_queries, then merge them)
 
-  def generate_possible_merge_operations(self, params, max_merge=3, max_q=5000):
+  def generate_possible_merge_operations(
+    self, query_structure: QueryStructure, max_merge=3, max_q=5000
+  ):
     cur_queries = self.queries[:]
     random.shuffle(cur_queries)
 
@@ -1677,11 +1688,7 @@ class QueryPool:
       except Exception:
         continue
 
-      if (
-        random.random() > 0.5
-        and params.get('group by', 'True') == 'True'
-        and params.get('aggregation', 'True') == 'True'
-      ):
+      if random.random() > 0.5 and query_structure.group_by and query_structure.aggregation:
         operations = list(query.pre_gen_query)[:]
         operations_with_groupby_agg = operations[:]
 
@@ -1693,21 +1700,17 @@ class QueryPool:
         operations_with_groupby_agg.append(Aggregate(query.df_name, random.choice(stats)))
 
         new_query_with_groupby_agg = Query(
-          operations_with_groupby_agg, query.get_TBL_source(), verbose=False
+          operations_with_groupby_agg, query.get_table_source(), verbose=False
         )
         self.result_queries.append(new_query_with_groupby_agg)
 
-      elif (
-        random.random() > 0.5
-        and params.get('group by', 'True') == 'False'
-        and params.get('aggregation', 'True') == 'True'
-      ):
+      elif random.random() > 0.5 and not query_structure.group_by and query_structure.aggregation:
         operations = list(query.pre_gen_query)[:]
         operations_with_agg = operations[:]
 
         operations_with_agg.append(Aggregate(query.df_name, random.choice(stats)))
 
-        new_query_with_agg = Query(operations_with_agg, query.get_TBL_source(), verbose=False)
+        new_query_with_agg = Query(operations_with_agg, query.get_table_source(), verbose=False)
         self.result_queries.append(new_query_with_agg)
 
       else:
@@ -1796,7 +1799,7 @@ class QueryPool:
                 rand = random.random()
 
                 # Add a projection operation to the merged query
-                if rand > 0.5 and len(columns) and params.get('projection', 'True') == 'True':
+                if rand > 0.5 and len(columns) and query_structure.projection:
                   num = random.randint(max(len(columns) - 2, 3), len(columns))
                   sample_columns = random.sample(columns, num)
                   operations.append(Projection(q1.df_name, sample_columns))
@@ -1808,7 +1811,7 @@ class QueryPool:
                 continue
               if self.verbose:
                 print('++++++++++ add the result query to template +++++++++++++')
-              new_query = Query(operations, q1.get_TBL_source(), verbose=False)
+              new_query = Query(operations, q1.get_table_source(), verbose=False)
 
               new_query.target = res_df
               new_query.num_merges = max(q1.num_merges, q2.num_merges) + 1
@@ -1828,9 +1831,7 @@ class QueryPool:
 
                 # Add group_by and agg operations only if columns are available
                 if (
-                  random.random() > 0.5
-                  and params.get('group by', 'True') == 'True'
-                  and params.get('aggregation', 'True') == 'True'
+                  random.random() > 0.5 and query_structure.group_by and query_structure.aggregation
                 ):
                   target_columns = list(new_query.get_target().columns)
                   group_by_column = random.choice(target_columns)
@@ -1847,7 +1848,7 @@ class QueryPool:
 
                   new_query_with_groupby_agg = Query(
                     operations_with_groupby_agg,
-                    q1.get_TBL_source(),
+                    q1.get_table_source(),
                     verbose=False,
                   )
                   new_query_with_groupby_agg.target = res_df
@@ -1860,14 +1861,14 @@ class QueryPool:
 
                 elif (
                   random.random() > 0.5
-                  and params.get('group by', 'True') == 'False'
-                  and params.get('aggregation', 'True') == 'True'
+                  and not query_structure.group_by
+                  and query_structure.aggregation
                 ):
                   operations_with_groupby_agg.append(Aggregate(df_name, random.choice(stats)))
 
                   new_query_with_agg = Query(
                     operations_with_groupby_agg,
-                    q1.get_TBL_source(),
+                    q1.get_table_source(),
                     verbose=False,
                   )
                   new_query_with_agg.target = res_df
@@ -1925,7 +1926,7 @@ class QueryPool:
                 if self.verbose:
                   print('++++++++++ add the result query to template +++++++++++++')
 
-                new_query = Query(operations, q1.get_TBL_source(), verbose=False)
+                new_query = Query(operations, q1.get_table_source(), verbose=False)
                 new_query.merged = True
                 new_query.target = res_df
                 new_query.num_merges = max(q1.num_merges, q2.num_merges) + 1
@@ -1964,7 +1965,7 @@ class TableSource:
   The primary source that reads from the csv / accessible file, a wrapper of the pd.DataFrame class
   """
 
-  def __init__(self, df: pd.DataFrame, name):
+  def __init__(self, df: pd.DataFrame, name: str) -> None:
     """
 
     :param df: pd.dataframe
@@ -1990,13 +1991,19 @@ class TableSource:
     :return: an object of type selection
     """
     possible_selection_columns = self.source.columns.tolist()
+
     if not possible_selection_columns:
       raise ValueError('No suitable numerical columns available for selection.')
+
     choice_col = random.choice(possible_selection_columns)
+
+    min_val = max_val = num = 0
 
     if self.source[choice_col].dtype.kind in 'if':  # Check if the column is float or int
       min_val, max_val = data_ranges[entity][choice_col]
+
       num = random.uniform(min_val, max_val)
+
       if self.source[choice_col].dtype.kind == 'i':  # If it's an int, round it
         num = round(num)
 
@@ -2064,6 +2071,7 @@ class TableSource:
     cur_condition = Condition(
       choice_col, op_choice, num
     )  # don't need to check consistency since only one condition
+
     return Selection(self.name, [cur_condition])
 
   def get_a_projection(self):
@@ -2117,7 +2125,7 @@ class TableSource:
   def equals(self, o: 'TableSource'):
     return self.source.equals(o.source)
 
-  def gen_base_queries(self, params) -> List[Query]:
+  def gen_base_queries(self, query_structure: QueryStructure) -> List[Query]:
     """
     Customized generation with base queries, can be modified to fit in various circumstances
     param query_types: types of queries specified by the user
@@ -2129,38 +2137,33 @@ class TableSource:
     q_gen_query_3 = []
     q_gen_query_4 = []
 
-    if params.get('num_selections', 3) > 0 and params.get('projection', 'True') == 'True':
+    if query_structure.num_selections > 0 and query_structure.projection:
       q_gen_query_1.append(self.get_a_projection())
       q_gen_query_2.append(self.get_a_selection())
       q_gen_query_3.append(self.get_a_selection())
       q_gen_query_3.append(self.get_a_projection())
       q_gen_query_4.append(self.get_a_selection())
-
-    elif params.get('num_selections', 3) == 0 and params.get('projection', 'True') == 'True':
+    elif query_structure.num_selections == 0 and query_structure.projection:
       q_gen_query_1.append(self.get_a_projection())
       q_gen_query_2.append(self.get_a_projection())
       q_gen_query_3.append(self.get_a_projection())
       q_gen_query_4.append(self.get_a_projection())
-
-    elif params.get('num_selections', 3) > 0 and params.get('projection', 'True') == 'False':
+    elif query_structure.num_selections > 0 and not query_structure.projection:
       q_gen_query_1.append(self.get_a_selection())
       q_gen_query_2.append(self.get_a_selection())
       q_gen_query_3.append(self.get_a_selection())
       q_gen_query_4.append(self.get_a_selection())
-
     else:
       sys.exit(
         'Invalid parameters for generating base queries. Must have at least one selection or projection operation.'
       )
 
-    q1 = Query(q_gen_query=q_gen_query_1, source=self)
-    q2 = Query(q_gen_query=q_gen_query_2, source=self)
-    q3 = Query(q_gen_query=q_gen_query_3, source=self)
-    q4 = Query(q_gen_query=q_gen_query_4, source=self)
-
-    queries = [q1, q2, q3, q4]
-
-    return queries
+    return [
+      Query(q_gen_query=q_gen_query_1, source=self),
+      Query(q_gen_query=q_gen_query_2, source=self),
+      Query(q_gen_query=q_gen_query_3, source=self),
+      Query(q_gen_query=q_gen_query_4, source=self),
+    ]
 
 
 # This is just testing for TPC-H from previous model
@@ -2170,6 +2173,7 @@ def test_patients():
   :return:
   """
   df = pd.read_csv('./patient_ma_bn.csv')
+
   q1 = [
     Selection(
       'df',
@@ -2183,6 +2187,7 @@ def test_patients():
     GroupBy('df', 'Sex'),
     Aggregate('df', 'min'),
   ]
+
   q2 = [
     Selection(
       'df',
@@ -2198,6 +2203,7 @@ def test_patients():
     GroupBy('df', 'Smoking'),
     Aggregate('df', 'count'),
   ]
+
   pq1 = Query(q1, source=df)
   pq2 = Query(q2, source=df)
 
@@ -2228,6 +2234,7 @@ def run_TPCH():
     ),
     Projection('customer', ['CUSTKEY', 'NATIONKEY', 'PHONE', 'ACCTBAL', 'MKTSEGMENT']),
   ]
+
   q2 = [
     Selection(
       'customer',
@@ -2252,6 +2259,7 @@ def run_TPCH():
       ],
     ),
   ]
+
   q4 = [
     Selection(
       'lineitem',
@@ -2305,6 +2313,7 @@ def run_TPCH():
     GroupBy('lineitem', 'RETURNFLAG'),
     Aggregate('lineitem', 'min'),
   ]
+
   q6 = [
     Selection('nation', conditions=[Condition('REGIONKEY', Operator.gt, 0)]),
     Projection('nation', ['REGIONKEY', 'N_NAME', 'N_COMMENT']),
@@ -2340,6 +2349,7 @@ def run_TPCH():
     GroupBy('orders', 'ORDERSTATUS'),
     Aggregate('orders', 'max'),
   ]
+
   q10 = [
     Selection(
       'supplier',
@@ -2351,6 +2361,7 @@ def run_TPCH():
     ),
     Projection('supplier', ['S_NAME', 'NATIONKEY', 'ACCTBAL']),
   ]
+
   q11 = [
     Selection(
       'supplier',
@@ -2361,6 +2372,7 @@ def run_TPCH():
       ],
     ),
   ]
+
   q12 = [Selection('part', conditions=[Condition('RETAILPRICE', Operator.gt, 500)])]
 
   q13 = [Selection('partsupp', conditions=[Condition('SUPPLYCOST', Operator.le, 1000)])]
@@ -2379,7 +2391,7 @@ def run_TPCH():
   pq12 = Query(q12, source=part)
   pq13 = Query(q13, source=partsupp)
 
-  allqueries = [
+  all_queries = [
     pq1,
     pq2,
     pq3,
@@ -2394,14 +2406,14 @@ def run_TPCH():
     pq12,
     pq13,
   ]
-  # allqueries = [pq4]
+
   res = []
   count = 1
-  # c = pq3.get_new_pandas_queries()
-  for pq in allqueries:
+
+  for query in all_queries:
     print(f'*** query #{count} is generating ***')
     count += 1
-    res += pq.get_new_pandas_queries()[:100]
+    res += query.get_new_pandas_queries()[:100]
 
   print('done')
 
@@ -2414,59 +2426,16 @@ def add_foreignkeys(TBL1: TableSource, col1, TBL2: TableSource, col2):
   TBL2.add_edge(col2, col1, TBL1)
 
 
-# Command-line interface
 if __name__ == '__main__':
-  import argparse
-  import json
-  import string
-
   # To measure total execution time of the query generator
   start = time.time()
 
-  parser = argparse.ArgumentParser(description='Pandas Query Generator CLI')
+  arguments = Arguments.from_args()
 
-  parser.add_argument(
-    '--schema',
-    type=str,
-    required=True,
-    help='Path to the relational schema JSON file',
-  )
-
-  parser.add_argument(
-    '--params',
-    type=str,
-    required=True,
-    help='Path to the user-defined parameters JSON file',
-  )
-
-  parser.add_argument(
-    '--export-directory',
-    type=str,
-    required=False,
-    default='./results',
-    help='Path to export results to',
-  )
-
-  parser.add_argument(
-    '--verbose',
-    type=bool,
-    required=False,
-    default=False,
-    help='Whether or not to print extra generation information',
-  )
-
-  args = parser.parse_args()
-
-  with open(args.schema, 'r') as sf:
+  with open(arguments.schema, 'r') as sf:
     schema_info = json.load(sf)
 
-  with open(args.params, 'r') as pf:
-    params = json.load(pf)
-
-  # Extract parameters
-  num_merges = params.get('num_merges', 2)
-  num_queries = params.get('num_queries', 1000)
-  multi_line = params.get('multi_line', False) == 'True'
+  query_structure = QueryStructure.from_file(arguments.params)
 
   # Initialize dictionaries to store DataFrames and their respective meta information
   dataframes = {}
@@ -2490,6 +2459,7 @@ if __name__ == '__main__':
   # Function to populate DataFrame with rows of random data based on schema
   def create_dataframe(entity_schema, num_rows=100, primary_key_unique=True):
     rows = []
+
     # If the primary key is unique, then num_rows for that dataframe = min(properties['max'] - properties['min'] + 1, 200)
     if primary_key_unique:
       num_rows = min(
@@ -2530,6 +2500,7 @@ if __name__ == '__main__':
             '%Y-%m-%d'
           )
       rows.append(row)
+
     return pd.DataFrame(rows)
 
   for entity, entity_info in schema_info['entities'].items():
@@ -2539,33 +2510,26 @@ if __name__ == '__main__':
       'foreign_keys': entity_info.get('foreign_keys', {}),
     }
 
-    # dynamic create variable names to reference df with globals()[entity]
-    if not isinstance(entity_schema['primary_key'], list):
-      globals()[entity] = create_dataframe(entity_schema, num_rows=200, primary_key_unique=True)
+    # TODO(liam): Can we get rid of this `globals` hack?
+    globals()[entity] = dataframes[entity] = create_dataframe(
+      entity_schema,
+      num_rows=200,
+      primary_key_unique=not isinstance(entity_schema['primary_key'], list),
+    )
 
-    else:
-      globals()[entity] = create_dataframe(entity_schema, num_rows=200, primary_key_unique=False)
+    table_sources[entity] = TableSource(dataframes[entity], entity)
 
-    dataframes[entity] = globals()[entity]
+    data_ranges[entity] = extract_data_ranges(entity_info['properties'])
 
-    # tbl_source for each dataframe
-    tbl = TableSource(globals()[entity], entity)
-    table_sources[entity] = tbl
-
-    # extract_data_ranges
-    ranges = extract_data_ranges(entity_info['properties'])
-    data_ranges[entity] = ranges
-
-    # primary_key
-    primary_key = entity_info['primary_key']
-    primary_keys[entity] = primary_key
+    primary_keys[entity] = entity_info['primary_key']
 
     if 'foreign_keys' in entity_info:
       foreign_keys[entity] = []
+
       for fk_column, refers_to in entity_info['foreign_keys'].items():
         foreign_keys[entity].append((fk_column, refers_to[0], refers_to[1]))
 
-  # Add foreign keys info to tbl_sources
+  # Add foreign keys info to table sources
   for entity, listT in foreign_keys.items():
     for tuple in listT:
       col, other_col, other = tuple
@@ -2574,43 +2538,46 @@ if __name__ == '__main__':
   end2 = time.time()
 
   # Base queries
-  allqueries = []
+  all_queries = []
   for entity, source in table_sources.items():
-    allqueries += source.gen_base_queries(params)
+    all_queries += source.gen_base_queries(query_structure)
 
   res = []
   count = 1
 
   end3 = time.time()
+
   # for data_structure.json, generates 4 queries for each of the 5 entities, so 20 pandas query objects
-  for pq in allqueries:
+  for query in all_queries:
     print(f'*** query #{count} is generating ***')
     count += 1
     # each pandas query object generates up to 100 unmerged pandas queries (depending on how many valid queries from gen_queries)
-    res += pq.get_new_pandas_queries(params)[:100]
+    res += query.get_new_pandas_queries(query_structure)[:100]
 
   end4 = time.time()
 
   print('done')
 
   # create pandas_query_pool object with list of unmerged queries and generate merge operations on them
-  pandas_queries_list = QueryPool(res, verbose=args.verbose)
+  pandas_queries_list = QueryPool(res, verbose=arguments.verbose)
   pandas_queries_list.shuffle_queries()
 
   # can't be merged if data schema is too simple (too few columns), generates 1000 merged queries with 3 merges each by default
   # Some of the merged queries are invalid (outputs “Exception occurred” and not saved in merged_queries.txt)
   pandas_queries_list.generate_possible_merge_operations(
-    params, max_merge=num_merges, max_q=num_queries
+    query_structure, max_merge=query_structure.num_merges, max_q=query_structure.num_queries
   )
 
   end5 = time.time()
 
-  if multi_line:
+  if query_structure.multi_line:
     pandas_queries_list.save_merged_examples_multiline(
-      directory=args.export_directory, filename='merged_queries_auto_sf0000'
+      directory=arguments.output_directory, filename='merged_queries_auto_sf0000'
     )
   else:
-    pandas_queries_list.save_merged_examples(args.export_directory, 'merged_queries_auto_sf0000')
+    pandas_queries_list.save_merged_examples(
+      arguments.output_directory, 'merged_queries_auto_sf0000'
+    )
 
   end = time.time()
 
