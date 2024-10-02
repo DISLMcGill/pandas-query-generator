@@ -4,18 +4,59 @@ version = "0.0.0"
 description = "A synthetic pandas query generation tool"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = [
-    "pandas>=2.2.3",
-    "ruff>=0.6.7",
-    "tdqm>=0.0.1",
-]
+dependencies = ["pandas>=2.2.3", "ruff>=0.6.7", "tdqm>=0.0.1"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project.scripts]
+pqg = "pandas_query_generator.__main__:main"
+
+[project.urls]
+Homepage = "https://github.com/DISLMcGill/pandas-query-generator"
+Issues = "https://github.com/DISLMcGill/pandas-query-generator/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/pandas_query_generator"]
+
+[tool.hatch.build.targets.sdist]
+include = ["/src", "/tests"]
 
 [tool.ruff]
+src = ["src"]
 indent-width = 2
 line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
 
 [tool.ruff.format]
 docstring-code-format = true
 docstring-code-line-length = 20
 indent-style = "space"
 quote-style = "single"
+
+[tool.pytest.ini_options]
+addopts = "-ra -q"
+testpaths = ["tests"]
+
+[tool.coverage.run]
+source = ["src"]
+
+[tool.mypy]
+mypy_path = "src"
+check_untyped_defs = true
+disallow_any_generics = true
+ignore_missing_imports = true
+no_implicit_optional = true
+show_error_codes = true
+strict_equality = true
+warn_redundant_casts = true
+warn_return_any = true
+warn_unreachable = true
+warn_unused_configs = true
+no_implicit_reexport = true
+
+[tool.uv]
+dev-dependencies = ["pytest>=8.3.3"]

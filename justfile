@@ -15,7 +15,7 @@ check:
   uv run ruff check
 
 example:
-  uv run src  \
+  uv run pqg  \
     --output-directory results \
     --params examples/query_parameters.json \
     --schema examples/data_structure_tpch_csv.json
@@ -27,4 +27,7 @@ readme:
   present --in-place README.md
 
 run *args:
-  uv run src {{args}}
+  uv run pqg {{args}}
+
+test:
+  uv run pytest --verbose

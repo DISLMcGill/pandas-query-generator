@@ -14,9 +14,9 @@ import pandas as pd
 from pandas import Series
 from tqdm import tqdm
 
-from arguments import Arguments
-from query_structure import QueryStructure
-from schema import Schema
+from .arguments import Arguments
+from .query_structure import QueryStructure
+from .schema import Schema
 
 warnings.filterwarnings('ignore', 'Boolean Series key will be reindexed to match DataFrame index.')
 
@@ -892,7 +892,14 @@ class Query:
             op = random.choice([Operator.lt, Operator.le, Operator.eq, Operator.ne])
           else:
             op = random.choice(
-              [Operator.gt, Operator.ge, Operator.lt, Operator.le, Operator.eq, Operator.ne]
+              [
+                Operator.gt,
+                Operator.ge,
+                Operator.lt,
+                Operator.le,
+                Operator.eq,
+                Operator.ne,
+              ]
             )
           cur_condition = Condition(key, op, cur_val)
 
@@ -1900,7 +1907,7 @@ class TableSource:
     min_val = max_val = num = 0
 
     if self.source[choice_col].dtype.kind in 'if':  # Check if the column is float or int
-      min_val, max_val = data_ranges[entity][choice_col]
+      min_val, max_val = data_ranges[self.name][choice_col]
 
       num = random.uniform(min_val, max_val)
 
@@ -2321,7 +2328,15 @@ def run_TPCH():
   pandas_queries_list.generate_possible_merge_operations()
 
 
-if __name__ == '__main__':
+# TODO(liam): Centralize data access in a single top-level structure.
+dataframes = {}
+data_ranges = {}
+foreign_keys = {}
+table_sources = {}
+primary_keys = {}
+
+
+def main():
   start_time = time.time()
 
   @contextmanager
@@ -2339,13 +2354,6 @@ if __name__ == '__main__':
         Schema.from_file(arguments.schema),
         QueryStructure.from_file(arguments.params),
       )
-
-      # TODO(liam): Centralize data access in a single top-level structure.
-      dataframes = {}
-      data_ranges = {}
-      foreign_keys = {}
-      table_sources = {}
-      primary_keys = {}
 
       for name, entity in schema.entities.items():
         # TODO(liam): Can we get rid of this globals hack?
@@ -2384,7 +2392,9 @@ if __name__ == '__main__':
       pandas_queries_list.shuffle_queries()
 
       pandas_queries_list.generate_possible_merge_operations(
-        query_structure, max_merge=query_structure.num_merges, max_q=query_structure.num_queries
+        query_structure,
+        max_merge=query_structure.num_merges,
+        max_q=query_structure.num_queries,
       )
 
     with timer('saving merged queries'):
@@ -2400,3 +2410,7 @@ if __name__ == '__main__':
   total_time = time.time() - start_time
 
   print(f'Total time taken: {total_time:.2f} seconds')
+
+
+if __name__ == '__main__':
+  main()
