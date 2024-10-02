@@ -37,10 +37,6 @@ docstring-code-line-length = 20
 indent-style = "space"
 quote-style = "single"
 
-[tool.pytest.ini_options]
-addopts = "-ra -q"
-testpaths = ["tests"]
-
 [tool.coverage.run]
 source = ["src"]
 
@@ -59,4 +55,4 @@ warn_unused_configs = true
 no_implicit_reexport = true
 
 [tool.uv]
-dev-dependencies = ["pytest>=8.3.3"]
+dev-dependencies = ["pytest-mock>=3.14.0", "pytest>=8.3.3"]

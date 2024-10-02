@@ -2,6 +2,8 @@ import json
 import typing as t
 from dataclasses import dataclass
 
+import pandas as pd
+
 from .entity import Entity
 
 

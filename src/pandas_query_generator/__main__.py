@@ -1,5 +1,4 @@
 import itertools
-import os
 import random
 import sys
 import time
@@ -7,699 +6,24 @@ import typing as t
 import warnings
 from collections import defaultdict
 from contextlib import contextmanager
-from enum import Enum
 from pathlib import Path
 
 import pandas as pd
-from pandas import Series
 from tqdm import tqdm
 
+from .aggregate import Aggregate
 from .arguments import Arguments
+from .condition import Condition
+from .group_by import GroupBy
+from .merge import Merge
+from .operation import Operation
+from .operators import ComparisonOperator, ConditionalOperator
+from .projection import Projection
 from .query_structure import QueryStructure
 from .schema import Schema
+from .selection import Selection
 
 warnings.filterwarnings('ignore', 'Boolean Series key will be reindexed to match DataFrame index.')
-
-
-class Operation:
-  """
-  The abstract base class for different types of DataFrame operations.
-
-  Attributes:
-      df_name (str): The name of the DataFrame.
-      leading (bool): Whether the operation is the first to be performed.
-      count (int or None): An optional count value for the operation.
-  """
-
-  def __init__(self, df_name: str, leading: bool, count: int | None = None):
-    """
-    Initialize an operation object.
-
-    :param df_name: The name of the DataFrame.
-    :param leading: Whether the operation is the first to be performed.
-    :param count: An optional count value. (What does count represent?)
-    """
-    self.count = count
-    self.df_name = df_name
-    self.leading = leading
-
-  def to_str(self) -> str:
-    """
-    Generate a string representation of the operation.
-
-    This method should be overridden by subclasses to return the actual operation string.
-
-    :return: A string representing the operation.
-    """
-    return ''
-
-  def set_leading(self, b: bool):
-    """
-    Set the leading status of the operation.
-
-    :param b: Boolean value to set the leading status.
-    """
-    self.leading = b
-
-  def set_count(self, c: int):
-    """
-    Set the count value for the operation.
-
-    :param c: Integer value to set the count.
-    """
-    self.count = c
-
-  def exec(self) -> t.Any:
-    """
-    Execute the operation.
-
-    This method calls `eval` on the string representation of the operation.
-
-    :return: The result of evaluating the operation.
-    """
-    return eval(self.to_str())
-
-
-class Operator(Enum):
-  ge = '>='
-  gt = '>'
-  le = '<='
-  lt = '<'
-  eq = '=='
-  ne = '!='
-  startswith = '.str.startswith'
-  in_op = 'in'
-
-
-class ConditionalOperator(Enum):
-  AND = '&'
-  OR = '|'
-  # NOT = "-"
-
-
-class Condition:
-  """
-  Refers to conditions like 'col1 > 20' in a particular dataframe
-  """
-
-  def __init__(self, col_name, op: Operator, num):
-    """
-
-    :param col_name: str
-    :param op: OP
-    :param num: not only numbers, can also be strings
-    """
-    self.col = col_name
-    self.op = op
-    self.val = num
-
-  def replace_val(self, val):
-    return Condition(self.col, self.op, val)
-    # self.val = val
-
-  def replace_op(self, op):
-    return Condition(self.col, op, self.val)
-    # self.op = op
-
-  def is_consistent_with(self, other: 'Condition') -> bool:
-    """
-    Check if the current condition is logically consistent with another condition.
-    param other: The other condition to compare with.
-    return: True if the conditions are consistent, otherwise False.
-    """
-    if self.col != other.col:
-      return True  # Conditions on different columns are always consistent
-
-    if self.col == other.col:
-      # Check for logical consistency between the two conditions, avoid conditions like (x<3 and x>5)
-      if (
-        (
-          self.op in [Operator.le, Operator.lt]
-          and other.op in [Operator.ge, Operator.gt]
-          and self.val <= other.val
-        )
-        or (
-          self.op in [Operator.ge, Operator.gt]
-          and other.op in [Operator.le, Operator.lt]
-          and self.val >= other.val
-        )
-        or (
-          self.op == Operator.eq
-          and other.op in [Operator.lt, Operator.le]
-          and self.val >= other.val
-        )
-        or (
-          self.op == Operator.eq
-          and other.op in [Operator.gt, Operator.ge]
-          and self.val <= other.val
-        )
-        or (
-          self.op in [Operator.lt, Operator.le]
-          and other.op == Operator.eq
-          and self.val <= other.val
-        )
-        or (
-          self.op in [Operator.gt, Operator.ge]
-          and other.op == Operator.eq
-          and self.val >= other.val
-        )
-        or (self.op == Operator.eq and other.op in [Operator.ne] and self.val == other.val)
-        or (self.op in [Operator.ne] and other.op == Operator.eq and self.val == other.val)
-        or (self.op == Operator.eq and other.op == Operator.eq and self.val != other.val)
-        or (
-          self.op == Operator.startswith
-          and other.op == Operator.startswith
-          and self.val != other.val
-        )
-        or (self.op == Operator.in_op and other.op == Operator.in_op and self.val != other.val)
-      ):
-        return False
-
-    return True
-
-  def __str__(self):
-    return f'condition ({self.col} {self.op.value} {self.val} )'
-
-
-class Selection(Operation):
-  """
-  A class representing a selection operation on a DataFrame.
-
-  Example Usage:
-      selection(df_name, [condition(col1, OP.ge, 1), OP_cond.AND, condition(col2, OP.le, 2)])
-  """
-
-  def __init__(
-    self,
-    df_name: str,
-    conditions: t.List[t.Union[Condition, ConditionalOperator]],
-    count=None,
-    leading=True,
-  ):
-    """
-    Initialize a selection object.
-
-    :param df_name: The name of the DataFrame.
-    :param conditions: A list of conditions and logical operators.
-    :param count: An optional count value.
-    :param leading: Whether the selection is the first operation to be performed.
-    """
-    super().__init__(df_name, leading, count)
-    self.conditions = conditions
-
-  def new_selection(self, new_cond: t.List[t.Union[Condition, ConditionalOperator]]) -> 'Selection':
-    """
-    Create a new selection object with updated conditions.
-
-    :param new_cond: A new list of conditions and logical operators.
-    :return: A new selection object.
-    """
-    return Selection(self.df_name, new_cond, self.leading)
-
-  def to_str(self, df2='F') -> str:
-    """
-    Generate a string representation of the selection operation.
-
-    :param df2: An optional alternative DataFrame reference. Defaults to "F".
-    :return: A string representing the selection operation in pandas grammar.
-
-    Example (Single Condition):
-        selection.to_str()
-        # Returns: "df[condition]"
-
-    Example (Multiple Conditions):
-        selection.to_str()
-        # Returns: "df[(condition1) & (condition2)]"
-    """
-    res_str = f'{self.df_name}' if self.leading else ''
-    cur_condition = ''
-
-    # Single Condition Case
-    if len(self.conditions) == 1:
-      condition = self.conditions[0]
-
-      assert isinstance(condition, Condition)
-
-      if df2.__eq__('F'):
-        if (
-          condition.op.value != Operator.startswith.value
-          and condition.op.value != Operator.in_op.value
-        ):
-          if (
-            isinstance(condition.val, str) and condition.val.count('-') == 2
-          ):  # Check if value is a date string
-            cur_condition = (
-              f"({self.df_name}['{condition.col}'] {condition.op.value} '{condition.val}')"
-            )
-          else:
-            cur_condition = (
-              f"({self.df_name}['{condition.col}'] {condition.op.value} {condition.val})"
-            )
-        elif condition.op.value == Operator.in_op.value:
-          cur_condition = f"({self.df_name}['{condition.col}'].isin({condition.val}))"
-        else:
-          cur_condition = (
-            f"({self.df_name}['{condition.col}']{condition.op.value}('{condition.val}'))"
-          )
-      else:
-        if (
-          condition.op.value != Operator.startswith.value
-          and condition.op.value != Operator.in_op.value
-        ):
-          if (
-            isinstance(condition.val, str) and condition.val.count('-') == 2
-          ):  # Check if value is a date string
-            cur_condition = (
-              f"({self.df_name}['{condition.col}'] {condition.op.value} '{condition.val}')"
-            )
-          else:
-            cur_condition = (
-              f"({self.df_name}['{condition.col}'] {condition.op.value} {condition.val})"
-            )
-        elif condition.op.value == Operator.in_op.value:
-          cur_condition = f"({df2}['{condition.col}'].isin({condition.val}))"
-        else:
-          cur_condition = f"(df{df2}['{condition.col}']{condition.op.value}('{condition.val}'))"
-
-      res_str = res_str + '[' + cur_condition + ']'
-      return res_str
-
-    # Multiple Conditions Case
-    for i, condition in enumerate(self.conditions):
-      condition = self.conditions[i]
-      if isinstance(condition, ConditionalOperator):
-        cur_condition += ' ' + condition.value + ' '
-      else:
-        if df2.__eq__('F'):
-          if (
-            condition.op.value != Operator.startswith.value
-            and condition.op.value != Operator.in_op.value
-          ):
-            if (
-              isinstance(condition.val, str) and condition.val.count('-') == 2
-            ):  # Check if value is a date string
-              cur_condition = (
-                f"({self.df_name}['{condition.col}'] {condition.op.value} '{condition.val}')"
-              )
-            else:
-              cur_condition = (
-                f"({self.df_name}['{condition.col}'] {condition.op.value} {condition.val})"
-              )
-          elif condition.op.value == Operator.in_op.value:
-            cur_condition += f"({self.df_name}['{condition.col}'].isin({condition.val}))"
-          else:
-            cur_condition += (
-              f"({self.df_name}['{condition.col}']{condition.op.value}('{condition.val}'))"
-            )
-        else:
-          if (
-            condition.op.value != Operator.startswith.value
-            and condition.op.value != Operator.in_op.value
-          ):
-            if (
-              isinstance(condition.val, str) and condition.val.count('-') == 2
-            ):  # Check if value is a date string
-              cur_condition = (
-                f"({self.df_name}['{condition.col}'] {condition.op.value} '{condition.val}')"
-              )
-            else:
-              cur_condition = (
-                f"({self.df_name}['{condition.col}'] {condition.op.value} {condition.val})"
-              )
-          elif condition.op.value == Operator.in_op.value:
-            cur_condition += f"(df{df2}['{condition.col}'].isin({condition.val}))"
-          else:
-            cur_condition += f"(df{df2}['{condition.col}']{condition.op.value}('{condition.val}'))"
-
-    res_str = res_str + '[' + cur_condition + ']'
-    return res_str
-
-  def __str__(self) -> str:
-    """
-    Generate a string representation of the selection.
-
-    :return: A string representing the selection.
-    """
-    conditions_ = [str(c) for c in self.conditions]
-    return f'selection: df_name = {self.df_name} conditions = {conditions_}'
-
-  def exec(self) -> t.Any:
-    """
-    Execute the selection operation.
-
-    :return: The result of evaluating the selection.
-    """
-    return eval(self.to_str())
-
-  def is_logically_consistent(self) -> bool:
-    """
-    Check if the conditions in the selection are logically consistent.
-    return: True if the conditions are consistent, otherwise False.
-    """
-    and_segments = []
-    current_segment = []
-
-    # Separates the conditions based on | operators
-    for cond in self.conditions:
-      if isinstance(cond, ConditionalOperator) and cond == ConditionalOperator.OR:
-        if current_segment:
-          and_segments.append(current_segment)
-          current_segment = []
-      else:
-        current_segment.append(cond)
-    # Add the last segment
-    if current_segment:
-      and_segments.append(current_segment)
-    # Check for logical consistency within each segment
-    for segment in and_segments:
-      conditions_only = [c for c in segment if isinstance(c, Condition)]
-      for i, cond1 in enumerate(conditions_only):
-        for j, cond2 in enumerate(conditions_only):
-          if i != j and not cond1.is_consistent_with(cond2):
-            return False
-
-    return True
-
-
-class Merge(Operation):
-  """
-  Class representing a merge operation between two DataFrames or queries.
-  Example usage:
-      df1.merge(df2, left_on = , right_on = )
-  """
-
-  def __init__(
-    self,
-    df_name: str,
-    queries: 'Query',
-    count=None,
-    on=None,
-    left_on: str | None = None,
-    right_on: str | None = None,
-    leading=False,
-  ):
-    """
-    Initialize a merge object.
-
-    :param df_name: The name of the primary DataFrame.
-    :param queries: The secondary pandas_query object to merge with.
-    :param count: An optional count value.
-    :param on: Column names to join on if both DataFrames share the same column names.
-    :param left_on: The column name in the primary DataFrame to merge on.
-    :param right_on: The column name in the secondary DataFrame to merge on.
-    :param leading: Whether the merge is the first operation to be performed.
-    """
-    super().__init__(df_name, leading, count)
-    self.operations = queries.operations
-    self.queries = queries
-    self.on_col = on if on is not None else []
-    self.left_on = left_on if left_on is not None else ''
-    self.right_on = right_on if right_on is not None else ''
-
-  def to_str(self) -> str:
-    """
-    Generate a string representation of the merge operation.
-
-    :return: A string that is executable in pandas grammar.
-    """
-    # If merging on the same column name
-    if len(self.on_col) > 0:
-      res_str = f'{self.df_name}' if self.leading else ''
-      operations_to_str = self.queries.query_string
-      on_cols = ','.join([f"'{col}'" for col in self.on_col])
-
-      res_str += f'.merge({operations_to_str}, on=[{on_cols}])'
-      return res_str
-
-    # If merging on different column names
-    else:
-      res_str = f'{self.df_name}' if self.leading else ''
-      operations_to_str = self.queries.query_string
-
-      res_str += (
-        f".merge({operations_to_str}, left_on='{self.left_on}', right_on='{self.right_on}')"
-      )
-      return res_str
-
-  def new_merge(
-    self,
-    new_queries: 'Query',
-    new_on_col=None,
-    new_left_on=None,
-    new_right_on=None,
-  ) -> 'Merge':
-    """
-    Create a new merge object with updated queries and column names.
-
-    :param new_queries: The new pandas_query object to merge with.
-    :param new_on_col: Optional new list of column names to join on.
-    :param new_left_on: Optional new column name in the primary DataFrame to merge on.
-    :param new_right_on: Optional new column name in the secondary DataFrame to merge on.
-    :return: A new merge object.
-    """
-    return Merge(
-      self.df_name,
-      new_queries,
-      count=self.count,
-      on=new_on_col,
-      left_on=new_left_on,
-      right_on=new_right_on,
-      leading=self.leading,
-    )
-
-  def exec(self) -> t.Any:
-    """
-    Execute the merge operation.
-
-    :return: The result of evaluating the merge operation.
-    """
-    return eval(self.to_str())
-
-  def __str__(self) -> str:
-    """
-    Generate a string representation of the merge operation.
-
-    :return: A string representing the merge operation.
-    """
-    return f'merge: df_name = {self.df_name}, on_col = {self.on_col}, left_on = {self.left_on}, right_on = {self.right_on}'
-
-
-class Projection(Operation):
-  """
-  Class representing a projection operation on a DataFrame.
-
-  Example Usage:
-      projection(df_name, ['col1', 'col2'])
-
-  """
-
-  def __init__(self, df_name: str, columns: t.List[str], count=None, leading=True):
-    """
-    Initialize a projection object.
-
-    :param df_name: The name of the DataFrame.
-    :param columns: The desired columns to be projected.
-    :param count: An optional count value.
-    :param leading: Whether it is the leading operation.
-    """
-    super().__init__(df_name, leading, count)
-    self.desire_columns = columns
-    self.length = len(columns)
-
-  def to_str(self) -> str:
-    """
-    Generate a string representation of the projection operation.
-
-    :return: A string that is executable in pandas grammar.
-    """
-    res_str = f'{self.df_name}' if self.leading else ''
-
-    cur_str = ''
-    for column in self.desire_columns:
-      cur_str += "'" + column + "',"
-
-    # Remove the last comma from the string
-    cur_str = cur_str[:-1]
-
-    # Example: coach[['Role', 'National_name']]
-    res_str = res_str + '[[' + cur_str + ']]'
-
-    return res_str
-
-  def new_projection(self, columns: t.List[str]) -> 'Projection':
-    """
-    Create a new projection object with updated columns.
-
-    :param columns: List of columns to project.
-    :return: A new projection object.
-    """
-    return Projection(self.df_name, columns, self.leading)
-
-  def __str__(self) -> str:
-    """
-    Generate a string representation of the projection operation.
-
-    :return: A string representing the projection operation.
-    """
-    return f'projection: df_name = {self.df_name}, col = {self.desire_columns}'
-
-  def exec(self) -> t.Any:
-    """
-    Execute the projection operation.
-
-    :return: The result of evaluating the projection operation.
-    """
-    return eval(self.to_str())
-
-
-class GroupBy(Operation):
-  """
-  Class representing a groupby operation on a DataFrame.
-
-  Example Usage:
-      group_by(df_name, ['col1', 'col2'])
-
-  """
-
-  def __init__(
-    self,
-    df_name: str,
-    columns: t.Union[str, t.List[str]],
-    count=None,
-    other_args=None,
-    leading=False,
-  ):
-    """
-    Initialize a group_by object.
-
-    :param df_name: The name of the DataFrame.
-    :param columns: The columns to group by.
-    :param count: An optional count value.
-    :param other_args: Additional arguments for the pandas groupby function.
-    :param leading: Whether it is the leading operation.
-    """
-    super().__init__(df_name, leading, count)
-    self.columns = columns if isinstance(columns, t.List) else [columns]
-    self.other_args = other_args
-
-  def set_columns(self, columns: t.Union[str, t.List[str]]):
-    """
-    Set the columns to group by.
-
-    :param columns: The columns to group by.
-    """
-    self.columns = columns if isinstance(columns, t.List) else [columns]
-
-  def to_str(self) -> str:
-    """
-    Generate a string representation of the groupby operation.
-
-    :return: A string that is executable in pandas grammar.
-    """
-    other_args = self.other_args if self.other_args else ''
-    res_str = f'{self.df_name}' if self.leading else ''
-    res_str += f'.groupby(by={self.columns}{other_args})'
-    return res_str
-
-  def new_groupby(self, columns: t.Union[str, t.List[str]]) -> 'GroupBy':
-    """
-    Create a new group_by object with updated columns.
-
-    :param columns: The columns to group by.
-    :return: A new group_by object.
-    """
-    return GroupBy(
-      self.df_name,
-      columns,
-      count=self.count,
-      other_args=self.other_args,
-      leading=self.leading,
-    )
-
-  def __str__(self) -> str:
-    """
-    Generate a string representation of the groupby operation.
-
-    :return: A string representing the groupby operation.
-    """
-    return f'groupby: {self.columns}'
-
-  def exec(self) -> t.Any:
-    """
-    Execute the groupby operation.
-
-    :return: The result of evaluating the groupby operation.
-    """
-    return eval(self.to_str())
-
-
-class Aggregate(Operation):
-  """
-  Class representing an aggregation operation on a DataFrame.
-
-  Example Usage:
-      agg(df_name, {'col1': 'mean', 'col2': 'sum'})
-
-  """
-
-  def __init__(
-    self,
-    df_name: str,
-    dict_columns: t.Union[str, t.Dict[str, str]],
-    count=None,
-    leading=True,
-  ):
-    """
-    Initialize an agg object.
-
-    :param df_name: The name of the DataFrame.
-    :param dict_columns: Aggregation functions or a dictionary mapping columns to functions.
-    :param count: An optional count value.
-    :param leading: Whether it is the leading operation.
-    """
-    super().__init__(df_name, leading, count)
-    self.dict_key_vals = dict_columns
-
-  def to_str(self) -> str:
-    """
-    Generate a string representation of the aggregation operation.
-
-    :return: A string that is executable in pandas grammar.
-    """
-    res_str = f'{self.df_name}' if self.leading else ''
-
-    # Handle the aggregation function
-    res_str = res_str + '.agg(' + "'" + str(self.dict_key_vals) + "'"
-    if self.dict_key_vals != 'count':
-      res_str += ', numeric_only=True'
-    res_str += ')'
-
-    return res_str
-
-  def new_agg(self, dict_cols: t.Union[str, t.Dict[str, str]]) -> 'Aggregate':
-    """
-    Create a new agg object with updated aggregation functions.
-
-    :param dict_cols: Aggregation functions or a dictionary mapping columns to functions.
-    :return: A new agg object.
-    """
-    return Aggregate(self.df_name, dict_cols, leading=self.leading)
-
-  def __str__(self) -> str:
-    """
-    Generate a string representation of the aggregation operation.
-
-    :return: A string representing the aggregation operation.
-    """
-    return f'agg: {str(self.dict_key_vals)}'
-
-  def exec(self) -> t.Any:
-    """
-    Execute the aggregation operation.
-
-    :return: The result of evaluating the aggregation operation.
-    """
-    return eval(self.to_str())
 
 
 class Query:
@@ -707,17 +31,17 @@ class Query:
   A class representing a pandas query in intermediate representation.
 
   Attributes:
-      _source_ (TBL_source): The DataFrame or table source object.
-      pre_gen_query (List[operation]): List of operations that form the query (executable)
-      df_name (str): The name of the DataFrame before the operation.
-      num_merges (int): Number of merges performed.
-      operations (List[str]): List of supported operation types.
-      query_string (str): The generated query string.
-      merged (bool): Indicates if the query involves a merge operation.
-      target (pd.DataFrame): The resulting DataFrame after applying the query operations.
+    _source_ (TBL_source): The DataFrame or table source object.
+    pre_gen_query (List[operation]): List of operations that form the query (executable)
+    df_name (str): The name of the DataFrame before the operation.
+    num_merges (int): Number of merges performed.
+    operations (List[str]): List of supported operation types.
+    query_string (str): The generated query string.
+    merged (bool): Indicates if the query involves a merge operation.
+    target (pd.DataFrame): The resulting DataFrame after applying the query operations.
   """
 
-  def __init__(self, q_gen_query: t.List[Operation], source: 'TableSource', verbose=False):
+  def __init__(self, q_gen_query: t.List[Operation], table_source: 'TableSource', verbose=False):
     """
     Initialize a pandas_query object.
 
@@ -729,7 +53,7 @@ class Query:
     if verbose:
       print(self.get_query_string())
 
-    self._source_ = source  ### TODO: modify to list of dataframes
+    self._source_ = table_source  ### TODO: modify to list of dataframes
     self._source_pandas_q = ''
     self.df_name = q_gen_query[0].df_name
     self.merged = False
@@ -752,6 +76,41 @@ class Query:
 
     # Initialize list of source dataframes for merged queries
     self.source_dataframes = [self.get_source()]
+
+  def get_possible_values(self, col):
+    """
+    Get descriptive statistics of a given column.
+
+    :param col: The column name.
+    :return: Descriptive statistics of the column.
+    """
+    des = self.get_source_description(self.get_source(), col)
+    return des
+
+  def get_query_string(self) -> str:
+    """
+    Generate a string representation of the entire query.
+
+    :return: A string representing the query operations.
+    """
+    strs = ''
+    for q in self.pre_gen_query:
+      strs += q.to_str()
+
+    return strs
+
+  # get descriptive statistics of a given col
+  def get_source_description(self, dfa: pd.DataFrame, col) -> pd.Series:
+    """
+    Get the descriptive statistics of a given column in the DataFrame.
+
+    :param dfa: The DataFrame to describe.
+    :param col: The column name.
+    :return: Descriptive statistics of the column.
+    """
+    des = dfa.describe()
+
+    return des[col]
 
   def can_do_merge(self):  # you can always do merge and groupby on df?
     """
@@ -833,7 +192,14 @@ class Query:
             description[random.choice(stats)] + random.randrange(0, description['std'] + 1, 1)
           )
 
-        OPs = [Operator.gt, Operator.ge, Operator.le, Operator.eq, Operator.lt, Operator.ne]
+        OPs = [
+          ComparisonOperator.GT,
+          ComparisonOperator.GE,
+          ComparisonOperator.LE,
+          ComparisonOperator.EQ,
+          ComparisonOperator.LT,
+          ComparisonOperator.NE,
+        ]
 
         cur_condition = Condition(key, random.choice(OPs), cur_val)
         possible_condition_columns[key].append(cur_condition)
@@ -885,20 +251,34 @@ class Query:
           cur_val = random.randint(min_val, max_val)
           # Ensure no conditions are created with values out of range
           if min_val == max_val:
-            op = Operator.eq
+            op = ComparisonOperator.EQ
           elif cur_val == min_val:
-            op = random.choice([Operator.gt, Operator.ge, Operator.eq, Operator.ne])
+            op = random.choice(
+              [
+                ComparisonOperator.GT,
+                ComparisonOperator.GE,
+                ComparisonOperator.EQ,
+                ComparisonOperator.NE,
+              ]
+            )
           elif cur_val == max_val:
-            op = random.choice([Operator.lt, Operator.le, Operator.eq, Operator.ne])
+            op = random.choice(
+              [
+                ComparisonOperator.LT,
+                ComparisonOperator.LE,
+                ComparisonOperator.EQ,
+                ComparisonOperator.NE,
+              ]
+            )
           else:
             op = random.choice(
               [
-                Operator.gt,
-                Operator.ge,
-                Operator.lt,
-                Operator.le,
-                Operator.eq,
-                Operator.ne,
+                ComparisonOperator.GT,
+                ComparisonOperator.GE,
+                ComparisonOperator.LT,
+                ComparisonOperator.LE,
+                ComparisonOperator.EQ,
+                ComparisonOperator.NE,
               ]
             )
           cur_condition = Condition(key, op, cur_val)
@@ -908,19 +288,26 @@ class Query:
           cur_val = round(random.uniform(min_val, max_val), 2)  # Assume 2 decimal places
           # Ensure no conditions are created with values out of range, no == or != operators for floats
           if min_val == max_val:
-            op = Operator.eq
+            op = ComparisonOperator.EQ
           elif cur_val == min_val:
-            op = random.choice([Operator.gt, Operator.ge])
+            op = random.choice([ComparisonOperator.GT, ComparisonOperator.GE])
           elif cur_val == max_val:
-            op = random.choice([Operator.lt, Operator.le])
+            op = random.choice([ComparisonOperator.LT, ComparisonOperator.LE])
           else:
-            op = random.choice([Operator.gt, Operator.ge, Operator.lt, Operator.le])
+            op = random.choice(
+              [
+                ComparisonOperator.GT,
+                ComparisonOperator.GE,
+                ComparisonOperator.LT,
+                ComparisonOperator.LE,
+              ]
+            )
 
           cur_condition = Condition(key, op, cur_val)
 
         elif possible_selection_columns[key] == 'string':
           cur_val = random.choice(data_ranges[self.df_name][key][0])  # starting char
-          cur_condition = Condition(key, Operator.startswith, cur_val)
+          cur_condition = Condition(key, ComparisonOperator.STARTS_WITH, cur_val)
 
         elif possible_selection_columns[key] == 'date':
           min_val, max_val = data_ranges[self.df_name][key]
@@ -930,26 +317,33 @@ class Query:
             '%Y-%m-%d'
           )
           if min_val == max_val:
-            op = Operator.eq
+            op = ComparisonOperator.EQ
           elif cur_val == min_val:
-            op = random.choice([Operator.gt, Operator.ge])
+            op = random.choice([ComparisonOperator.GT, ComparisonOperator.GE])
           elif cur_val == max_val:
-            op = random.choice([Operator.lt, Operator.le])
+            op = random.choice([ComparisonOperator.LT, ComparisonOperator.LE])
           else:
-            op = random.choice([Operator.gt, Operator.ge, Operator.lt, Operator.le])
+            op = random.choice(
+              [
+                ComparisonOperator.GT,
+                ComparisonOperator.GE,
+                ComparisonOperator.LT,
+                ComparisonOperator.LE,
+              ]
+            )
           cur_condition = Condition(key, op, cur_val)
 
         elif possible_selection_columns[key] == 'enum':
           if random.choice([True, False]):  # Randomly choose between == and IN condition
             cur_val = f"'{random.choice(data_ranges[self.df_name][key])}'"
-            op = random.choice([Operator.eq, Operator.ne])
+            op = random.choice([ComparisonOperator.EQ, ComparisonOperator.NE])
             cur_condition = Condition(key, op, cur_val)
           else:
             num_in_values = random.randint(2, len(data_ranges[self.df_name][key]))
             in_values = [
               val for val in random.sample(data_ranges[self.df_name][key], num_in_values)
             ]
-            cur_condition = Condition(key, Operator.in_op, in_values)
+            cur_condition = Condition(key, ComparisonOperator.IN, in_values)
 
         possible_condition_columns[key].append(cur_condition)
 
@@ -1061,7 +455,7 @@ class Query:
                 possible_conditions_dict[cur_key]
               )  # cur_condition is list of conditions
 
-              if cur_condition.op != Operator.startswith:  # int or float col
+              if cur_condition.op != ComparisonOperator.STARTS_WITH:  # int or float col
                 cur_conditions.append(cur_condition)
                 if and_count < 2:
                   cur_conditions.append(
@@ -1295,7 +689,7 @@ class Query:
 
         # Ensure only valid conditions for floats
         if (
-          possible_new_ith_condition.op in [Operator.eq, Operator.ne]
+          possible_new_ith_condition.op in [ComparisonOperator.EQ, ComparisonOperator.NE]
           and possible_new_ith_condition.val == float
         ):
           continue
@@ -1309,41 +703,6 @@ class Query:
     random.shuffle(new_conds)
     return new_conds[:generate_num]
 
-  def get_possible_values(self, col):
-    """
-    Get descriptive statistics of a given column.
-
-    :param col: The column name.
-    :return: Descriptive statistics of the column.
-    """
-    des = self.get_source_description(self.get_source(), col)
-    return des
-
-  def get_query_string(self) -> str:
-    """
-    Generate a string representation of the entire query.
-
-    :return: A string representing the query operations.
-    """
-    strs = ''
-    for q in self.pre_gen_query:
-      strs += q.to_str()
-
-    return strs
-
-  # get descriptive statistics of a given col
-  def get_source_description(self, dfa: pd.DataFrame, col) -> pd.Series:
-    """
-    Get the descriptive statistics of a given column in the DataFrame.
-
-    :param dfa: The DataFrame to describe.
-    :param col: The column name.
-    :return: Descriptive statistics of the column.
-    """
-    des = dfa.describe()
-
-    return des[col]
-
 
 class QueryPool:
   result_queries: t.List[t.Any]
@@ -1352,12 +711,12 @@ class QueryPool:
     Class for managing and processing a pool of pandas queries, including generating merged queries.
 
     Attributes:
-        queries (List[pandas_query]): List of queries of type pandas_query.
-        count (int): Counter for generating DataFrame names during merging.
-        self_join (bool): Whether tables can be joined with themselves.
-        verbose (bool): Whether to print the processing steps.
-        result_queries (List[pandas_query]): List to store the merged queries.
-        un_merged_queries (List[pandas_query]): List of queries that haven't been merged.
+      queries (List[pandas_query]): List of queries of type pandas_query.
+      count (int): Counter for generating DataFrame names during merging.
+      self_join (bool): Whether tables can be joined with themselves.
+      verbose (bool): Whether to print the processing steps.
+      result_queries (List[pandas_query]): List to store the merged queries.
+      un_merged_queries (List[pandas_query]): List of queries that haven't been merged.
     """
 
   def __init__(self, queries: t.List[Query], count=0, self_join=False, verbose=True):
@@ -1373,90 +732,94 @@ class QueryPool:
     self.queries = queries  # Can be shuffled and manipulated independantly
     self.result_queries = []
     self.self_join = self_join
-    self.un_merged_queries = queries[
-      :
-    ]  # Stores a copy of the original queries to generate unmerged examples
     self.verbose = verbose
 
-  def save_merged_examples(self, directory: str, filename: str) -> None:
-    """
-    Save the merged queries into a text file if the content has changed.
+    # Stores a copy of the original queries to generate unmerged examples
+    self.un_merged_queries = queries[:]
 
-    :param directory: Directory path where the file should be saved.
-    :param filename: Name of the file to save.
+  def save(self, directory: str, filename: str, multi_line: t.Optional[bool] = False) -> None:
+    """
+    Save the merged queries into a text file.
+
+    This method writes the generated queries to a file, either in a single-line
+    or multi-line format. It creates the directory if it doesn't exist and
+    handles potential exceptions during the file writing process.
+
+    Args:
+      directory (str): The directory path where the file should be saved.
+      filename (str): The name of the file to save (without extension).
+      multi_line (bool, optional): Whether to save queries in a multi-line format. Defaults to False.
+
+    Raises:
+      IOError: If there's an error writing to the file.
+
+    Note:
+      The multi-line format is more verbose and includes intermediate steps.
+      The single-line format is more compact and only includes the final queries.
     """
     filepath = Path(directory) / f'{filename}.txt'
 
-    # Create directory if it doesn't exist
     filepath.parent.mkdir(parents=True, exist_ok=True)
 
-    # Generate new content
-    new_content = '\n'.join(f'df{i} = {q.query_string}' for i, q in enumerate(self.result_queries))
-
-    # Write new content
-    with open(filepath, 'w') as f:
-      f.write(new_content)
-
-    print(f'Successfully wrote the merged queries into file {filepath}')
-
-  def save_merged_examples_multiline(self, directory: str, filename: str) -> None:
-    count = 0
     try:
-      f = open(f'{directory}/{filename}.txt', 'a')
-    except:
-      filepath = f'{directory}/{filename}.txt'
-      os.makedirs(os.path.dirname(filepath), exist_ok=True)
-      f = open(f'{directory}/{filename}.txt', 'a')
-    res = {}
-    q = []
-    exception_count = [0]
+      if multi_line:
+        self._save_multi_line(filepath)
+      else:
+        self._save_single_line(filepath)
+      print(f'Successfully wrote the merged queries into file {filepath}')
+    except IOError as e:
+      print(f'Error writing to file {filepath}: {e}')
 
-    def unravel(query: Query, exception_count):
-      wstrs = query.pre_gen_query
-      numOP = len(wstrs)
-      step = 0
-      try:
-        p = eval(wstrs)
-      except Exception:
-        # f.write("Next \n")
-        exception_count[0] += 1
-        # pass
+  def _save_single_line(self, filepath: Path) -> None:
+    """Save queries in a single-line format."""
+    content = '\n'.join(f'df{i} = {q.query_string}' for i, q in enumerate(self.result_queries))
+    filepath.write_text(content)
 
-      for s in query.pre_gen_query:
-        strs = s.to_str()
-        if isinstance(s, Merge):
-          counter = self.count - 1
+  def _save_multi_line(self, filepath: Path) -> None:
+    """Save queries in a multi-line format."""
 
-          # b = max(unravel(other))
-          unravel(s.queries, exception_count)
+    class QueryUnraveler:
+      def __init__(self):
+        self.exception_count = 0
+        self.count = 0
 
-          f.write(
-            f'df{self.count} = df{counter}.merge(df{self.count - 1}, left_on={s.left_on}, right_on={s.right_on}) \n'
-          )
-          self.count += 1
-          continue
+      def unravel(self, query: Query, file):
+        try:
+          eval(query.pre_gen_query)
+        except Exception:
+          self.exception_count += 1
 
-        if s.leading:
-          s1 = s.to_str()
-          f.write(f'df{self.count} = {s1} \n')  # strs
-        else:
-          if isinstance(s, Selection):
-            s2 = s.to_str(str(self.count - 1))
+        for operation in query.pre_gen_query:
+          if isinstance(operation, Merge):
+            counter = self.count - 1
+
+            self.unravel(operation.queries, file)
+
+            file.write(
+              f'df{self.count} = df{counter}.merge(df{self.count - 1}, '
+              f'left_on={operation.left_on}, right_on={operation.right_on})\n'
+            )
           else:
-            s2 = s.to_str()
-          f.write(f'df{self.count} = df{self.count - 1}' + s2 + '\n')
-        step += 1
-        self.count += 1
+            op_str = operation.to_str()
 
-    for m in self.result_queries:
-      count = unravel(m, exception_count)
-      f.write('Next \n')
+            if operation.leading:
+              file.write(f'df{self.count} = {op_str}\n')
+            else:
+              if isinstance(operation, Selection):
+                op_str = operation.to_str(str(self.count - 1))
+              file.write(f'df{self.count} = df{self.count - 1}{op_str}\n')
 
-    print(
-      f' ##### Successfully write the merged queries into file {directory}/{filename}.txt #####'
-    )
+          self.count += 1
 
-    f.close()
+    unraveler = QueryUnraveler()
+
+    with filepath.open('w') as file:
+      for query in self.result_queries:
+        unraveler.unravel(query, file)
+        file.write('Next\n')
+
+    if unraveler.exception_count > 0:
+      print(f'Warning: {unraveler.exception_count} exceptions occurred during query evaluation')
 
   def shuffle_queries(self):
     """
@@ -1519,7 +882,7 @@ class QueryPool:
     :return: List of two column names if a relationship is found, otherwise an empty list.
     """
 
-    if isinstance(q1.get_target(), Series) or isinstance(q2.get_target(), Series):
+    if isinstance(q1.get_target(), pd.Series) or isinstance(q2.get_target(), pd.Series):
       return []
 
     col1 = list(q1.get_target().columns)
@@ -1916,25 +1279,53 @@ class TableSource:
 
     if self.source[choice_col].dtype.kind == 'i':
       if min_val == max_val:
-        op_choice = Operator.eq
+        op_choice = ComparisonOperator.EQ
       elif num == min_val:
-        op_choice = random.choice([Operator.gt, Operator.ge, Operator.eq, Operator.ne])
+        op_choice = random.choice(
+          [
+            ComparisonOperator.GT,
+            ComparisonOperator.GE,
+            ComparisonOperator.EQ,
+            ComparisonOperator.NE,
+          ]
+        )
       elif num == max_val:
-        op_choice = random.choice([Operator.lt, Operator.le, Operator.eq, Operator.ne])
+        op_choice = random.choice(
+          [
+            ComparisonOperator.LT,
+            ComparisonOperator.LE,
+            ComparisonOperator.EQ,
+            ComparisonOperator.NE,
+          ]
+        )
       else:
         op_choice = random.choice(
-          [Operator.gt, Operator.ge, Operator.lt, Operator.le, Operator.eq, Operator.ne]
+          [
+            ComparisonOperator.GT,
+            ComparisonOperator.GE,
+            ComparisonOperator.LT,
+            ComparisonOperator.LE,
+            ComparisonOperator.EQ,
+            ComparisonOperator.NE,
+          ]
         )
 
     elif self.source[choice_col].dtype.kind == 'f':
       if min_val == max_val:
-        op_choice = Operator.eq
+        op_choice = ComparisonOperator.EQ
       elif num == min_val:
-        op_choice = random.choice([Operator.gt, Operator.ge])
+        op_choice = random.choice([ComparisonOperator.GT, ComparisonOperator.GE])
       elif num == max_val:
-        op_choice = random.choice([Operator.lt, Operator.le])
+        op_choice = random.choice([ComparisonOperator.LT, ComparisonOperator.LE])
       else:
-        op_choice = random.choice([Operator.gt, Operator.ge, Operator.lt, Operator.le])
+        op_choice = random.choice(
+          [
+            ComparisonOperator.GT,
+            ComparisonOperator.GE,
+            ComparisonOperator.LT,
+            ComparisonOperator.LE,
+          ]
+        )
 
     elif (
       self.source[choice_col].dtype == 'object' or self.source[choice_col].dtype == 'string'
@@ -1948,17 +1339,24 @@ class TableSource:
         max_date = pd.to_datetime(max_val, format='%Y-%m-%d')
         num = pd.to_datetime(random.choice(pd.date_range(min_date, max_date))).strftime('%Y-%m-%d')
         if min_date == max_date:
-          op_choice = Operator.eq
+          op_choice = ComparisonOperator.EQ
         elif num == min_date:
-          op_choice = random.choice([Operator.gt, Operator.ge])
+          op_choice = random.choice([ComparisonOperator.GT, ComparisonOperator.GE])
         elif num == max_date:
-          op_choice = random.choice([Operator.lt, Operator.le])
+          op_choice = random.choice([ComparisonOperator.LT, ComparisonOperator.LE])
         else:
-          op_choice = random.choice([Operator.gt, Operator.ge, Operator.lt, Operator.le])
+          op_choice = random.choice(
+            [
+              ComparisonOperator.GT,
+              ComparisonOperator.GE,
+              ComparisonOperator.LT,
+              ComparisonOperator.LE,
+            ]
+          )
       except ValueError:
         startL = data_ranges[self.name][choice_col][0]
         num = random.choice(startL)  # starting char
-        op_choice = Operator.startswith
+        op_choice = ComparisonOperator.STARTS_WITH
 
     # enum values are stored in lists in data ranges
     elif (
@@ -1966,13 +1364,13 @@ class TableSource:
     ) and isinstance(data_ranges[self.name][choice_col], list):
       if random.choice([True, False]):
         num = f"'{random.choice(data_ranges[self.name][choice_col])}'"
-        op_choice = random.choice([Operator.eq, Operator.ne])
+        op_choice = random.choice([ComparisonOperator.EQ, ComparisonOperator.NE])
       else:
         num_in_values = random.randint(2, len(data_ranges[self.name][choice_col]))
         in_values = [
           val for val in random.sample(data_ranges[self.name][choice_col], num_in_values)
         ]
-        op_choice = Operator.in_op
+        op_choice = ComparisonOperator.IN
         num = in_values
 
     cur_condition = Condition(
@@ -2066,266 +1464,219 @@ class TableSource:
       )
 
     return [
-      Query(q_gen_query=q_gen_query_1, source=self),
-      Query(q_gen_query=q_gen_query_2, source=self),
-      Query(q_gen_query=q_gen_query_3, source=self),
-      Query(q_gen_query=q_gen_query_4, source=self),
+      Query(q_gen_query=q_gen_query_1, table_source=self),
+      Query(q_gen_query=q_gen_query_2, table_source=self),
+      Query(q_gen_query=q_gen_query_3, table_source=self),
+      Query(q_gen_query=q_gen_query_4, table_source=self),
     ]
 
 
-# This is just testing for TPC-H from previous model
-def test_patients():
-  """
-  Please use Main to run this script, this is just an example of workflow
-  :return:
-  """
-  df = pd.read_csv('./patient_ma_bn.csv')
+def test_run_TPCH(tpch_dataframes):
+  table_sources = {name: TableSource(df, name) for name, df in tpch_dataframes.items()}
 
-  q1 = [
-    Selection(
-      'df',
-      conditions=[
-        Condition('Age', Operator.gt, 50),
-        ConditionalOperator.OR,
-        Condition('Age', Operator.le, 70),
-      ],
-    ),
-    Projection('df', ['Age', 'Sex', 'operation', 'P1200', 'P1600', 'Smoking']),
-    GroupBy('df', 'Sex'),
-    Aggregate('df', 'min'),
-  ]
-
-  q2 = [
-    Selection(
-      'df',
-      conditions=[
-        Condition('Age', Operator.gt, 50),
-        ConditionalOperator.AND,
-        Condition('Height', Operator.le, 160),
-        ConditionalOperator.AND,
-        Condition('TNM_distribution', Operator.eq, 1),
-      ],
-    ),
-    Projection('df', ['Age', 'Sex', 'P1210', 'P100', 'Smoking', 'Weight']),
-    GroupBy('df', 'Smoking'),
-    Aggregate('df', 'count'),
-  ]
-
-  pq1 = Query(q1, source=df)
-  pq2 = Query(q2, source=df)
-
-  res = pq1.get_new_pandas_queries()[:1000] + pq2.get_new_pandas_queries()[:1000]
-
-  queries = QueryPool(res)
-  queries.generate_possible_merge_operations(3)
-
-
-def run_TPCH():
-  customer = TableSource(pd.read_csv('./../../../benchmarks/customer.csv'), 'customer')
-  lineitem = TableSource(pd.read_csv('./../../../benchmarks/lineitem.csv'), 'lineitem')
-  nation = TableSource(pd.read_csv('./../../../benchmarks/nation.csv'), 'nation')
-  orders = TableSource(pd.read_csv('./../../../benchmarks/orders.csv'), 'orders')
-  part = TableSource(pd.read_csv('./../../../benchmarks/part.csv'), 'part')
-  partsupp = TableSource(pd.read_csv('./../../../benchmarks/partsupp.csv'), 'partsupp')
-  region = TableSource(pd.read_csv('./../../../benchmarks/region.csv'), 'region')
-  supplier = TableSource(pd.read_csv('./../../../benchmarks/supplier.csv'), 'supplier')
-
-  q1 = [
-    Selection(
+  query_definitions = [
+    (
       'customer',
-      conditions=[
-        Condition('ACCTBAL', Operator.gt, 100),
-        ConditionalOperator.OR,
-        Condition('CUSTKEY', Operator.le, 70),
+      [
+        Selection(
+          'customer',
+          conditions=[
+            Condition('ACCTBAL', ComparisonOperator.GT, 100),
+            ConditionalOperator.OR,
+            Condition('CUSTKEY', ComparisonOperator.LE, 70),
+          ],
+        ),
+        Projection('customer', ['CUSTKEY', 'NATIONKEY', 'PHONE', 'ACCTBAL', 'MKTSEGMENT']),
       ],
     ),
-    Projection('customer', ['CUSTKEY', 'NATIONKEY', 'PHONE', 'ACCTBAL', 'MKTSEGMENT']),
-  ]
-
-  q2 = [
-    Selection(
+    (
       'customer',
-      conditions=[
-        Condition('ACCTBAL', Operator.gt, 100),
-        ConditionalOperator.OR,
-        Condition('CUSTKEY', Operator.le, 70),
+      [
+        Selection(
+          'customer',
+          conditions=[
+            Condition('ACCTBAL', ComparisonOperator.GT, 100),
+            ConditionalOperator.OR,
+            Condition('CUSTKEY', ComparisonOperator.LE, 70),
+          ],
+        ),
+        Projection('customer', ['CUSTKEY', 'NATIONKEY', 'PHONE', 'ACCTBAL', 'MKTSEGMENT']),
+        GroupBy('customer', 'NATIONKEY'),
+        Aggregate('customer', 'max'),
       ],
     ),
-    Projection('customer', ['CUSTKEY', 'NATIONKEY', 'PHONE', 'ACCTBAL', 'MKTSEGMENT']),
-    GroupBy('customer', 'NATIONKEY'),
-    Aggregate('customer', 'max'),
-  ]
-
-  q3 = [
-    Selection(
-      'lineitem',
-      conditions=[
-        Condition('SUPPKEY', Operator.gt, 100),
-        ConditionalOperator.OR,
-        Condition('QUANTITY', Operator.gt, 5),
-      ],
-    ),
-  ]
-
-  q4 = [
-    Selection(
-      'lineitem',
-      conditions=[
-        Condition('SUPPKEY', Operator.gt, 100),
-        ConditionalOperator.OR,
-        Condition('QUANTITY', Operator.gt, 5),
-        ConditionalOperator.AND,
-        Condition('DISCOUNT', Operator.gt, 0.05),
-      ],
-    ),
-    Projection(
+    (
       'lineitem',
       [
-        'PARTKEY',
-        'SUPPKEY',
-        'LINENUMBER',
-        'QUANTITY',
-        'DISCOUNT',
-        'TAX',
-        'SHIPDATE',
+        Selection(
+          'lineitem',
+          conditions=[
+            Condition('SUPPKEY', ComparisonOperator.GT, 100),
+            ConditionalOperator.OR,
+            Condition('QUANTITY', ComparisonOperator.GT, 5),
+          ],
+        ),
       ],
     ),
-  ]
-
-  q5 = [
-    Selection(
-      'lineitem',
-      conditions=[
-        Condition('SUPPKEY', Operator.gt, 100),
-        ConditionalOperator.OR,
-        Condition('QUANTITY', Operator.gt, 5),
-        ConditionalOperator.AND,
-        Condition('DISCOUNT', Operator.gt, 0.05),
-      ],
-    ),
-    Projection(
+    (
       'lineitem',
       [
-        'PARTKEY',
-        'SUPPKEY',
-        'LINENUMBER',
-        'QUANTITY',
-        'RETURNFLAG',
-        'DISCOUNT',
-        'TAX',
-        'SHIPDATE',
-        'SHIPMODE',
+        Selection(
+          'lineitem',
+          conditions=[
+            Condition('SUPPKEY', ComparisonOperator.GT, 100),
+            ConditionalOperator.OR,
+            Condition('QUANTITY', ComparisonOperator.GT, 5),
+            ConditionalOperator.AND,
+            Condition('DISCOUNT', ComparisonOperator.GT, 0.05),
+          ],
+        ),
+        Projection(
+          'lineitem',
+          ['PARTKEY', 'SUPPKEY', 'LINENUMBER', 'QUANTITY', 'DISCOUNT', 'TAX', 'SHIPDATE'],
+        ),
       ],
     ),
-    GroupBy('lineitem', 'RETURNFLAG'),
-    Aggregate('lineitem', 'min'),
-  ]
-
-  q6 = [
-    Selection('nation', conditions=[Condition('REGIONKEY', Operator.gt, 0)]),
-    Projection('nation', ['REGIONKEY', 'N_NAME', 'N_COMMENT']),
-  ]
-
-  q7 = [Selection('region', conditions=[Condition('REGIONKEY', Operator.ge, 0)])]
-
-  q8 = [
-    Selection(
-      'orders',
-      conditions=[
-        Condition('TOTALPRICE', Operator.gt, 50000.0),
-        ConditionalOperator.OR,
-        Condition('SHIPPRIORITY', Operator.eq, 0),
+    (
+      'lineitem',
+      [
+        Selection(
+          'lineitem',
+          conditions=[
+            Condition('SUPPKEY', ComparisonOperator.GT, 100),
+            ConditionalOperator.OR,
+            Condition('QUANTITY', ComparisonOperator.GT, 5),
+            ConditionalOperator.AND,
+            Condition('DISCOUNT', ComparisonOperator.GT, 0.05),
+          ],
+        ),
+        Projection(
+          'lineitem',
+          [
+            'PARTKEY',
+            'SUPPKEY',
+            'LINENUMBER',
+            'QUANTITY',
+            'RETURNFLAG',
+            'DISCOUNT',
+            'TAX',
+            'SHIPDATE',
+            'SHIPMODE',
+          ],
+        ),
+        GroupBy('lineitem', 'RETURNFLAG'),
+        Aggregate('lineitem', 'min'),
       ],
     ),
-    Projection('orders', ['CUSTKEY', 'TOTALPRICE', 'ORDERPRIORITY', 'CLERK']),
-  ]
-
-  q9 = [
-    Selection(
-      'orders',
-      conditions=[
-        Condition('TOTALPRICE', Operator.gt, 50000.0),
-        ConditionalOperator.OR,
-        Condition('SHIPPRIORITY', Operator.eq, 0),
+    (
+      'nation',
+      [
+        Selection('nation', conditions=[Condition('REGIONKEY', ComparisonOperator.GT, 0)]),
+        Projection('nation', ['REGIONKEY', 'N_NAME', 'N_COMMENT']),
       ],
     ),
-    Projection(
-      'orders',
-      ['ORDERSTATUS', 'CUSTKEY', 'TOTALPRICE', 'ORDERPRIORITY', 'CLERK'],
+    (
+      'region',
+      [
+        Selection('region', conditions=[Condition('REGIONKEY', ComparisonOperator.GE, 0)]),
+      ],
     ),
-    GroupBy('orders', 'ORDERSTATUS'),
-    Aggregate('orders', 'max'),
-  ]
-
-  q10 = [
-    Selection(
+    (
+      'orders',
+      [
+        Selection(
+          'orders',
+          conditions=[
+            Condition('TOTALPRICE', ComparisonOperator.GT, 50000.0),
+            ConditionalOperator.OR,
+            Condition('SHIPPRIORITY', ComparisonOperator.EQ, 0),
+          ],
+        ),
+        Projection('orders', ['CUSTKEY', 'TOTALPRICE', 'ORDERPRIORITY', 'CLERK']),
+      ],
+    ),
+    (
+      'orders',
+      [
+        Selection(
+          'orders',
+          conditions=[
+            Condition('TOTALPRICE', ComparisonOperator.GT, 50000.0),
+            ConditionalOperator.OR,
+            Condition('SHIPPRIORITY', ComparisonOperator.EQ, 0),
+          ],
+        ),
+        Projection(
+          'orders',
+          ['ORDERSTATUS', 'CUSTKEY', 'TOTALPRICE', 'ORDERPRIORITY', 'CLERK'],
+        ),
+        GroupBy('orders', 'ORDERSTATUS'),
+        Aggregate('orders', 'max'),
+      ],
+    ),
+    (
       'supplier',
-      conditions=[
-        Condition('NATIONKEY', Operator.gt, 10),
-        ConditionalOperator.OR,
-        Condition('ACCTBAL', Operator.le, 5000),
+      [
+        Selection(
+          'supplier',
+          conditions=[
+            Condition('NATIONKEY', ComparisonOperator.GT, 10),
+            ConditionalOperator.OR,
+            Condition('ACCTBAL', ComparisonOperator.LE, 5000),
+          ],
+        ),
+        Projection('supplier', ['S_NAME', 'NATIONKEY', 'ACCTBAL']),
       ],
     ),
-    Projection('supplier', ['S_NAME', 'NATIONKEY', 'ACCTBAL']),
-  ]
-
-  q11 = [
-    Selection(
+    (
       'supplier',
-      conditions=[
-        Condition('NATIONKEY', Operator.gt, 10),
-        ConditionalOperator.OR,
-        Condition('ACCTBAL', Operator.le, 5000),
+      [
+        Selection(
+          'supplier',
+          conditions=[
+            Condition('NATIONKEY', ComparisonOperator.GT, 10),
+            ConditionalOperator.OR,
+            Condition('ACCTBAL', ComparisonOperator.LE, 5000),
+          ],
+        ),
+      ],
+    ),
+    (
+      'part',
+      [
+        Selection('part', conditions=[Condition('RETAILPRICE', ComparisonOperator.GT, 500)]),
+      ],
+    ),
+    (
+      'partsupp',
+      [
+        Selection('partsupp', conditions=[Condition('SUPPLYCOST', ComparisonOperator.LE, 1000)]),
       ],
     ),
   ]
 
-  q12 = [Selection('part', conditions=[Condition('RETAILPRICE', Operator.gt, 500)])]
+  structure = QueryStructure(
+    aggregation=True,
+    group_by=True,
+    multi_line=False,
+    num_merges=3,
+    num_queries=1000,
+    num_selections=2,
+    projection=True,
+  )
 
-  q13 = [Selection('partsupp', conditions=[Condition('SUPPLYCOST', Operator.le, 1000)])]
-
-  pq1 = Query(q1, source=customer)
-  pq2 = Query(q2, source=customer)
-  pq3 = Query(q3, source=lineitem)
-  pq4 = Query(q4, source=lineitem)
-  pq5 = Query(q5, source=lineitem)
-  pq6 = Query(q6, source=nation)
-  pq7 = Query(q7, source=region)
-  pq8 = Query(q8, source=orders)
-  pq9 = Query(q9, source=orders)
-  pq10 = Query(q10, source=supplier)
-  pq11 = Query(q11, source=supplier)
-  pq12 = Query(q12, source=part)
-  pq13 = Query(q13, source=partsupp)
-
-  all_queries = [
-    pq1,
-    pq2,
-    pq3,
-    pq4,
-    pq5,
-    pq6,
-    pq7,
-    pq8,
-    pq9,
-    pq10,
-    pq11,
-    pq12,
-    pq13,
-  ]
+  queries = [Query(q, table_sources[table]) for table, q in query_definitions]
 
   res = []
-  count = 1
 
-  for query in all_queries:
-    print(f'*** query #{count} is generating ***')
-    count += 1
-    res += query.get_new_pandas_queries()[:100]
-
-  print('done')
+  for query in queries:
+    res.extend(query.get_new_pandas_queries(structure)[:100])
 
   pandas_queries_list = QueryPool(res)
-  pandas_queries_list.generate_possible_merge_operations()
+  pandas_queries_list.generate_possible_merge_operations(structure)
+
+  assert len(res) > 0, 'No queries were generated'
+  assert len(pandas_queries_list.result_queries) > 0, 'No merged queries were generated'
 
 
 # TODO(liam): Centralize data access in a single top-level structure.
@@ -2387,25 +1738,22 @@ def main():
         res += query.get_new_pandas_queries(query_structure)[:100]
 
     with timer('generating merged queries'):
-      pandas_queries_list = QueryPool(res, verbose=arguments.verbose)
+      query_pool = QueryPool(res, verbose=arguments.verbose)
 
-      pandas_queries_list.shuffle_queries()
+      query_pool.shuffle_queries()
 
-      pandas_queries_list.generate_possible_merge_operations(
+      query_pool.generate_possible_merge_operations(
         query_structure,
         max_merge=query_structure.num_merges,
         max_q=query_structure.num_queries,
       )
 
     with timer('saving merged queries'):
-      if query_structure.multi_line:
-        pandas_queries_list.save_merged_examples_multiline(
-          directory=arguments.output_directory, filename='merged_queries_auto_sf0000'
-        )
-      else:
-        pandas_queries_list.save_merged_examples(
-          arguments.output_directory, 'merged_queries_auto_sf0000'
-        )
+      query_pool.save(
+        directory=arguments.output_directory,
+        filename='merged_queries_auto_sf0000',
+        multi_line=query_structure.multi_line,
+      )
 
   total_time = time.time() - start_time
 
