@@ -1,9 +1,9 @@
 {
-  "num_selections": 2,
-  "projection": true,
+  "allow_aggregation": true,
+  "allow_group_by": true,
+  "allow_projection": true,
+  "multi_line": false,
   "num_merges": 3,
-  "group_by": true,
-  "aggregation": true,
   "num_queries": 1000,
-  "multi_line": false
+  "num_selections": 2
 }

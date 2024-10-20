@@ -1656,13 +1656,13 @@ def test_run_TPCH(tpch_dataframes):
   ]
 
   structure = QueryStructure(
-    aggregation=True,
-    group_by=True,
+    allow_aggregation=True,
+    allow_group_by=True,
     multi_line=False,
     num_merges=3,
     num_queries=1000,
     num_selections=2,
-    projection=True,
+    allow_projection=True,
   )
 
   queries = [Query(q, table_sources[table]) for table, q in query_definitions]

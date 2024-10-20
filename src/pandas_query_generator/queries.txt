@@ -1,0 +1,40 @@
+Query 19:
+orders
+orders = orders[(orders['TOTALPRICE'] <= 21155.03)]
+orders = orders[(orders['O_CUSTKEY'] > 126727)]
+orders = orders[['ORDERPRIORITY', 'CLERK']]
+orders = orders.groupby(['CLERK']).agg({'ORDERPRIORITY': 'min'})
+orders = orders[(orders['ORDERPRIORITY'] != "'5-LOW'")]
+orders = orders[['ORDERPRIORITY']]
+
+Operations:
+  Selection: orders[(orders['TOTALPRICE'] <= 21155.03)]
+  Selection: orders[(orders['O_CUSTKEY'] > 126727)]
+  Projection: orders[['ORDERPRIORITY', 'CLERK']]
+  GroupByAggregate: orders.groupby(['CLERK']).agg({'ORDERPRIORITY': 'min'})
+  Selection: orders[(orders['ORDERPRIORITY'] != "'5-LOW'")]
+  Projection: orders[['ORDERPRIORITY']]
+
+Available columns:
+  orders: ORDERPRIORITY
+
+Query 21:
+
+partsupp
+partsupp = partsupp[(partsupp['AVAILQTY'] != 4627)]
+partsupp = partsupp[['PS_SUPPKEY', 'PS_PARTKEY', 'P_COMMENT']]
+partsupp = partsupp[(partsupp['PS_PARTKEY'] <= 47)]
+partsupp = partsupp[(partsupp['PS_PARTKEY'] > 16)]
+partsupp = partsupp.groupby(['P_COMMENT']).agg({'PS_SUPPKEY': 'max', 'PS_PARTKEY': 'max'})
+partsupp = partsupp[['PS_PARTKEY']]
+
+Operations:
+  Selection: partsupp[(partsupp['AVAILQTY'] != 4627)]
+  Projection: partsupp[['PS_SUPPKEY', 'PS_PARTKEY', 'P_COMMENT']]
+  Selection: partsupp[(partsupp['PS_PARTKEY'] <= 47)]
+  Selection: partsupp[(partsupp['PS_PARTKEY'] > 16)]
+  GroupByAggregate: partsupp.groupby(['P_COMMENT']).agg({'PS_SUPPKEY': 'max', 'PS_PARTKEY': 'max'})
+  Projection: partsupp[['PS_PARTKEY']]
+
+Available columns:
+  partsupp: PS_PARTKEY
