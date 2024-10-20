@@ -5,8 +5,8 @@ from abc import abstractmethod
 from collections import Counter
 from contextlib import contextmanager
 from dataclasses import dataclass, field
-from typing import runtime_checkable
 
+import pandas as pd
 from entity import *
 from schema import Schema
 
@@ -27,7 +27,7 @@ class QueryStructure:
   multi_line: bool
 
 
-@runtime_checkable
+@t.runtime_checkable
 class Operation(t.Protocol):
   """
   Abstract base class for query operations.
@@ -53,21 +53,31 @@ class Selection(Operation):
   Represents a selection operation in a query.
 
   Attributes:
-    conditions (List[Tuple[str, str, Any]]): List of selection conditions.
+  conditions (List[Tuple[str, str, Any, str]]): List of selection conditions and operators.
+    Each tuple contains (column, operation, value, next_condition_operator).
+    The last tuple's next_condition_operator is ignored.
   """
 
-  conditions: t.List[t.Tuple[str, str, t.Any]] = field(default_factory=list)
+  conditions: t.List[t.Tuple[str, str, t.Any, str]] = field(default_factory=list)
 
   def apply(self, entity: str) -> str:
-    conditions = []
+    if not self.conditions:
+      return ''
 
-    for col, op, val in self.conditions:
+    formatted_conditions = []
+
+    for i, (col, op, val, next_op) in enumerate(self.conditions):
       if op in ['.str.startswith', '.isin']:
-        conditions.append(f'({entity}[{col}]{op}({val}))')
+        condition = f'({entity}[{col}]{op}({val}))'
       else:
-        conditions.append(f'({entity}[{col}] {op} {val})')
+        condition = f'({entity}[{col}] {op} {val})'
 
-    return '[' + ' & '.join(conditions) + ']'
+      if i < len(self.conditions) - 1:
+        condition += f' {next_op} '
+
+      formatted_conditions.append(f'{condition}')
+
+    return f"[{''.join(formatted_conditions)}]"
 
 
 @dataclass
@@ -97,11 +107,11 @@ class Merge(Operation):
 
 @dataclass
 class GroupByAggregation(Operation):
-  group_by: t.List[str]
+  group_by_columns: t.List[str]
   agg_function: str
 
   def apply(self, entity: str) -> str:
-    group_cols = ', '.join(f"'{col}'" for col in self.group_by)
+    group_cols = ', '.join(f"'{col}'" for col in self.group_by_columns)
     numeric_only = 'numeric_only=True' if self.agg_function != 'count' else ''
     return f".groupby(by=[{group_cols}]).agg('{self.agg_function}'{f", {numeric_only}" if numeric_only else ""})"
 
@@ -114,9 +124,41 @@ class Query:
 
   entity: str
   operations: t.List[Operation]
+  multi_line: bool
 
   def __str__(self) -> str:
+    if self.multi_line:
+      return self._format_multi_line()[0]
+    else:
+      return self._format_single_line()
+
+  def _format_single_line(self) -> str:
     return f'{self.entity}{''.join(op.apply(self.entity) for op in self.operations)}'
+
+  def _format_multi_line(self, start_counter: int = 1) -> t.Tuple[str, int]:
+    lines = []
+
+    df_counter, current_df = start_counter, self.entity
+
+    for op in self.operations:
+      if isinstance(op, Selection):
+        lines.append(f'df{df_counter} = {current_df}{op.apply(current_df)}')
+      elif isinstance(op, Projection):
+        lines.append(f'df{df_counter} = {current_df}{op.apply(current_df)}')
+      elif isinstance(op, Merge):
+        right_query, next_counter = op.right._format_multi_line(df_counter + 1)
+        lines.extend(right_query.split('\n'))
+        lines.append(
+          f"df{next_counter} = {current_df}.merge(df{next_counter-1}, left_on='{op.left_on}', right_on='{op.right_on}')"
+        )
+        df_counter = next_counter
+      elif isinstance(op, GroupByAggregation):
+        lines.append(f'df{df_counter} = {current_df}{op.apply(current_df)}')
+
+      current_df = f'df{df_counter}'
+      df_counter += 1
+
+    return '\n'.join(lines), df_counter
 
 
 class QueryBuilder:
@@ -167,7 +209,7 @@ class QueryBuilder:
     if self.query_structure.allow_groupby_aggregation:
       self._add_operation(self._generate_operation(GroupByAggregation))
 
-    query = Query(self.entity_name, self.operations)
+    query = Query(self.entity_name, self.operations, self.query_structure.multi_line)
 
     return query
 
@@ -214,6 +256,7 @@ class QueryBuilder:
     This method creates a selection operation with random conditions based on
     the properties of the selected entity. It handles different property types
     (int, float, string, enum, date) and generates appropriate conditions for each.
+    It also randomly selects operators ('&' or '|') between conditions.
 
     Returns:
         Operation: The generated selection operation.
@@ -233,23 +276,24 @@ class QueryBuilder:
           value = random.uniform(min, max)
           if isinstance(prop, PropertyInt):
             value = int(value)
-          conditions.append((f"'{column}'", op, value))
         case PropertyString(starting_character):
           op = random.choice(['==', '!=', '.str.startswith'])
           value = random.choice(starting_character)
-          conditions.append((f"'{column}'", op, f"'{value}'"))
+          value = f"'{value}'"  # Wrap string values in quotes
         case PropertyEnum(values):
           op = random.choice(['==', '!=', '.isin'])
           if op == '.isin':
             value = random.sample(values, random.randint(1, len(values)))
-            conditions.append((f"'{column}'", op, value))
           else:
             value = random.choice(values)
-            conditions.append((f"'{column}'", op, value))
         case PropertyDate(min, max):
           op = random.choice(['==', '!=', '<', '<=', '>', '>='])
           value = f"'{random.choice([min, max]).isoformat()}'"
-          conditions.append((f"'{column}'", op, value))
+
+      # Select the operator for the next condition (ignored for the last condition)
+      next_op = random.choice(['&', '|'])
+
+      conditions.append((f"'{column}'", op, value, next_op))
 
     return Selection(conditions)
 
@@ -328,7 +372,9 @@ class QueryBuilder:
     right_query = right_builder.build()
 
     return Merge(
-      right=Query(right_query.entity, right_query.operations), left_on=left_on, right_on=right_on
+      right=Query(right_query.entity, right_query.operations, self.query_structure.multi_line),
+      left_on=left_on,
+      right_on=right_on,
     )
 
   def _generate_group_by_aggregation(self) -> Operation:
@@ -407,7 +453,7 @@ def analyze_queries(queries: t.List[Query]) -> t.Dict[str, t.Any]:
       elif isinstance(op, Projection):
         stats['projections'][len(op.columns)] += 1
       elif isinstance(op, GroupByAggregation):
-        stats['groupby_aggregations'][len(op.group_by)] += 1
+        stats['groupby_aggregations'][len(op.group_by_columns)] += 1
       stats['operations'][type(op).__name__] += 1
 
     stats['avg_operations_per_query'] += operation_count
@@ -451,9 +497,55 @@ def print_stats(stats: t.Dict[str, t.Any]):
     print(f'  {entity}: {count} ({percentage:.2f}%)')
 
 
+def execute_query(
+  query: Query, sample_data: t.Dict[str, pd.DataFrame]
+) -> t.Optional[t.Union[pd.DataFrame, pd.Series]]:
+  """
+  Execute a given query on the provided sample data.
+
+  This function attempts to execute the query against the sample data and returns
+  the result. If an exception occurs during execution, it returns None.
+
+  Args:
+    query (Query): The Query object to be executed. This should be a valid
+                   Query instance containing the entity and operations to perform.
+    sample_data (Dict[str, DataFrame]): A dictionary containing sample data for each
+                                        entity in the schema. The keys should be entity
+                                        names, and the values should be the corresponding
+                                        sample data as pandas DataFrames.
+
+  Returns:
+    Optional[Union[DataFrame, Series]]: The result of the query execution if successful,
+                                        which is typically a pandas DataFrame or Series.
+                                        Returns None if an exception occurs during
+                                        query execution.
+
+  Raises:
+    No exceptions are raised by this function. All exceptions during query
+    execution are caught and result in a None return value.
+
+  Note:
+    This function uses the `exec` built-in function to execute the query string.
+    Make sure the Query objects and sample_data are from trusted sources to
+    prevent potential security risks associated with executing arbitrary code.
+  """
+  try:
+    full_query, environment = str(query), {**sample_data}
+    exec(full_query, globals(), environment)
+    result = environment.get(query.entity)
+    if isinstance(result, (pd.DataFrame, pd.Series)):
+      return result
+    return None
+  except:
+    return None
+
+
 if __name__ == '__main__':
   schema = Schema.from_file('../../examples/data_structure_tpch_csv.json')
 
+  sample_data = {entity: schema.entities[entity].generate_dataframe() for entity in schema.entities}
+
+  # Users will be able to configure these via the CLI.
   query_structure = QueryStructure(
     allow_groupby_aggregation=True,
     max_groupby_columns=2,
@@ -462,7 +554,7 @@ if __name__ == '__main__':
     max_projections=5,
     max_selection_conditions=4,
     max_selections=5,
-    multi_line=False,
+    multi_line=True,
   )
 
   @contextmanager
@@ -482,5 +574,8 @@ if __name__ == '__main__':
       print()
       print(query)
       print()
+      print('Results:')
+      print()
+      print(execute_query(query, sample_data))
 
   print_stats(analyze_queries(queries))
