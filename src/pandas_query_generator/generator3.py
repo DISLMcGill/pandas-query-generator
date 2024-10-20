@@ -1,3 +1,4 @@
+import multiprocessing
 import random
 import time
 import typing as t
@@ -5,6 +6,7 @@ from abc import abstractmethod
 from collections import Counter
 from contextlib import contextmanager
 from dataclasses import dataclass, field
+from functools import partial
 
 import pandas as pd
 from entity import *
@@ -128,36 +130,29 @@ class Query:
   multi_line: bool
 
   def __str__(self) -> str:
-    if self.multi_line:
-      return self._format_multi_line()[0]
-    else:
-      return self._format_single_line()
+    return (
+      self.format_multi_line()[0]
+      if self.multi_line
+      else f'{self.entity}{''.join(op.apply(self.entity) for op in self.operations)}'
+    )
 
-  def _format_single_line(self) -> str:
-    return f'{self.entity}{''.join(op.apply(self.entity) for op in self.operations)}'
-
-  def _format_multi_line(self, start_counter: int = 1) -> t.Tuple[str, int]:
+  def format_multi_line(self, start_counter: int = 1) -> t.Tuple[str, int]:
     lines = []
 
     df_counter, current_df = start_counter, self.entity
 
     for op in self.operations:
-      if isinstance(op, Selection):
-        lines.append(f'df{df_counter} = {current_df}{op.apply(current_df)}')
-      elif isinstance(op, Projection):
+      if isinstance(op, (Selection, Projection, GroupByAggregation)):
         lines.append(f'df{df_counter} = {current_df}{op.apply(current_df)}')
       elif isinstance(op, Merge):
-        right_query, next_counter = op.right._format_multi_line(df_counter + 1)
+        right_query, next_counter = op.right.format_multi_line(df_counter + 1)
         lines.extend(right_query.split('\n'))
         lines.append(
           f"df{next_counter} = {current_df}.merge(df{next_counter-1}, left_on='{op.left_on}', right_on='{op.right_on}')"
         )
         df_counter = next_counter
-      elif isinstance(op, GroupByAggregation):
-        lines.append(f'df{df_counter} = {current_df}{op.apply(current_df)}')
 
-      current_df = f'df{df_counter}'
-      df_counter += 1
+      current_df, df_counter = f'df{df_counter}', df_counter + 1
 
     return '\n'.join(lines), df_counter
 
@@ -173,10 +168,6 @@ class QueryBuilder:
     self.entity = self.schema.entities[self.entity_name]
 
     self.available_columns = list(self.entity.properties.keys())
-
-    self.sample_data = {
-      entity: self.schema.entities[entity].generate_dataframe() for entity in self.schema.entities
-    }
 
   def build(self) -> Query:
     """
@@ -398,39 +389,28 @@ class QueryBuilder:
 
     return GroupByAggregation(group_columns, agg_function)
 
-  def _is_query_meaningful(self, query: Query) -> bool:
-    """
-    Check if the generated query is meaningful (i.e., produces non-empty results).
-
-    This method attempts to execute the query against the sample data and checks
-    if the result is non-empty. It catches any exceptions that might occur during
-    execution and considers such queries as not meaningful.
-
-    Args:
-      query (Query): The query to check.
-
-    Returns:
-      bool: True if the query is meaningful (produces non-empty results), False otherwise.
-    """
-    try:
-      full_query, environment = str(query), {**self.sample_data}
-      exec(full_query, globals(), environment)
-      result = environment.get(query.entity, None)
-      return result is not None and not result.empty
-    except:
-      return False
-
 
 class Generator:
   def __init__(self, schema: Schema, query_structure: QueryStructure):
-    self.schema: Schema = schema
-    self.query_structure: QueryStructure = query_structure
+    self.schema = schema
+    self.query_structure = query_structure
+
+  @staticmethod
+  def _generate_single_query(schema, query_structure, _):
+    return QueryBuilder(schema, query_structure).build()
 
   def generate(self, queries: int) -> t.List[Query]:
-    return [
-      QueryBuilder(self.schema, self.query_structure).build()
-      for _ in tqdm(range(queries), desc='Generating queries', unit='query')
-    ]
+    with multiprocessing.Pool() as pool:
+      generate_func = partial(self._generate_single_query, self.schema, self.query_structure)
+
+      return list(
+        tqdm(
+          pool.imap(generate_func, range(queries)),
+          total=queries,
+          desc='Generating queries',
+          unit='query',
+        )
+      )
 
 
 def analyze_queries(queries: t.List[Query]) -> t.Dict[str, t.Any]:
@@ -544,6 +524,19 @@ def execute_query(
     return None
 
 
+@contextmanager
+def timer(description):
+  start = time.time()
+  yield
+  elapsed_time = time.time() - start
+  print(f'Time taken for {description}: {elapsed_time:.2f} seconds')
+
+
+def execute_query_wrapper(args):
+  query, sample_data = args
+  return execute_query(query, sample_data)
+
+
 if __name__ == '__main__':
   schema = Schema.from_file('../../examples/data_structure_tpch_csv.json')
 
@@ -561,25 +554,30 @@ if __name__ == '__main__':
     multi_line=True,
   )
 
-  @contextmanager
-  def timer(description):
-    start = time.time()
-    yield
-    elapsed_time = time.time() - start
-    print(f'Time taken for {description}: {elapsed_time:.2f} seconds')
-
   generator = Generator(schema, query_structure)
 
-  with timer('Generating 100 queries'):
+  with timer('Generating and executing 100 queries'):
     queries = generator.generate(100)
 
-    for i, query in enumerate(queries):
+    ctx = multiprocessing.get_context('fork')
+
+    with ctx.Pool() as pool:
+      results = list(
+        tqdm(
+          pool.imap(execute_query_wrapper, ((query, sample_data) for query in queries)),
+          total=len(queries),
+          desc='Executing queries',
+          unit='query',
+        )
+      )
+
+    for i, (query, result) in enumerate(zip(queries, results)):
       print(f'Query {i + 1}')
       print()
       print(query)
       print()
       print('Results:')
       print()
-      print(execute_query(query, sample_data))
+      print(result)
 
   print_stats(analyze_queries(queries))
