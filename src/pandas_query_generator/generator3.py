@@ -9,6 +9,7 @@ from dataclasses import dataclass, field
 import pandas as pd
 from entity import *
 from schema import Schema
+from tqdm import tqdm
 
 
 @dataclass
@@ -426,7 +427,10 @@ class Generator:
     self.query_structure: QueryStructure = query_structure
 
   def generate(self, queries: int) -> t.List[Query]:
-    return [QueryBuilder(self.schema, self.query_structure).build() for _ in range(queries)]
+    return [
+      QueryBuilder(self.schema, self.query_structure).build()
+      for _ in tqdm(range(queries), desc='Generating queries', unit='query')
+    ]
 
 
 def analyze_queries(queries: t.List[Query]) -> t.Dict[str, t.Any]:
