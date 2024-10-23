@@ -27,20 +27,28 @@ class Query:
 
   def format_multi_line(self, start_counter: int = 1) -> t.Tuple[str, int]:
     lines = []
-
-    df_counter, current_df = start_counter, self.entity
+    df_counter = start_counter
+    current_df = self.entity
 
     for op in self.operations:
       if isinstance(op, (Selection, Projection, GroupByAggregation)):
         lines.append(f'df{df_counter} = {current_df}{op.apply(current_df)}')
+        current_df = f'df{df_counter}'
+        df_counter += 1
       elif isinstance(op, Merge):
-        right_query, next_counter = op.right.format_multi_line(df_counter + 1)
-        lines.extend(right_query.split('\n'))
-        lines.append(
-          f"df{next_counter} = {current_df}.merge(df{next_counter-1}, left_on='{op.left_on}', right_on='{op.right_on}')"
-        )
-        df_counter = next_counter
+        right_statements, right_final_counter = op.right.format_multi_line(df_counter)
 
-      current_df, df_counter = f'df{df_counter}', df_counter + 1
+        if right_statements:
+          lines.extend(right_statements.split('\n'))
+
+        right_df = f'df{right_final_counter-1}'
+
+        lines.append(
+          f'df{right_final_counter} = {current_df}.merge({right_df}, '
+          f"left_on='{op.left_on}', right_on='{op.right_on}')"
+        )
+
+        current_df = f'df{right_final_counter}'
+        df_counter = right_final_counter + 1
 
     return '\n'.join(lines), df_counter

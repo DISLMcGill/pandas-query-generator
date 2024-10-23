@@ -11,17 +11,20 @@ from .schema import Schema
 
 
 class Generator:
-  def __init__(self, schema: Schema, query_structure: QueryStructure):
+  def __init__(self, schema: Schema, query_structure: QueryStructure, multi_line: bool):
     self.schema = schema
     self.query_structure = query_structure
+    self.multi_line = multi_line
 
   @staticmethod
-  def _generate_single_query(schema, query_structure, _):
-    return QueryBuilder(schema, query_structure).build()
+  def _generate_single_query(schema, query_structure, multi_line, _):
+    return QueryBuilder(schema, query_structure, multi_line).build()
 
   def generate(self, queries: int) -> t.List[Query]:
     with multiprocessing.Pool() as pool:
-      generate_func = partial(self._generate_single_query, self.schema, self.query_structure)
+      generate_func = partial(
+        self._generate_single_query, self.schema, self.query_structure, self.multi_line
+      )
 
       return list(
         tqdm(

@@ -13,9 +13,10 @@ from .selection import Selection
 
 
 class QueryBuilder:
-  def __init__(self, schema: Schema, query_structure: QueryStructure):
+  def __init__(self, schema: Schema, query_structure: QueryStructure, multi_line: bool):
     self.schema: Schema = schema
     self.query_structure: QueryStructure = query_structure
+    self.multi_line = multi_line
 
     self.operations: t.List[Operation] = []
 
@@ -45,7 +46,7 @@ class QueryBuilder:
     if self.query_structure.allow_groupby_aggregation and random.random() < 0.5:
       self._add_operation(self._generate_operation(GroupByAggregation))
 
-    return Query(self.entity_name, self.operations, self.query_structure.multi_line)
+    return Query(self.entity_name, self.operations, self.multi_line)
 
   def _add_operation(self, operation: Operation) -> None:
     """
@@ -173,7 +174,6 @@ class QueryBuilder:
       max_merges=1,
       max_projection_columns=4,
       max_selection_conditions=2,
-      multi_line=False,
     )
 
     possible_right_entities = []
@@ -196,7 +196,7 @@ class QueryBuilder:
     else:
       left_on, right_on, right_entity_name = random.choice(possible_right_entities)
 
-    right_builder = QueryBuilder(self.schema, right_query_structure)
+    right_builder = QueryBuilder(self.schema, right_query_structure, self.multi_line)
 
     right_builder.entity_name = right_entity_name
     right_builder.entity = self.schema.entities[right_entity_name]
@@ -205,7 +205,7 @@ class QueryBuilder:
     right_query = right_builder.build()
 
     return Merge(
-      right=Query(right_query.entity, right_query.operations, self.query_structure.multi_line),
+      right=Query(right_query.entity, right_query.operations, self.multi_line),
       left_on=left_on,
       right_on=right_on,
     )

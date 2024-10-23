@@ -8,6 +8,7 @@ class Arguments:
   A wrapper class providing concrete types for parsed command-line arguments.
   """
 
+  multi_line: bool
   num_queries: int
   output_file: str
   query_structure: str
@@ -17,6 +18,12 @@ class Arguments:
   @staticmethod
   def from_args() -> 'Arguments':
     parser = argparse.ArgumentParser(description='Pandas Query Generator CLI')
+
+    parser.add_argument(
+      '--multi-line',
+      action='store_true',
+      help='Format queries on multiple lines',
+    )
 
     parser.add_argument(
       '--num-queries',
@@ -49,10 +56,8 @@ class Arguments:
 
     parser.add_argument(
       '--verbose',
-      type=bool,
-      required=False,
-      default=False,
-      help='Whether or not to print extra generation information',
+      action='store_true',
+      help='Print extra generation information',
     )
 
     return Arguments(**vars(parser.parse_args()))

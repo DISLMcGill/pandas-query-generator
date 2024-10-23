@@ -14,7 +14,6 @@ class QueryStructure:
   max_merges: int
   max_projection_columns: int
   max_selection_conditions: int
-  multi_line: bool
 
   @staticmethod
   def from_file(path: str) -> 'QueryStructure':
@@ -37,5 +36,4 @@ class QueryStructure:
       max_merges=content.get('max_merges', 2),
       max_projection_columns=content.get('max_projection_columns', 4),
       max_selection_conditions=content.get('max_selection_conditions', 2),
-      multi_line=content.get('multi_line', False),
     )

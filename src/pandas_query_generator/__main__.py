@@ -23,7 +23,7 @@ def main():
 
   sample_data = {entity: schema.entities[entity].generate_dataframe() for entity in schema.entities}
 
-  generator = Generator(schema, query_structure)
+  generator = Generator(schema, query_structure, arguments.multi_line)
 
   @contextmanager
   def timer(description):
