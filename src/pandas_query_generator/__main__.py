@@ -1,5 +1,7 @@
 import multiprocessing
 import os
+import time
+from contextlib import contextmanager
 
 from tqdm import tqdm
 
@@ -22,6 +24,17 @@ def main():
   sample_data = {entity: schema.entities[entity].generate_dataframe() for entity in schema.entities}
 
   generator = Generator(schema, query_structure)
+
+  @contextmanager
+  def timer(description):
+    start = time.time()
+    yield
+    elapsed_time = time.time() - start
+    print(f'Time taken for {description}: {elapsed_time:.2f} seconds')
+
+  def execute_query_wrapper(args):
+    query, sample_data = args
+    return execute_query(query, sample_data)
 
   with timer(f'Generating and executing {arguments.num_queries} queries'):
     queries = generator.generate(arguments.num_queries)

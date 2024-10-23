@@ -1,7 +1,5 @@
-import time
 import typing as t
 from collections import Counter
-from contextlib import contextmanager
 
 import pandas as pd
 
@@ -10,6 +8,27 @@ from .merge import Merge
 from .projection import Projection
 from .query import Query
 from .selection import Selection
+
+
+class OperationStats(t.TypedDict):
+  """Statistics for each operation type"""
+
+  total: int
+  complexity_distribution: Counter
+
+
+class QueryStats(t.TypedDict):
+  """Comprehensive statistics about queries and their execution"""
+
+  total_queries: int
+  operations: t.Dict[str, int]  # Operation name -> count
+  merges: Counter  # Number of operations in right query -> count
+  selections: Counter  # Number of conditions -> count
+  projections: Counter  # Number of columns -> count
+  groupby_aggregations: Counter  # Number of groupby columns -> count
+  entities_used: Counter  # Entity name -> count
+  avg_operations_per_query: float
+  execution_results: t.Dict[str, t.Union[int, float]]  # Result statistics
 
 
 def execute_query(
@@ -57,40 +76,6 @@ def execute_query(
     return None
   except:
     return None
-
-
-@contextmanager
-def timer(description):
-  start = time.time()
-  yield
-  elapsed_time = time.time() - start
-  print(f'Time taken for {description}: {elapsed_time:.2f} seconds')
-
-
-def execute_query_wrapper(args):
-  query, sample_data = args
-  return execute_query(query, sample_data)
-
-
-class OperationStats(t.TypedDict):
-  """Statistics for each operation type"""
-
-  total: int
-  complexity_distribution: Counter
-
-
-class QueryStats(t.TypedDict):
-  """Comprehensive statistics about queries and their execution"""
-
-  total_queries: int
-  operations: t.Dict[str, int]  # Operation name -> count
-  merges: Counter  # Number of operations in right query -> count
-  selections: Counter  # Number of conditions -> count
-  projections: Counter  # Number of columns -> count
-  groupby_aggregations: Counter  # Number of groupby columns -> count
-  entities_used: Counter  # Entity name -> count
-  avg_operations_per_query: float
-  execution_results: t.Dict[str, t.Union[int, float]]  # Result statistics
 
 
 def generate_query_statistics(
