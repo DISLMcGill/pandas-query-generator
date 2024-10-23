@@ -10,18 +10,23 @@ Below is the standard output of `pqg --help`, which elaborates on the various
 command-line arguments the tool accepts:
 
 ```present uv run pqg --help
-usage: pqg [-h] --schema SCHEMA --params PARAMS
-           [--output-directory OUTPUT_DIRECTORY] [--verbose VERBOSE]
+usage: pqg [-h] [--multi-line] --num-queries NUM_QUERIES
+           [--output-file OUTPUT_FILE] --query-structure QUERY_STRUCTURE
+           --schema SCHEMA [--verbose]
 
 Pandas Query Generator CLI
 
 options:
   -h, --help            show this help message and exit
+  --multi-line          Format queries on multiple lines
+  --num-queries NUM_QUERIES
+                        The number of queries to generate
+  --output-file OUTPUT_FILE
+                        The name of the file to write the results to
+  --query-structure QUERY_STRUCTURE
+                        Path to the user-defined query structure JSON file
   --schema SCHEMA       Path to the relational schema JSON file
-  --params PARAMS       Path to the user-defined parameters JSON file
-  --output-directory OUTPUT_DIRECTORY
-                        Directory to write results to
-  --verbose VERBOSE     Whether or not to print extra generation information
+  --verbose             Print extra generation information
 ```
 
 ### Prior Art
