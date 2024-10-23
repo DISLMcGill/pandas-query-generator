@@ -13,6 +13,11 @@ from .schema import Schema
 from .utils import *
 
 
+def execute_query_wrapper(args):
+  query, sample_data = args
+  return execute_query(query, sample_data)
+
+
 def main():
   arguments = Arguments.from_args()
 
@@ -31,10 +36,6 @@ def main():
     yield
     elapsed_time = time.time() - start
     print(f'Time taken for {description}: {elapsed_time:.2f} seconds')
-
-  def execute_query_wrapper(args):
-    query, sample_data = args
-    return execute_query(query, sample_data)
 
   with timer(f'Generating and executing {arguments.num_queries} queries'):
     queries = generator.generate(arguments.num_queries)
