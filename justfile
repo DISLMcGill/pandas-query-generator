@@ -2,6 +2,11 @@ set dotenv-load
 
 export EDITOR := 'nvim'
 
+alias e := example
+alias f := fmt
+alias r := run
+alias t := test
+
 default:
   just --list
 
@@ -9,10 +14,13 @@ build:
   uv build
 
 dev-deps:
-  cargo install present
+  cargo install present tokei
 
 check:
   uv run ruff check
+
+count:
+  tokei
 
 example *args:
   uv run pqg  \
