@@ -8,8 +8,9 @@ class Arguments:
   A wrapper class providing concrete types for parsed command-line arguments.
   """
 
-  output_directory: str
-  params: str
+  num_queries: int
+  output_file: str
+  query_structure: str
   schema: str
   verbose: bool
 
@@ -18,25 +19,32 @@ class Arguments:
     parser = argparse.ArgumentParser(description='Pandas Query Generator CLI')
 
     parser.add_argument(
+      '--num-queries',
+      type=int,
+      required=True,
+      help='The number of queries to generate',
+    )
+
+    parser.add_argument(
+      '--output-file',
+      type=str,
+      required=False,
+      default='queries.txt',
+      help='The name of the file to write the results to',
+    )
+
+    parser.add_argument(
+      '--query-structure',
+      type=str,
+      required=True,
+      help='Path to the user-defined query structure JSON file',
+    )
+
+    parser.add_argument(
       '--schema',
       type=str,
       required=True,
       help='Path to the relational schema JSON file',
-    )
-
-    parser.add_argument(
-      '--params',
-      type=str,
-      required=True,
-      help='Path to the user-defined parameters JSON file',
-    )
-
-    parser.add_argument(
-      '--output-directory',
-      type=str,
-      required=False,
-      default='./results',
-      help='Directory to write results to',
     )
 
     parser.add_argument(

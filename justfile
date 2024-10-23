@@ -16,8 +16,9 @@ check:
 
 example:
   uv run pqg  \
-    --output-directory results \
-    --params examples/query_parameters.json \
+    --num-queries 100 \
+    --output-file results/queries.txt \
+    --query-structure examples/query_parameters.json \
     --schema examples/data_structure_tpch_csv.json
 
 fmt:

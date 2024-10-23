@@ -1,0 +1,199 @@
+supplier
+
+partsupp[(partsupp['SUPPLYCOST'] != 718.7448057893963) | (partsupp['P_COMMENT'] != 'g')]
+
+region[['R_NAME', 'R_COMMENT', 'R_REGIONKEY']].merge(nation.merge(customer.merge(orders.merge(customer.merge(nation[['N_COMMENT', 'N_REGIONKEY', 'N_NATIONKEY']], left_on='C_NATIONKEY', right_on='N_NATIONKEY'), left_on='O_CUSTKEY', right_on='C_CUSTKEY'), left_on='C_CUSTKEY', right_on='O_CUSTKEY'), left_on='N_NATIONKEY', right_on='C_NATIONKEY'), left_on='R_REGIONKEY', right_on='N_REGIONKEY')
+
+part
+
+nation[(nation['N_COMMENT'].str.startswith('i'))][['N_NATIONKEY', 'N_REGIONKEY', 'N_NAME']].merge(supplier[['S_NATIONKEY', 'S_PHONE']], left_on='N_NATIONKEY', right_on='S_NATIONKEY')
+
+orders[['O_ORDERKEY', 'O_CUSTKEY']].merge(customer[['C_ACCTBAL']], left_on='O_CUSTKEY', right_on='C_CUSTKEY')
+
+nation[(nation['N_NATIONKEY'] >= 21)][['N_COMMENT', 'N_NATIONKEY']].merge(region[(region['R_REGIONKEY'] <= 3) & (region['R_COMMENT'] == 'l')][['R_REGIONKEY', 'R_NAME', 'R_COMMENT']].merge(nation[['N_NAME', 'N_REGIONKEY', 'N_COMMENT', 'N_NATIONKEY']], left_on='R_REGIONKEY', right_on='N_REGIONKEY'), left_on='N_REGIONKEY', right_on='R_REGIONKEY').merge(customer[(customer['C_COMMENT'].str.startswith('f')) | (customer['C_ACCTBAL'] > 988.5467622589642)].merge(nation.merge(supplier[(supplier['S_NATIONKEY'] != 20) | (supplier['S_ADDRESS'] != 'v')][['S_SUPPKEY']], left_on='N_NATIONKEY', right_on='S_NATIONKEY'), left_on='C_NATIONKEY', right_on='N_NATIONKEY'), left_on='N_NATIONKEY', right_on='C_NATIONKEY')
+
+region[['R_NAME', 'R_COMMENT']].merge(nation, left_on='R_REGIONKEY', right_on='N_REGIONKEY')
+
+supplier
+
+nation[(nation['N_NAME'] != 'U') & (nation['N_REGIONKEY'] <= 0)][['N_NAME', 'N_NATIONKEY', 'N_REGIONKEY']].merge(region.merge(nation[(nation['N_REGIONKEY'] < 3)][['N_NATIONKEY', 'N_NAME']].merge(supplier[(supplier['S_NAME'] != 'S') | (supplier['S_ADDRESS'] != ',')].merge(nation[(nation['N_NATIONKEY'] < 6)][['N_NAME', 'N_COMMENT']].merge(customer[(customer['C_NAME'].str.startswith('C')) & (customer['MKTSEGMENT'] != MACHINERY)], left_on='N_NATIONKEY', right_on='C_NATIONKEY'), left_on='S_NATIONKEY', right_on='N_NATIONKEY'), left_on='N_NATIONKEY', right_on='S_NATIONKEY'), left_on='R_REGIONKEY', right_on='N_REGIONKEY'), left_on='N_REGIONKEY', right_on='R_REGIONKEY').merge(customer, left_on='N_NATIONKEY', right_on='C_NATIONKEY')
+
+lineitem.merge(orders[(orders['O_COMMENT'] != 'e')][['O_CUSTKEY', 'O_ORDERKEY', 'O_COMMENT', 'ORDERPRIORITY']], left_on='L_ORDERKEY', right_on='O_ORDERKEY')
+
+customer.merge(nation[['N_NAME', 'N_NATIONKEY', 'N_REGIONKEY']], left_on='C_NATIONKEY', right_on='N_NATIONKEY').merge(orders.merge(lineitem[(lineitem['L_ORDERKEY'] != 155) & (lineitem['L_PARTKEY'] >= 120627)][['L_PARTKEY', 'LINESTATUS', 'L_ORDERKEY', 'RETURNFLAG']].merge(orders[(orders['TOTALPRICE'] != 120453.05981059893)], left_on='L_ORDERKEY', right_on='O_ORDERKEY'), left_on='O_ORDERKEY', right_on='L_ORDERKEY'), left_on='C_CUSTKEY', right_on='O_CUSTKEY')
+
+nation[(nation['N_COMMENT'].str.startswith('l')) & (nation['N_COMMENT'] == 'n')].merge(customer[['C_NAME']].merge(nation[(nation['N_COMMENT'] == 'e') | (nation['N_NAME'].str.startswith('A'))][['N_NATIONKEY']].merge(region[['R_COMMENT', 'R_NAME', 'R_REGIONKEY']].merge(nation.merge(supplier, left_on='N_NATIONKEY', right_on='S_NATIONKEY'), left_on='R_REGIONKEY', right_on='N_REGIONKEY'), left_on='N_REGIONKEY', right_on='R_REGIONKEY'), left_on='C_NATIONKEY', right_on='N_NATIONKEY'), left_on='N_NATIONKEY', right_on='C_NATIONKEY').merge(supplier[['S_PHONE', 'S_ADDRESS']].merge(partsupp.merge(part, left_on='PS_PARTKEY', right_on='P_PARTKEY'), left_on='S_SUPPKEY', right_on='PS_SUPPKEY'), left_on='N_NATIONKEY', right_on='S_NATIONKEY')
+
+part.merge(partsupp[(partsupp['SUPPLYCOST'] >= 764.4810213794226) | (partsupp['PS_SUPPKEY'] == 1777)][['PS_PARTKEY']].merge(part[(part['TYPE'] == 'M') | (part['PT_COMMENT'].str.startswith('!'))].merge(partsupp[(partsupp['AVAILQTY'] >= 1798) & (partsupp['SUPPLYCOST'] > 967.8248173359918)].merge(supplier[['S_COMMENT', 'S_ACCTBAL', 'S_NAME']].merge(nation[(nation['N_COMMENT'] != 'p') & (nation['N_COMMENT'].str.startswith(' '))][['N_NAME', 'N_REGIONKEY', 'N_COMMENT']], left_on='S_NATIONKEY', right_on='N_NATIONKEY'), left_on='PS_SUPPKEY', right_on='S_SUPPKEY'), left_on='P_PARTKEY', right_on='PS_PARTKEY'), left_on='PS_PARTKEY', right_on='P_PARTKEY'), left_on='P_PARTKEY', right_on='PS_PARTKEY').merge(partsupp[(partsupp['PS_SUPPKEY'] >= 6390) | (partsupp['AVAILQTY'] == 9297)], left_on='P_PARTKEY', right_on='PS_PARTKEY')
+
+nation[(nation['N_NAME'].str.startswith('E')) & (nation['N_NATIONKEY'] == 9)]
+
+lineitem[['L_PARTKEY', 'SHIPINSTRUCT']]
+
+region.merge(nation.merge(region[(region['R_REGIONKEY'] <= 0)].merge(nation[['N_COMMENT', 'N_NAME', 'N_NATIONKEY']].merge(customer[(customer['C_CUSTKEY'] == 86)].merge(nation, left_on='C_NATIONKEY', right_on='N_NATIONKEY'), left_on='N_NATIONKEY', right_on='C_NATIONKEY'), left_on='R_REGIONKEY', right_on='N_REGIONKEY'), left_on='N_REGIONKEY', right_on='R_REGIONKEY'), left_on='R_REGIONKEY', right_on='N_REGIONKEY')
+
+region
+
+supplier[(supplier['S_ACCTBAL'] >= 6573.291929029981) | (supplier['S_NAME'].str.startswith('S'))][['S_SUPPKEY', 'S_NAME']]
+
+nation[['N_NATIONKEY', 'N_COMMENT', 'N_NAME', 'N_REGIONKEY']]
+
+lineitem[['SHIPDATE', 'SHIPMODE', 'LINENUMBER', 'L_SUPPKEY']].merge(orders[(orders['O_COMMENT'] != '.')], left_on='L_ORDERKEY', right_on='O_ORDERKEY')
+
+orders[['TOTALPRICE', 'O_ORDERKEY']].merge(lineitem[['EXTENDEDPRICE']], left_on='O_ORDERKEY', right_on='L_ORDERKEY')
+
+nation[(nation['N_NAME'] != 'A') | (nation['N_COMMENT'] != 'i')].merge(region[['R_COMMENT', 'R_NAME', 'R_REGIONKEY']], left_on='N_REGIONKEY', right_on='R_REGIONKEY').merge(region, left_on='N_REGIONKEY', right_on='R_REGIONKEY')
+
+region[['R_NAME', 'R_REGIONKEY', 'R_COMMENT']]
+
+part[(part['CONTAINER'] != 'WRAP')][['TYPE', 'MFGR']].merge(partsupp[(partsupp['PS_PARTKEY'] != 47)][['P_COMMENT']], left_on='P_PARTKEY', right_on='PS_PARTKEY')
+
+customer.merge(nation, left_on='C_NATIONKEY', right_on='N_NATIONKEY').merge(orders[['CLERK', 'ORDERPRIORITY', 'SHIPPRIORITY']], left_on='C_CUSTKEY', right_on='O_CUSTKEY')
+
+nation[['N_NATIONKEY', 'N_REGIONKEY', 'N_COMMENT']].merge(region[(region['R_COMMENT'] != 'h') | (region['R_REGIONKEY'] <= 1)], left_on='N_REGIONKEY', right_on='R_REGIONKEY')
+
+lineitem[(lineitem['L_COMMENT'] != 'd')]
+
+lineitem[(lineitem['SHIPDATE'] < '1998-10-30')]
+
+partsupp[(partsupp['SUPPLYCOST'] != 886.0386565951846) | (partsupp['AVAILQTY'] >= 5328)].merge(lineitem[(lineitem['L_ORDERKEY'] < 154)][['EXTENDEDPRICE', 'RECEIPTDATE']].merge(partsupp, left_on='L_SUPPKEY', right_on='PS_SUPPKEY'), left_on='PS_SUPPKEY', right_on='L_SUPPKEY')
+
+partsupp.merge(part.merge(partsupp[['PS_PARTKEY', 'P_COMMENT', 'AVAILQTY']].merge(part.merge(partsupp[(partsupp['PS_PARTKEY'] != 16) & (partsupp['SUPPLYCOST'] != 141.72135417468976)].merge(lineitem.merge(partsupp.merge(lineitem.merge(partsupp[(partsupp['AVAILQTY'] != 4025)][['PS_PARTKEY', 'PS_SUPPKEY', 'P_COMMENT']], left_on='L_PARTKEY', right_on='PS_PARTKEY'), left_on='PS_SUPPKEY', right_on='L_SUPPKEY'), left_on='L_SUPPKEY', right_on='PS_SUPPKEY'), left_on='PS_SUPPKEY', right_on='L_SUPPKEY'), left_on='P_PARTKEY', right_on='PS_PARTKEY'), left_on='PS_PARTKEY', right_on='P_PARTKEY'), left_on='P_PARTKEY', right_on='PS_PARTKEY'), left_on='PS_PARTKEY', right_on='P_PARTKEY').merge(lineitem[(lineitem['TAX'] >= 0.046125753994444914)].merge(partsupp[(partsupp['PS_SUPPKEY'] > 4663)].merge(part[(part['PT_COMMENT'].str.startswith('l'))], left_on='PS_PARTKEY', right_on='P_PARTKEY'), left_on='L_SUPPKEY', right_on='PS_SUPPKEY'), left_on='PS_SUPPKEY', right_on='L_SUPPKEY')
+
+partsupp[(partsupp['PS_SUPPKEY'] > 1216)][['AVAILQTY', 'SUPPLYCOST', 'PS_SUPPKEY']].merge(lineitem[(lineitem['QUANTITY'] < 42) & (lineitem['SHIPINSTRUCT'] == NONE)], left_on='PS_SUPPKEY', right_on='L_SUPPKEY').merge(part[['TYPE']], left_on='PS_PARTKEY', right_on='P_PARTKEY')
+
+partsupp[(partsupp['SUPPLYCOST'] > 769.9380451782018)][['PS_PARTKEY', 'SUPPLYCOST', 'PS_SUPPKEY', 'P_COMMENT']].merge(lineitem[(lineitem['L_SUPPKEY'] > 1597) & (lineitem['LINENUMBER'] >= 5)], left_on='PS_PARTKEY', right_on='L_PARTKEY')
+
+supplier[(supplier['S_ACCTBAL'] == 6822.853492338574) & (supplier['S_PHONE'].str.startswith('32-'))][['S_ADDRESS', 'S_NAME']]
+
+orders.merge(customer[(customer['C_NAME'].str.startswith('C')) | (customer['C_ADDRESS'].str.startswith('F'))], left_on='O_CUSTKEY', right_on='C_CUSTKEY')
+
+region[['R_REGIONKEY']]
+
+region[(region['R_NAME'] != 'AFR')][['R_REGIONKEY']].merge(nation[['N_NATIONKEY', 'N_COMMENT', 'N_REGIONKEY']].merge(region[(region['R_REGIONKEY'] != 0)][['R_COMMENT', 'R_NAME', 'R_REGIONKEY']], left_on='N_REGIONKEY', right_on='R_REGIONKEY'), left_on='R_REGIONKEY', right_on='N_REGIONKEY').merge(nation[(nation['N_REGIONKEY'] == 2)][['N_REGIONKEY', 'N_COMMENT', 'N_NATIONKEY']].merge(customer[(customer['C_CUSTKEY'] != 86) | (customer['C_COMMENT'].str.startswith('e'))].merge(nation[(nation['N_COMMENT'] == 'o')].merge(customer[(customer['C_NAME'] == 'C')], left_on='N_NATIONKEY', right_on='C_NATIONKEY'), left_on='C_NATIONKEY', right_on='N_NATIONKEY'), left_on='N_NATIONKEY', right_on='C_NATIONKEY'), left_on='R_REGIONKEY', right_on='N_REGIONKEY')
+
+partsupp[(partsupp['PS_PARTKEY'] >= 42) & (partsupp['AVAILQTY'] < 2307)].merge(part.merge(partsupp.merge(lineitem[(lineitem['SHIPMODE'] == FOB) | (lineitem['SHIPMODE'] == RAIL)][['LINENUMBER', 'SHIPMODE', 'DISCOUNT', 'LINESTATUS']].merge(partsupp[(partsupp['P_COMMENT'].str.startswith('u')) & (partsupp['SUPPLYCOST'] == 855.5608669928516)][['PS_PARTKEY', 'SUPPLYCOST', 'AVAILQTY', 'P_COMMENT']].merge(lineitem.merge(orders.merge(customer[['C_COMMENT', 'C_PHONE', 'C_NATIONKEY']].merge(orders, left_on='C_CUSTKEY', right_on='O_CUSTKEY'), left_on='O_CUSTKEY', right_on='C_CUSTKEY'), left_on='L_ORDERKEY', right_on='O_ORDERKEY'), left_on='PS_PARTKEY', right_on='L_PARTKEY'), left_on='L_SUPPKEY', right_on='PS_SUPPKEY'), left_on='PS_PARTKEY', right_on='L_PARTKEY'), left_on='P_PARTKEY', right_on='PS_PARTKEY'), left_on='PS_PARTKEY', right_on='P_PARTKEY')
+
+region.merge(nation.merge(supplier, left_on='N_NATIONKEY', right_on='S_NATIONKEY'), left_on='R_REGIONKEY', right_on='N_REGIONKEY').merge(nation[(nation['N_NAME'].str.startswith('C')) | (nation['N_REGIONKEY'] > 2)][['N_REGIONKEY']], left_on='R_REGIONKEY', right_on='N_REGIONKEY')
+
+region[['R_COMMENT', 'R_REGIONKEY']].merge(nation[(nation['N_COMMENT'] != 'h')][['N_REGIONKEY', 'N_COMMENT', 'N_NAME']].merge(customer[(customer['MKTSEGMENT'].isin(['AUTOMOBILE', 'BUILDING'])) & (customer['C_ADDRESS'] != 'Y')].merge(orders, left_on='C_CUSTKEY', right_on='O_CUSTKEY'), left_on='N_NATIONKEY', right_on='C_NATIONKEY'), left_on='R_REGIONKEY', right_on='N_REGIONKEY').merge(nation[['N_NATIONKEY', 'N_COMMENT']], left_on='R_REGIONKEY', right_on='N_REGIONKEY')
+
+lineitem
+
+part[(part['P_NAME'] != 't') & (part['P_NAME'] == 'r')]
+
+part
+
+nation[(nation['N_NATIONKEY'] >= 8) & (nation['N_NAME'] == 'J')][['N_COMMENT', 'N_REGIONKEY', 'N_NATIONKEY']]
+
+customer.merge(orders.merge(lineitem[(lineitem['LINESTATUS'] != F) & (lineitem['LINESTATUS'] == F)], left_on='O_ORDERKEY', right_on='L_ORDERKEY'), left_on='C_CUSTKEY', right_on='O_CUSTKEY')
+
+supplier[['S_NATIONKEY', 'S_NAME', 'S_ADDRESS']].merge(partsupp[(partsupp['AVAILQTY'] == 7270) | (partsupp['P_COMMENT'] == 'o')], left_on='S_SUPPKEY', right_on='PS_SUPPKEY')
+
+partsupp[(partsupp['P_COMMENT'].str.startswith('q')) | (partsupp['SUPPLYCOST'] < 399.91686015660525)][['AVAILQTY', 'PS_PARTKEY', 'P_COMMENT', 'PS_SUPPKEY']]
+
+supplier[['S_ACCTBAL', 'S_NATIONKEY', 'S_ADDRESS']]
+
+partsupp.merge(supplier.merge(nation.merge(supplier[(supplier['S_COMMENT'].str.startswith('d'))].merge(partsupp[(partsupp['PS_PARTKEY'] < 39) & (partsupp['PS_SUPPKEY'] == 5596)][['P_COMMENT']].merge(lineitem[(lineitem['L_COMMENT'] != 'k')], left_on='PS_PARTKEY', right_on='L_PARTKEY'), left_on='S_SUPPKEY', right_on='PS_SUPPKEY'), left_on='N_NATIONKEY', right_on='S_NATIONKEY'), left_on='S_NATIONKEY', right_on='N_NATIONKEY'), left_on='PS_SUPPKEY', right_on='S_SUPPKEY')
+
+nation[(nation['N_COMMENT'] == 'o') & (nation['N_NATIONKEY'] >= 7)].merge(supplier[['S_ADDRESS', 'S_PHONE']], left_on='N_NATIONKEY', right_on='S_NATIONKEY').merge(customer[['C_ACCTBAL']].merge(nation[(nation['N_NAME'] == 'A')][['N_REGIONKEY', 'N_COMMENT', 'N_NAME', 'N_NATIONKEY']], left_on='C_NATIONKEY', right_on='N_NATIONKEY'), left_on='N_NATIONKEY', right_on='C_NATIONKEY')
+
+supplier.merge(nation[['N_NATIONKEY']], left_on='S_NATIONKEY', right_on='N_NATIONKEY').merge(nation[['N_NATIONKEY', 'N_COMMENT']], left_on='S_NATIONKEY', right_on='N_NATIONKEY')
+
+lineitem[['RECEIPTDATE']].merge(orders, left_on='L_ORDERKEY', right_on='O_ORDERKEY').merge(partsupp.merge(lineitem[(lineitem['EXTENDEDPRICE'] == 33605.27769816429) | (lineitem['QUANTITY'] >= 22)][['SHIPMODE', 'L_PARTKEY', 'L_ORDERKEY', 'COMMITDATE']].merge(orders[(orders['ORDERDATE'] == '1998-07-21') | (orders['SHIPPRIORITY'] != 0)][['TOTALPRICE', 'O_ORDERKEY', 'SHIPPRIORITY']].merge(lineitem[(lineitem['COMMITDATE'] >= '1992-05-15') | (lineitem['LINESTATUS'].isin(['F']))].merge(orders[['O_COMMENT', 'CLERK', 'ORDERPRIORITY']], left_on='L_ORDERKEY', right_on='O_ORDERKEY'), left_on='O_ORDERKEY', right_on='L_ORDERKEY'), left_on='L_ORDERKEY', right_on='O_ORDERKEY'), left_on='PS_PARTKEY', right_on='L_PARTKEY'), left_on='L_PARTKEY', right_on='PS_PARTKEY')
+
+region[['R_NAME', 'R_REGIONKEY', 'R_COMMENT']]
+
+region[(region['R_COMMENT'] == 'g')].merge(nation[(nation['N_NATIONKEY'] < 13) | (nation['N_REGIONKEY'] < 2)][['N_REGIONKEY']], left_on='R_REGIONKEY', right_on='N_REGIONKEY')
+
+nation.merge(supplier[['S_COMMENT']].merge(nation[['N_REGIONKEY']], left_on='S_NATIONKEY', right_on='N_NATIONKEY'), left_on='N_NATIONKEY', right_on='S_NATIONKEY').merge(customer[(customer['C_CUSTKEY'] < 42) & (customer['C_CUSTKEY'] >= 51)], left_on='N_NATIONKEY', right_on='C_NATIONKEY')
+
+region[['R_REGIONKEY', 'R_COMMENT']]
+
+lineitem[(lineitem['RETURNFLAG'].isin(['A', 'N'])) | (lineitem['QUANTITY'] != 32)].merge(partsupp[['AVAILQTY', 'SUPPLYCOST', 'PS_SUPPKEY', 'PS_PARTKEY']], left_on='L_PARTKEY', right_on='PS_PARTKEY')
+
+partsupp[(partsupp['PS_SUPPKEY'] == 5305) & (partsupp['AVAILQTY'] <= 3916)][['SUPPLYCOST', 'PS_PARTKEY', 'PS_SUPPKEY']].merge(part[(part['P_PARTKEY'] <= 64) | (part['BRAND'] == Brand#45)][['P_PARTKEY', 'CONTAINER', 'MFGR', 'TYPE']].merge(partsupp[(partsupp['SUPPLYCOST'] >= 103.15914162039995)][['P_COMMENT', 'AVAILQTY', 'SUPPLYCOST', 'PS_SUPPKEY']], left_on='P_PARTKEY', right_on='PS_PARTKEY'), left_on='PS_PARTKEY', right_on='P_PARTKEY')
+
+partsupp[(partsupp['P_COMMENT'].str.startswith('l'))][['PS_PARTKEY', 'AVAILQTY', 'P_COMMENT', 'SUPPLYCOST']]
+
+supplier[(supplier['S_ADDRESS'].str.startswith('p')) & (supplier['S_SUPPKEY'] <= 107)].merge(nation[(nation['N_NATIONKEY'] < 10)][['N_COMMENT', 'N_REGIONKEY', 'N_NATIONKEY']].merge(supplier, left_on='N_NATIONKEY', right_on='S_NATIONKEY'), left_on='S_NATIONKEY', right_on='N_NATIONKEY')
+
+customer
+
+part[['SIZE', 'PT_COMMENT']].merge(partsupp[(partsupp['AVAILQTY'] < 716)][['SUPPLYCOST', 'PS_PARTKEY']], left_on='P_PARTKEY', right_on='PS_PARTKEY').merge(partsupp[['AVAILQTY', 'P_COMMENT']].merge(supplier[(supplier['S_ACCTBAL'] > 3847.2910009178468)][['S_ADDRESS', 'S_NAME', 'S_PHONE', 'S_COMMENT']].merge(nation[['N_COMMENT', 'N_REGIONKEY', 'N_NAME', 'N_NATIONKEY']].merge(supplier[['S_SUPPKEY', 'S_ACCTBAL', 'S_NAME', 'S_PHONE']], left_on='N_NATIONKEY', right_on='S_NATIONKEY'), left_on='S_NATIONKEY', right_on='N_NATIONKEY'), left_on='PS_SUPPKEY', right_on='S_SUPPKEY'), left_on='P_PARTKEY', right_on='PS_PARTKEY')
+
+orders[['O_CUSTKEY', 'ORDERDATE', 'ORDERPRIORITY', 'O_ORDERKEY']].merge(customer, left_on='O_CUSTKEY', right_on='C_CUSTKEY')
+
+lineitem.merge(partsupp[['PS_SUPPKEY', 'P_COMMENT', 'SUPPLYCOST', 'PS_PARTKEY']].merge(lineitem[['SHIPDATE', 'COMMITDATE', 'L_SUPPKEY']], left_on='PS_SUPPKEY', right_on='L_SUPPKEY'), left_on='L_PARTKEY', right_on='PS_PARTKEY').merge(partsupp[['PS_SUPPKEY']].merge(supplier[(supplier['S_NAME'] != 'S')], left_on='PS_SUPPKEY', right_on='S_SUPPKEY'), left_on='L_PARTKEY', right_on='PS_PARTKEY')
+
+supplier[(supplier['S_SUPPKEY'] < 124)][['S_COMMENT', 'S_NATIONKEY', 'S_PHONE']].merge(nation[(nation['N_REGIONKEY'] <= 0) | (nation['N_NATIONKEY'] >= 13)][['N_REGIONKEY', 'N_COMMENT', 'N_NATIONKEY', 'N_NAME']].merge(region[(region['R_NAME'] != 'ASI') & (region['R_REGIONKEY'] != 2)][['R_REGIONKEY', 'R_NAME', 'R_COMMENT']].merge(nation[(nation['N_NAME'] == 'P') | (nation['N_REGIONKEY'] == 0)].merge(customer[(customer['C_NATIONKEY'] != 1)][['C_NAME', 'C_CUSTKEY', 'C_PHONE']], left_on='N_NATIONKEY', right_on='C_NATIONKEY'), left_on='R_REGIONKEY', right_on='N_REGIONKEY'), left_on='N_REGIONKEY', right_on='R_REGIONKEY'), left_on='S_NATIONKEY', right_on='N_NATIONKEY').merge(partsupp[(partsupp['PS_PARTKEY'] >= 32)][['PS_PARTKEY', 'AVAILQTY', 'P_COMMENT', 'PS_SUPPKEY']], left_on='S_SUPPKEY', right_on='PS_SUPPKEY')
+
+lineitem[(lineitem['LINENUMBER'] == 3) | (lineitem['COMMITDATE'] > '1998-10-16')].merge(partsupp[['P_COMMENT', 'PS_PARTKEY', 'AVAILQTY']], left_on='L_SUPPKEY', right_on='PS_SUPPKEY').merge(orders[['CLERK', 'ORDERSTATUS', 'O_CUSTKEY']], left_on='L_ORDERKEY', right_on='O_ORDERKEY')
+
+part[(part['P_PARTKEY'] == 164)][['MFGR']].merge(partsupp[(partsupp['PS_PARTKEY'] < 10)].merge(supplier.merge(nation.merge(region.merge(nation, left_on='R_REGIONKEY', right_on='N_REGIONKEY'), left_on='N_REGIONKEY', right_on='R_REGIONKEY'), left_on='S_NATIONKEY', right_on='N_NATIONKEY'), left_on='PS_SUPPKEY', right_on='S_SUPPKEY'), left_on='P_PARTKEY', right_on='PS_PARTKEY').merge(partsupp.merge(supplier[(supplier['S_ADDRESS'] != 'm') & (supplier['S_ACCTBAL'] <= 5975.083487414773)][['S_NAME']], left_on='PS_SUPPKEY', right_on='S_SUPPKEY'), left_on='P_PARTKEY', right_on='PS_PARTKEY')
+
+partsupp[(partsupp['P_COMMENT'] == 'g') & (partsupp['AVAILQTY'] < 6847)]
+
+nation[(nation['N_NATIONKEY'] == 17)][['N_NATIONKEY']].merge(supplier[(supplier['S_ACCTBAL'] >= 1900.2712266787973)], left_on='N_NATIONKEY', right_on='S_NATIONKEY')
+
+nation.merge(customer[(customer['C_ACCTBAL'] >= 8963.107317251615) & (customer['MKTSEGMENT'] != HOUSEHOLD)].merge(nation, left_on='C_NATIONKEY', right_on='N_NATIONKEY'), left_on='N_NATIONKEY', right_on='C_NATIONKEY')
+
+orders[(orders['O_CUSTKEY'] > 135322) & (orders['O_CUSTKEY'] != 117329)][['ORDERPRIORITY']]
+
+partsupp[(partsupp['PS_SUPPKEY'] > 6901) | (partsupp['PS_PARTKEY'] < 2)][['SUPPLYCOST', 'PS_SUPPKEY']].merge(lineitem[(lineitem['SHIPINSTRUCT'] == COLLECT COD) | (lineitem['SHIPMODE'] != REG AIR)][['LINESTATUS', 'SHIPDATE', 'L_COMMENT']], left_on='PS_PARTKEY', right_on='L_PARTKEY')
+
+customer[['C_ACCTBAL']].merge(nation[(nation['N_REGIONKEY'] > 0)][['N_NAME', 'N_COMMENT', 'N_NATIONKEY', 'N_REGIONKEY']].merge(customer[['MKTSEGMENT', 'C_NATIONKEY', 'C_CUSTKEY', 'C_COMMENT']].merge(orders[(orders['O_CUSTKEY'] > 125911) & (orders['TOTALPRICE'] <= 123524.62383944714)].merge(lineitem[(lineitem['SHIPMODE'] == SHIP) | (lineitem['L_ORDERKEY'] != 44)], left_on='O_ORDERKEY', right_on='L_ORDERKEY'), left_on='C_CUSTKEY', right_on='O_CUSTKEY'), left_on='N_NATIONKEY', right_on='C_NATIONKEY'), left_on='C_NATIONKEY', right_on='N_NATIONKEY').merge(nation[(nation['N_NATIONKEY'] != 5)].merge(region[(region['R_COMMENT'].str.startswith('g')) | (region['R_COMMENT'] != 'h')][['R_COMMENT', 'R_REGIONKEY']].merge(nation[['N_NATIONKEY']].merge(region.merge(nation.merge(supplier[(supplier['S_NATIONKEY'] == 16)][['S_PHONE']].merge(partsupp[(partsupp['P_COMMENT'] != 'u') | (partsupp['AVAILQTY'] != 7220)], left_on='S_SUPPKEY', right_on='PS_SUPPKEY'), left_on='N_NATIONKEY', right_on='S_NATIONKEY'), left_on='R_REGIONKEY', right_on='N_REGIONKEY'), left_on='N_REGIONKEY', right_on='R_REGIONKEY'), left_on='R_REGIONKEY', right_on='N_REGIONKEY'), left_on='N_REGIONKEY', right_on='R_REGIONKEY'), left_on='C_NATIONKEY', right_on='N_NATIONKEY')
+
+region[['R_REGIONKEY']].merge(nation[(nation['N_COMMENT'].str.startswith('a'))].merge(region[(region['R_REGIONKEY'] >= 0) | (region['R_REGIONKEY'] <= 3)][['R_NAME', 'R_COMMENT', 'R_REGIONKEY']].merge(nation[(nation['N_REGIONKEY'] > 2) | (nation['N_REGIONKEY'] <= 0)].merge(customer[['C_NAME', 'C_PHONE']], left_on='N_NATIONKEY', right_on='C_NATIONKEY'), left_on='R_REGIONKEY', right_on='N_REGIONKEY'), left_on='N_REGIONKEY', right_on='R_REGIONKEY'), left_on='R_REGIONKEY', right_on='N_REGIONKEY')
+
+lineitem[(lineitem['RETURNFLAG'].isin(['A', 'N', 'R'])) | (lineitem['SHIPMODE'] != TRUCK)].merge(partsupp, left_on='L_SUPPKEY', right_on='PS_SUPPKEY').merge(partsupp[(partsupp['PS_SUPPKEY'] < 6514) & (partsupp['P_COMMENT'].str.startswith('y'))][['SUPPLYCOST']].merge(lineitem[['L_SUPPKEY']].merge(partsupp[(partsupp['P_COMMENT'].str.startswith('u')) & (partsupp['P_COMMENT'].str.startswith('f'))][['P_COMMENT', 'PS_PARTKEY', 'AVAILQTY']], left_on='L_SUPPKEY', right_on='PS_SUPPKEY'), left_on='PS_SUPPKEY', right_on='L_SUPPKEY'), left_on='L_PARTKEY', right_on='PS_PARTKEY')
+
+region[(region['R_REGIONKEY'] >= 2) | (region['R_REGIONKEY'] > 1)].merge(nation, left_on='R_REGIONKEY', right_on='N_REGIONKEY').merge(nation.merge(supplier.merge(partsupp[(partsupp['AVAILQTY'] < 3180) & (partsupp['PS_SUPPKEY'] < 1477)][['PS_SUPPKEY']], left_on='S_SUPPKEY', right_on='PS_SUPPKEY'), left_on='N_NATIONKEY', right_on='S_NATIONKEY'), left_on='R_REGIONKEY', right_on='N_REGIONKEY')
+
+supplier[(supplier['S_SUPPKEY'] >= 32)].merge(nation.merge(supplier[(supplier['S_ADDRESS'].str.startswith('g')) & (supplier['S_ADDRESS'].str.startswith('n'))].merge(nation, left_on='S_NATIONKEY', right_on='N_NATIONKEY'), left_on='N_NATIONKEY', right_on='S_NATIONKEY'), left_on='S_NATIONKEY', right_on='N_NATIONKEY').merge(nation[(nation['N_NATIONKEY'] != 17) & (nation['N_COMMENT'] == 'v')][['N_NAME', 'N_COMMENT', 'N_REGIONKEY']].merge(region[(region['R_NAME'] != 'ASI')][['R_COMMENT', 'R_NAME', 'R_REGIONKEY']].merge(nation.merge(customer[['C_NATIONKEY', 'C_PHONE']], left_on='N_NATIONKEY', right_on='C_NATIONKEY'), left_on='R_REGIONKEY', right_on='N_REGIONKEY'), left_on='N_REGIONKEY', right_on='R_REGIONKEY'), left_on='S_NATIONKEY', right_on='N_NATIONKEY')
+
+region[(region['R_REGIONKEY'] < 0)].merge(nation[['N_NATIONKEY', 'N_COMMENT', 'N_REGIONKEY', 'N_NAME']].merge(supplier[['S_ADDRESS', 'S_NATIONKEY', 'S_ACCTBAL']], left_on='N_NATIONKEY', right_on='S_NATIONKEY'), left_on='R_REGIONKEY', right_on='N_REGIONKEY')
+
+nation[(nation['N_REGIONKEY'] == 3) | (nation['N_NATIONKEY'] >= 17)].merge(customer[(customer['C_NAME'].str.startswith('C')) | (customer['C_NATIONKEY'] == 0)][['C_COMMENT']], left_on='N_NATIONKEY', right_on='C_NATIONKEY').merge(supplier, left_on='N_NATIONKEY', right_on='S_NATIONKEY')
+
+supplier[(supplier['S_ACCTBAL'] == 3029.495596555793) | (supplier['S_SUPPKEY'] > 105)].merge(nation[(nation['N_NATIONKEY'] != 13)][['N_COMMENT', 'N_NATIONKEY']], left_on='S_NATIONKEY', right_on='N_NATIONKEY').merge(nation[(nation['N_NATIONKEY'] <= 3)][['N_REGIONKEY', 'N_COMMENT', 'N_NAME']], left_on='S_NATIONKEY', right_on='N_NATIONKEY')
+
+partsupp[(partsupp['SUPPLYCOST'] <= 780.0271810852552)][['AVAILQTY', 'PS_PARTKEY', 'P_COMMENT']]
+
+lineitem[['EXTENDEDPRICE', 'RETURNFLAG']].merge(orders[['SHIPPRIORITY']], left_on='L_ORDERKEY', right_on='O_ORDERKEY')
+
+orders[(orders['ORDERPRIORITY'].isin(['2-HIGH'])) | (orders['O_ORDERKEY'] < 195)][['ORDERPRIORITY', 'TOTALPRICE']].merge(lineitem[['SHIPMODE', 'COMMITDATE', 'L_PARTKEY']].merge(partsupp, left_on='L_SUPPKEY', right_on='PS_SUPPKEY'), left_on='O_ORDERKEY', right_on='L_ORDERKEY').merge(lineitem[['L_ORDERKEY', 'SHIPINSTRUCT', 'RECEIPTDATE', 'SHIPDATE']].merge(orders, left_on='L_ORDERKEY', right_on='O_ORDERKEY'), left_on='O_ORDERKEY', right_on='L_ORDERKEY')
+
+supplier[(supplier['S_NATIONKEY'] > 3)][['S_COMMENT', 'S_SUPPKEY', 'S_ACCTBAL', 'S_ADDRESS']]
+
+region[(region['R_COMMENT'] != 'l') & (region['R_REGIONKEY'] >= 0)].merge(nation[(nation['N_COMMENT'].str.startswith('s'))][['N_NAME', 'N_REGIONKEY']].merge(customer[(customer['MKTSEGMENT'].isin(['AUTOMOBILE', 'MACHINERY', 'BUILDING'])) | (customer['C_PHONE'].str.startswith('1'))].merge(nation, left_on='C_NATIONKEY', right_on='N_NATIONKEY'), left_on='N_NATIONKEY', right_on='C_NATIONKEY'), left_on='R_REGIONKEY', right_on='N_REGIONKEY')
+
+customer[['C_NATIONKEY']].merge(orders.merge(customer.merge(orders[(orders['ORDERPRIORITY'] == 1-URGENT) | (orders['SHIPPRIORITY'] != 0)][['O_ORDERKEY', 'ORDERPRIORITY', 'ORDERSTATUS', 'SHIPPRIORITY']].merge(lineitem.merge(partsupp, left_on='L_SUPPKEY', right_on='PS_SUPPKEY'), left_on='O_ORDERKEY', right_on='L_ORDERKEY'), left_on='C_CUSTKEY', right_on='O_CUSTKEY'), left_on='O_CUSTKEY', right_on='C_CUSTKEY'), left_on='C_CUSTKEY', right_on='O_CUSTKEY').merge(nation[['N_COMMENT', 'N_REGIONKEY', 'N_NAME', 'N_NATIONKEY']], left_on='C_NATIONKEY', right_on='N_NATIONKEY')
+
+lineitem[['EXTENDEDPRICE']].merge(partsupp, left_on='L_SUPPKEY', right_on='PS_SUPPKEY').merge(partsupp.merge(supplier, left_on='PS_SUPPKEY', right_on='S_SUPPKEY'), left_on='L_SUPPKEY', right_on='PS_SUPPKEY')
+
+nation
+
+nation.merge(region[(region['R_REGIONKEY'] >= 1) | (region['R_COMMENT'].str.startswith('h'))][['R_COMMENT', 'R_REGIONKEY', 'R_NAME']].merge(nation.merge(supplier[(supplier['S_ACCTBAL'] <= 4193.80635791001) | (supplier['S_SUPPKEY'] > 147)][['S_NAME', 'S_SUPPKEY', 'S_PHONE', 'S_COMMENT']], left_on='N_NATIONKEY', right_on='S_NATIONKEY'), left_on='R_REGIONKEY', right_on='N_REGIONKEY'), left_on='N_REGIONKEY', right_on='R_REGIONKEY')
+
+orders.merge(lineitem.merge(partsupp, left_on='L_SUPPKEY', right_on='PS_SUPPKEY'), left_on='O_ORDERKEY', right_on='L_ORDERKEY').merge(customer[(customer['C_COMMENT'] == 'h')][['C_COMMENT']].merge(nation[['N_NAME']].merge(region[['R_NAME', 'R_COMMENT', 'R_REGIONKEY']].merge(nation[['N_COMMENT']], left_on='R_REGIONKEY', right_on='N_REGIONKEY'), left_on='N_REGIONKEY', right_on='R_REGIONKEY'), left_on='C_NATIONKEY', right_on='N_NATIONKEY'), left_on='O_CUSTKEY', right_on='C_CUSTKEY')
+
+partsupp[(partsupp['AVAILQTY'] < 5892)].merge(lineitem[(lineitem['SHIPDATE'] != '1998-10-30')], left_on='PS_PARTKEY', right_on='L_PARTKEY').merge(lineitem.merge(orders[['ORDERPRIORITY', 'CLERK']].merge(lineitem, left_on='O_ORDERKEY', right_on='L_ORDERKEY'), left_on='L_ORDERKEY', right_on='O_ORDERKEY'), left_on='PS_PARTKEY', right_on='L_PARTKEY')
+
+nation[['N_NAME', 'N_REGIONKEY']]
+
+customer.merge(orders[(orders['CLERK'] == 'C')][['ORDERSTATUS', 'CLERK', 'O_CUSTKEY']].merge(customer[['C_NATIONKEY', 'C_ADDRESS', 'C_ACCTBAL']].merge(nation, left_on='C_NATIONKEY', right_on='N_NATIONKEY'), left_on='O_CUSTKEY', right_on='C_CUSTKEY'), left_on='C_CUSTKEY', right_on='O_CUSTKEY')
+
+nation[(nation['N_COMMENT'].str.startswith('y'))]
+
+part[(part['MFGR'] == Manufacturer#5)].merge(partsupp[(partsupp['PS_PARTKEY'] != 15) & (partsupp['AVAILQTY'] <= 8132)].merge(lineitem[['RETURNFLAG']].merge(partsupp[(partsupp['SUPPLYCOST'] <= 787.9523819580091) | (partsupp['PS_PARTKEY'] <= 17)].merge(part[(part['P_NAME'] == 'v') | (part['BRAND'].isin(['Brand#43', 'Brand#51']))][['CONTAINER', 'SIZE']].merge(partsupp[['SUPPLYCOST', 'PS_PARTKEY', 'P_COMMENT']], left_on='P_PARTKEY', right_on='PS_PARTKEY'), left_on='PS_PARTKEY', right_on='P_PARTKEY'), left_on='L_SUPPKEY', right_on='PS_SUPPKEY'), left_on='PS_SUPPKEY', right_on='L_SUPPKEY'), left_on='P_PARTKEY', right_on='PS_PARTKEY').merge(partsupp.merge(lineitem[(lineitem['EXTENDEDPRICE'] != 66342.15281531173)].merge(partsupp[(partsupp['SUPPLYCOST'] == 897.2032648440951)][['PS_SUPPKEY', 'PS_PARTKEY', 'P_COMMENT', 'AVAILQTY']].merge(lineitem.merge(orders[['TOTALPRICE']].merge(lineitem.merge(partsupp[(partsupp['PS_PARTKEY'] >= 1)].merge(lineitem[(lineitem['RECEIPTDATE'] <= '1998-11-06')][['L_SUPPKEY', 'COMMITDATE']].merge(partsupp[(partsupp['PS_PARTKEY'] != 37)].merge(supplier.merge(partsupp[(partsupp['P_COMMENT'] == 'g')], left_on='S_SUPPKEY', right_on='PS_SUPPKEY'), left_on='PS_SUPPKEY', right_on='S_SUPPKEY'), left_on='L_PARTKEY', right_on='PS_PARTKEY'), left_on='PS_PARTKEY', right_on='L_PARTKEY'), left_on='L_PARTKEY', right_on='PS_PARTKEY'), left_on='O_ORDERKEY', right_on='L_ORDERKEY'), left_on='L_ORDERKEY', right_on='O_ORDERKEY'), left_on='PS_PARTKEY', right_on='L_PARTKEY'), left_on='L_SUPPKEY', right_on='PS_SUPPKEY'), left_on='PS_SUPPKEY', right_on='L_SUPPKEY'), left_on='P_PARTKEY', right_on='PS_PARTKEY')
+
+partsupp[(partsupp['PS_SUPPKEY'] > 4277) | (partsupp['P_COMMENT'] != 'g')][['SUPPLYCOST', 'AVAILQTY', 'PS_PARTKEY']].merge(lineitem[(lineitem['SHIPINSTRUCT'] == TAKE BACK RETURN)][['DISCOUNT', 'EXTENDEDPRICE']].merge(partsupp[(partsupp['PS_PARTKEY'] == 42) & (partsupp['SUPPLYCOST'] < 697.3845043925899)].merge(supplier[['S_COMMENT', 'S_SUPPKEY', 'S_ADDRESS', 'S_NATIONKEY']].merge(nation.merge(customer[(customer['MKTSEGMENT'] != AUTOMOBILE)], left_on='N_NATIONKEY', right_on='C_NATIONKEY'), left_on='S_NATIONKEY', right_on='N_NATIONKEY'), left_on='PS_SUPPKEY', right_on='S_SUPPKEY'), left_on='L_SUPPKEY', right_on='PS_SUPPKEY'), left_on='PS_PARTKEY', right_on='L_PARTKEY')
+
+orders[(orders['TOTALPRICE'] > 281014.43277975684)][['CLERK', 'O_ORDERKEY']]
+
+partsupp[['P_COMMENT', 'PS_SUPPKEY', 'SUPPLYCOST']]
+
+supplier[(supplier['S_PHONE'] != '1') | (supplier['S_ACCTBAL'] == 996.8974756197977)][['S_ADDRESS']].merge(nation[(nation['N_COMMENT'].str.startswith('p')) | (nation['N_NATIONKEY'] > 23)], left_on='S_NATIONKEY', right_on='N_NATIONKEY')
+
+nation[(nation['N_NAME'] != 'U') & (nation['N_NATIONKEY'] == 4)][['N_NATIONKEY', 'N_NAME', 'N_REGIONKEY', 'N_COMMENT']].merge(customer[(customer['C_COMMENT'] == 'd') & (customer['C_NATIONKEY'] < 9)][['C_PHONE', 'C_NATIONKEY']].merge(nation[(nation['N_COMMENT'] == 'i') | (nation['N_NAME'] != 'G')][['N_NATIONKEY']].merge(region[['R_REGIONKEY', 'R_COMMENT']], left_on='N_REGIONKEY', right_on='R_REGIONKEY'), left_on='C_NATIONKEY', right_on='N_NATIONKEY'), left_on='N_NATIONKEY', right_on='C_NATIONKEY')
