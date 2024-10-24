@@ -15,7 +15,7 @@ usage: pqg [-h] [--max-groupby-columns MAX_GROUPBY_COLUMNS]
            [--max-projection-columns MAX_PROJECTION_COLUMNS]
            [--max-selection-conditions MAX_SELECTION_CONDITIONS]
            [--multi-line] --num-queries NUM_QUERIES
-           [--output-file OUTPUT_FILE] --schema SCHEMA [--verbose]
+           [--output-file OUTPUT_FILE] --schema SCHEMA [--sorted] [--verbose]
 
 Pandas Query Generator CLI
 
@@ -39,6 +39,8 @@ options:
                         queries.txt)
   --schema SCHEMA       Path to the relational schema JSON file (default:
                         None)
+  --sorted              Whether or not to sort the queries by complexity
+                        (default: False)
   --verbose             Print extra generation information and statistics
                         (default: False)
 ```
