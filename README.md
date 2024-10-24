@@ -10,21 +10,33 @@ Below is the standard output of `pqg --help`, which elaborates on the various
 command-line arguments the tool accepts:
 
 ```present uv run pqg --help
-usage: pqg [-h] [--multi-line] --num-queries NUM_QUERIES
-           [--output-file OUTPUT_FILE] --query-structure QUERY_STRUCTURE
-           --schema SCHEMA [--verbose]
+usage: pqg [-h] [--allow-groupby-aggregation]
+           [--max-groupby-columns MAX_GROUPBY_COLUMNS]
+           [--max-merges MAX_MERGES]
+           [--max-projection-columns MAX_PROJECTION_COLUMNS]
+           [--max-selection-conditions MAX_SELECTION_CONDITIONS]
+           [--multi-line] --num-queries NUM_QUERIES
+           [--output-file OUTPUT_FILE] --schema SCHEMA [--verbose]
 
 Pandas Query Generator CLI
 
 options:
   -h, --help            show this help message and exit
+  --allow-groupby-aggregation
+                        Allow GROUP BY aggregation in generated queries
+  --max-groupby-columns MAX_GROUPBY_COLUMNS
+                        Maximum number of columns in GROUP BY clause
+  --max-merges MAX_MERGES
+                        Maximum number of table merges allowed
+  --max-projection-columns MAX_PROJECTION_COLUMNS
+                        Maximum number of columns to project
+  --max-selection-conditions MAX_SELECTION_CONDITIONS
+                        Maximum number of conditions in WHERE clause
   --multi-line          Format queries on multiple lines
   --num-queries NUM_QUERIES
                         The number of queries to generate
   --output-file OUTPUT_FILE
                         The name of the file to write the results to
-  --query-structure QUERY_STRUCTURE
-                        Path to the user-defined query structure JSON file
   --schema SCHEMA       Path to the relational schema JSON file
   --verbose             Print extra generation information
 ```
