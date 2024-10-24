@@ -26,7 +26,7 @@ def simple_projection():
 @pytest.fixture
 def simple_merge(simple_selection):
   nested_query = Query('orders', [simple_selection], False)
-  return Merge(nested_query, 'customer_id', 'customer_id')
+  return Merge(nested_query, "'customer_id'", "'customer_id'")
 
 
 @pytest.fixture
@@ -113,7 +113,7 @@ class TestQuery:
 
     query = Query(
       sample_entity,
-      [Selection([("'age'", '>=', 25, '&')]), Merge(right_query, 'customer_id', 'customer_id')],
+      [Selection([("'age'", '>=', 25, '&')]), Merge(right_query, "'customer_id'", "'customer_id'")],
       True,
     )
 
@@ -131,13 +131,13 @@ class TestQuery:
   def test_multiline_nested_merges(self, sample_entity):
     inner_query = Query('orders', [Selection([("'status'", '==', "'pending'", '&')])], False)
 
-    middle_query = Query('products', [Merge(inner_query, 'order_id', 'order_id')], False)
+    middle_query = Query('products', [Merge(inner_query, "'order_id'", "'order_id'")], False)
 
     query = Query(
       sample_entity,
       [
         Selection([("'active'", '==', 'True', '&')]),
-        Merge(middle_query, 'product_id', 'product_id'),
+        Merge(middle_query, "'product_id'", "'product_id'"),
       ],
       True,
     )

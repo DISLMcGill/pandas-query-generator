@@ -19,18 +19,123 @@ def simple_projection():
 @pytest.fixture
 def simple_merge(simple_selection):
   nested_query = Query('orders', [simple_selection], False)
-  return Merge(nested_query, 'customer_id', 'customer_id')
+  return Merge(nested_query, "'customer_id'", "'customer_id'")
+
+
+@pytest.fixture
+def multi_column_projection():
+  return Projection(['order_id', 'customer_id', 'total', 'status'])
 
 
 class TestMerge:
   def test_simple_merge(self, simple_merge):
-    expected = ".merge(orders[(orders['age'] >= 25) & (orders['status'] == 'active')], left_on='customer_id', right_on='customer_id')"
+    expected = (
+      ".merge(orders[(orders['age'] >= 25) & (orders['status'] == 'active')], "
+      "left_on='customer_id', right_on='customer_id')"
+    )
+
     assert simple_merge.apply('customer') == expected
 
   def test_merge_with_complex_right_query(self, simple_projection):
     nested_query = Query('orders', [simple_projection], False)
-    merge = Merge(nested_query, 'customer_id', 'order_id')
+
+    merge = Merge(nested_query, "'customer_id'", "'order_id'")
+
     expected = (
-      ".merge(orders[['name', 'age', 'email']], left_on='customer_id', right_on='order_id')"
+      ".merge(orders[['name', 'age', 'email']], " "left_on='customer_id', right_on='order_id')"
     )
+
+    assert merge.apply('customer') == expected
+
+  def test_merge_with_multiple_operations(self, simple_selection, simple_projection):
+    nested_query = Query('orders', [simple_selection, simple_projection], False)
+
+    merge = Merge(nested_query, "'customer_id'", "'order_id'")
+
+    expected = (
+      ".merge(orders[(orders['age'] >= 25) & (orders['status'] == 'active')]"
+      "[['name', 'age', 'email']], "
+      "left_on='customer_id', right_on='order_id')"
+    )
+
+    assert merge.apply('customer') == expected
+
+  def test_nested_merges(self, simple_selection):
+    innermost_query = Query('items', [simple_selection], False)
+    inner_merge = Merge(innermost_query, "'order_id'", "'item_id'")
+    middle_query = Query('orders', [inner_merge], False)
+    outer_merge = Merge(middle_query, "'customer_id'", "'order_id'")
+
+    expected = (
+      ".merge(orders.merge(items[(items['age'] >= 25) & "
+      "(items['status'] == 'active')], "
+      "left_on='order_id', right_on='item_id'), "
+      "left_on='customer_id', right_on='order_id')"
+    )
+
+    assert outer_merge.apply('customer') == expected
+
+  def test_merge_with_empty_right_query(self):
+    right_query = Query('orders', [], False)
+    merge = Merge(right_query, "'customer_id'", "'order_id'")
+    expected = ".merge(orders, left_on='customer_id', right_on='order_id')"
+    assert merge.apply('customer') == expected
+
+  def test_merge_with_list_join_columns(self):
+    right_query = Query('orders', [], False)
+
+    merge = Merge(
+      right_query, "['customer_id', 'region_id']", "['order_customer_id', 'order_region_id']"
+    )
+
+    expected = (
+      '.merge(orders, '
+      "left_on=['customer_id', 'region_id'], "
+      "right_on=['order_customer_id', 'order_region_id'])"
+    )
+
+    assert merge.apply('customer') == expected
+
+  def test_merge_chain(self, simple_projection, multi_column_projection):
+    items_query = Query('items', [simple_projection], False)
+    orders_query = Query('orders', [multi_column_projection], False)
+
+    first_merge = Merge(items_query, "'customer_id'", "'customer_id'")
+    second_merge = Merge(orders_query, "'order_id'", "'order_id'")
+
+    final_query = Query('customer', [first_merge, second_merge], False)
+
+    expected = (
+      'customer'
+      ".merge(items[['name', 'age', 'email']], "
+      "left_on='customer_id', right_on='customer_id')"
+      ".merge(orders[['order_id', 'customer_id', 'total', 'status']], "
+      "left_on='order_id', right_on='order_id')"
+    )
+
+    assert str(final_query) == expected
+
+  def test_merge_with_quoted_column_names(self):
+    right_query = Query('orders', [], False)
+    merge = Merge(right_query, "'customer_id'", "'order_id'")
+    expected = ".merge(orders, left_on='customer_id', right_on='order_id')"
+    assert merge.apply('customer') == expected
+
+  def test_merge_with_complex_selections(self):
+    conditions = [
+      ("'age'", '>=', 25, '&'),
+      ("'status'", '.isin', "['active', 'pending']", '&'),
+      ("'name'", '.str.startswith', "'A'", '|'),
+    ]
+
+    right_query = Query('orders', [Selection(conditions)], False)
+    merge = Merge(right_query, "'customer_id'", "'order_id'")
+
+    expected = (
+      ".merge(orders[(orders['age'] >= 25) & "
+      "(orders['status'].isin(['active', 'pending'])) & "
+      "(orders['name'].str.startswith('A'))], "
+      "left_on='customer_id', right_on='order_id')"
+    )
+
     assert merge.apply('customer') == expected

@@ -45,7 +45,7 @@ class Query:
 
         lines.append(
           f'df{right_final_counter} = {current_df}.merge({right_df}, '
-          f"left_on='{op.left_on}', right_on='{op.right_on}')"
+          f'left_on={op.left_on}, right_on={op.right_on})'
         )
 
         current_df = f'df{right_final_counter}'

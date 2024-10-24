@@ -17,13 +17,11 @@ class QueryBuilder:
     self.schema: Schema = schema
     self.query_structure: QueryStructure = query_structure
     self.multi_line = multi_line
-
     self.operations: t.List[Operation] = []
-
     self.entity_name = random.choice(list(self.schema.entities.keys()))
     self.entity = self.schema.entities[self.entity_name]
-
     self.available_columns = list(self.entity.properties.keys())
+    self.merged_columns: t.Dict[str, t.List[str]] = {}
 
   def build(self) -> Query:
     """
@@ -100,10 +98,10 @@ class QueryBuilder:
 
     num_conditions = random.randint(1, self.query_structure.max_selection_conditions)
 
-    for _ in range(num_conditions):
+    for i in range(num_conditions):
       column = random.choice(list(self.available_columns))
-
       prop = self.entity.properties[column]
+      next_op = random.choice(['&', '|']) if i < num_conditions - 1 else '&'
 
       match prop:
         case PropertyInt(min, max) | PropertyFloat(min, max):
@@ -111,24 +109,31 @@ class QueryBuilder:
           value = random.uniform(min, max)
           if isinstance(prop, PropertyInt):
             value = int(value)
+          # Numeric values don't need quotes
+          conditions.append((f"'{column}'", op, value, next_op))
         case PropertyString(starting_character):
           op = random.choice(['==', '!=', '.str.startswith'])
           value = random.choice(starting_character)
-          value = f"'{value}'"  # Wrap string values in quotes
+          # Properly escape quotes in string values
+          quoted_value = f"'{value}'" if "'" not in value else f'"{value}"'
+          conditions.append((f"'{column}'", op, quoted_value, next_op))
         case PropertyEnum(values):
           op = random.choice(['==', '!=', '.isin'])
           if op == '.isin':
-            value = random.sample(values, random.randint(1, len(values)))
+            selected_values = random.sample(values, random.randint(1, len(values)))
+            # Quote each value in the list
+            quoted_values = [f"'{v}'" if "'" not in v else f'"{v}"' for v in selected_values]
+            value = f"[{', '.join(quoted_values)}]"
           else:
             value = random.choice(values)
+            # Quote single enum values
+            value = f"'{value}'" if "'" not in value else f'"{value}"'
+          conditions.append((f"'{column}'", op, value, next_op))
         case PropertyDate(min, max):
           op = random.choice(['==', '!=', '<', '<=', '>', '>='])
+          # Quote date values
           value = f"'{random.choice([min, max]).isoformat()}'"
-
-      # Select the operator for the next condition (ignored for the last condition)
-      next_op = random.choice(['&', '|'])
-
-      conditions.append((f"'{column}'", op, value, next_op))
+          conditions.append((f"'{column}'", op, value, next_op))
 
     return Selection(conditions)
 
@@ -157,56 +162,85 @@ class QueryBuilder:
 
   def _generate_merge(self) -> Operation:
     """
-    Generate a merge operation.
+    Generate a merge operation with improved column tracking.
 
-    This method creates a merge operation by selecting a right entity to merge with,
-    determining the columns to join on, and generating a sub-query for the right side
-    of the merge. It handles cases where foreign key relationships exist and falls back
-    to random entity selection if no such relationships are found.
-
-    Returns:
-      Operation: The generated merge operation.
+    This updated version ensures column compatibility through nested merges by:
+    1. Tracking columns from each merged entity
+    2. Verifying join column availability
+    3. Propagating available columns up the merge chain
     """
     right_query_structure = QueryStructure(
       allow_groupby_aggregation=False,
       max_groupby_columns=2,
-      max_merges=1,
+      max_merges=self.query_structure.max_merges - 1,
       max_projection_columns=4,
       max_selection_conditions=2,
     )
 
     possible_right_entities = []
 
-    for local_col, [foreign_col, foreign_table] in self.entity.foreign_keys.items():
-      possible_right_entities.append((local_col, foreign_col, foreign_table))
+    # Track both local and merged columns for join compatibility
+    all_available_columns = set(self.available_columns)
+    for merged_cols in self.merged_columns.values():
+      all_available_columns.update(merged_cols)
 
+    # Check foreign key relationships with current entity
+    for local_col, [foreign_col, foreign_table] in self.entity.foreign_keys.items():
+      if local_col in all_available_columns:
+        possible_right_entities.append((local_col, foreign_col, foreign_table))
+
+    # Check reverse relationships
     for entity_name, entity in self.schema.entities.items():
       for local_col, [foreign_col, foreign_table] in entity.foreign_keys.items():
-        if foreign_table == self.entity_name:
+        if foreign_table == self.entity_name and foreign_col in all_available_columns:
           possible_right_entities.append((foreign_col, local_col, entity_name))
 
+    # If no valid relationships found, use primary keys
     if not possible_right_entities:
-      right_entity_name = random.choice(
-        [e for e in self.schema.entities.keys() if e != self.entity_name]
-      )
+      available_entities = [e for e in self.schema.entities.keys() if e != self.entity_name]
 
+      if not available_entities:
+        raise ValueError('No valid entities for merge')
+
+      right_entity_name = random.choice(available_entities)
       left_on = self.entity.primary_key
       right_on = self.schema.entities[right_entity_name].primary_key
     else:
       left_on, right_on, right_entity_name = random.choice(possible_right_entities)
 
+    # Create builder for right side of merge
     right_builder = QueryBuilder(self.schema, right_query_structure, self.multi_line)
-
     right_builder.entity_name = right_entity_name
     right_builder.entity = self.schema.entities[right_entity_name]
     right_builder.available_columns = list(right_builder.entity.properties.keys())
 
+    # Build right query and track its columns
     right_query = right_builder.build()
 
+    # If right query has projections, use those columns
+    projected_columns = []
+    for op in right_query.operations:
+      if isinstance(op, Projection):
+        projected_columns = op.columns
+        break
+
+    # If no projection, use all available columns
+    if not projected_columns:
+      projected_columns = right_builder.available_columns
+
+    # Track columns from this merge
+    self.merged_columns[right_entity_name] = projected_columns
+
+    format_join_cols = (
+      lambda cols: f"[{', '.join(f"'{col}'" for col in cols)}]"
+      if isinstance(cols, list)
+      else f"'{cols}'"
+    )
+
     return Merge(
-      right=Query(right_query.entity, right_query.operations, self.multi_line),
-      left_on=left_on,
-      right_on=right_on,
+      right=right_query,
+      left_on=format_join_cols(left_on),
+      right_on=format_join_cols(right_on),
     )
 
   def _generate_group_by_aggregation(self) -> Operation:

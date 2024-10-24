@@ -11,4 +11,4 @@ class Merge(Operation):
   right_on: str
 
   def apply(self, entity: str) -> str:
-    return f".merge({self.right}, left_on='{self.left_on}', right_on='{self.right_on}')"
+    return f'.merge({self.right}, left_on={self.left_on}, right_on={self.right_on})'

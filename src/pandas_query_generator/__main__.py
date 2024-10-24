@@ -58,19 +58,31 @@ def main():
           )
         )
 
-      for i, (query, result) in enumerate(zip(queries, results), 1):
-        print(f'Query {i}')
-        print()
-        print(query)
-        print()
-        print('Results:')
-        print()
-        print(result)
+      stats = generate_query_statistics(queries, results)
 
-      print_statistics(generate_query_statistics(queries, results))
+      for i, ((result, error), query) in enumerate(zip(results, queries), 1):
+        print(f'Query {i}:\n')
+        print(str(query))
+        print()
+
+        if result is not None:
+          print('Results:')
+          print(result)
+        elif error:
+          print('Error:\n')
+          print(error)
+        print()
+
+      print_statistics(stats)
+
+      # If no successful results, display error summary
+      if stats['execution_results']['non_empty_results'] == 0:
+        print('\nNo queries produced non-empty results. Error summary:')
+        error_counts = stats['execution_results']['errors']
+        for error, count in error_counts.most_common():
+          print(f'\n{count} occurrences of:')
+          print(error)
     else:
       print(f'\nQueries written to: {arguments.output_file}')
 
-
-if __name__ == '__main__':
-  main()
+    print()

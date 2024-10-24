@@ -10,11 +10,23 @@ from .query import Query
 from .selection import Selection
 
 
+class ExecutionResults(t.TypedDict):
+  """Statistics about query execution results"""
+
+  successful_executions: int
+  failed_executions: int
+  non_empty_results: int
+  empty_results: int
+  success_rate: float
+  non_empty_rate: float
+  errors: Counter[str]  # Error message -> count
+
+
 class OperationStats(t.TypedDict):
   """Statistics for each operation type"""
 
   total: int
-  complexity_distribution: Counter
+  complexity_distribution: Counter[int]  # Complexity level -> count
 
 
 class QueryStats(t.TypedDict):
@@ -22,75 +34,58 @@ class QueryStats(t.TypedDict):
 
   total_queries: int
   operations: t.Dict[str, int]  # Operation name -> count
-  merges: Counter  # Number of operations in right query -> count
-  selections: Counter  # Number of conditions -> count
-  projections: Counter  # Number of columns -> count
-  groupby_aggregations: Counter  # Number of groupby columns -> count
-  entities_used: Counter  # Entity name -> count
+  merges: Counter[int]  # Number of operations in right query -> count
+  selections: Counter[int]  # Number of conditions -> count
+  projections: Counter[int]  # Number of columns -> count
+  groupby_aggregations: Counter[int]  # Number of groupby columns -> count
+  entities_used: Counter[str]  # Entity name -> count
   avg_operations_per_query: float
-  execution_results: t.Dict[str, t.Union[int, float]]  # Result statistics
+  execution_results: ExecutionResults  # Execution statistics and errors
 
 
 def execute_query(
   query: Query, sample_data: t.Dict[str, pd.DataFrame]
-) -> t.Optional[t.Union[pd.DataFrame, pd.Series]]:
+) -> t.Tuple[t.Optional[t.Union[pd.DataFrame, pd.Series]], t.Optional[str]]:
   """
-  Execute a given query on the provided sample data.
-
-  This function attempts to execute the query against the sample data and returns
-  the result. If an exception occurs during execution, it returns None.
+  Execute a given query on the provided sample data and capture any errors.
 
   Args:
-    query (Query):
-      The Query object to be executed. This should be a valid
-      Query instance containing the entity and operations to perform.
-
-    sample_data (Dict[str, DataFrame]):
-      A dictionary containing sample data for each
-      entity in the schema. The keys should be entity
-      names, and the values should be the corresponding
-      sample data as pandas DataFrames.
+    query (Query): The Query object to be executed
+    sample_data (Dict[str, DataFrame]): Dictionary of sample data for each entity
 
   Returns:
-    Optional[Union[DataFrame, Series]]:
-      The result of the query execution if successful,
-      which is typically a pandas DataFrame or Series.
-      Returns None if an exception occurs during
-      query execution.
-
-  Raises:
-    No exceptions are raised by this function. All exceptions during query
-    execution are caught and result in a None return value.
-
-  Note:
-    This function uses the `exec` built-in function to execute the query string.
-    Make sure the Query objects and sample_data are from trusted sources to
-    prevent potential security risks associated with executing arbitrary code.
+    Tuple[Optional[Union[DataFrame, Series]], Optional[str]]:
+      - The result of the query execution if successful, None if failed
+      - The error message if execution failed, None if successful
   """
   try:
-    full_query, environment = str(query), {**sample_data}
+    full_query = str(query)
+    environment = {**sample_data}
     exec(full_query, globals(), environment)
     result = environment.get(query.entity)
+
     if isinstance(result, (pd.DataFrame, pd.Series)):
-      return result
-    return None
-  except:
-    return None
+      return result, None
+    return None, f'Result was not a DataFrame or Series: {type(result)}'
+  except Exception as e:
+    return None, f'{type(e).__name__}: {str(e)}'
 
 
 def generate_query_statistics(
   queries: t.List[Query],
-  results: t.Optional[t.List[t.Optional[t.Union[pd.DataFrame, pd.Series]]]] = None,
+  results: t.Optional[
+    t.List[t.Tuple[t.Optional[t.Union[pd.DataFrame, pd.Series]], t.Optional[str]]]
+  ] = None,
 ) -> QueryStats:
   """
   Generate comprehensive statistics about queries and their execution results.
 
   Args:
-      queries: List of Query objects to analyze
-      results: Optional list of query execution results
+    queries: List of Query objects to analyze
+    results: Optional list of tuples containing (execution_result, error_message)
 
   Returns:
-      QueryStats containing detailed statistics
+    QueryStats containing detailed statistics
   """
   stats: QueryStats = {
     'total_queries': len(queries),
@@ -108,6 +103,7 @@ def generate_query_statistics(
       'empty_results': 0,
       'success_rate': 0.0,
       'non_empty_rate': 0.0,
+      'errors': Counter(),  # Track frequency of different error types
     },
   }
 
@@ -132,40 +128,34 @@ def generate_query_statistics(
     stats['avg_operations_per_query'] = total_operations / len(queries)
 
   if results is not None:
-    for result in results:
+    for result, error in results:
       if result is None:
         stats['execution_results']['failed_executions'] += 1
+        if error:
+          stats['execution_results']['errors'][error] += 1
       else:
         stats['execution_results']['successful_executions'] += 1
-
         if isinstance(result, (pd.DataFrame, pd.Series)):
           if (isinstance(result, pd.DataFrame) and not result.empty) or (
             isinstance(result, pd.Series) and result.size > 0
           ):
             stats['execution_results']['non_empty_results'] += 1
-          else:
-            stats['execution_results']['empty_results'] += 1
 
     total = stats['total_queries']
+    successful = stats['execution_results']['successful_executions']
+    non_empty = stats['execution_results']['non_empty_results']
+
+    stats['execution_results']['empty_results'] = total - non_empty
 
     if total > 0:
-      stats['execution_results']['success_rate'] = (
-        stats['execution_results']['successful_executions'] / total
-      ) * 100
-      stats['execution_results']['non_empty_rate'] = (
-        stats['execution_results']['non_empty_results'] / total
-      ) * 100
+      stats['execution_results']['success_rate'] = (successful / total) * 100
+      stats['execution_results']['non_empty_rate'] = (non_empty / total) * 100
 
   return stats
 
 
 def print_statistics(stats: QueryStats) -> None:
-  """
-  Print comprehensive statistics about queries and their execution.
-
-  Args:
-      stats: QueryStats containing the statistics to print
-  """
+  """Print comprehensive statistics about queries and their execution."""
   print(f"Total queries generated: {stats['total_queries']}")
   print(f"Average operations per query: {stats['avg_operations_per_query']:.2f}")
 
@@ -205,17 +195,20 @@ def print_statistics(stats: QueryStats) -> None:
 
   if stats['execution_results'].get('successful_executions', 0) > 0:
     print('\nQuery Execution Results:')
-
     print(
-      f"Successful executions: {stats['execution_results']['successful_executions']} "
+      f"  Successful executions: {stats['execution_results']['successful_executions']} "
       f"({stats['execution_results']['success_rate']:.2f}%)"
     )
-
-    print(f"Failed executions: {stats['execution_results']['failed_executions']}")
-
+    print(f"  Failed executions: {stats['execution_results']['failed_executions']}")
     print(
-      f"Queries with non-empty results: {stats['execution_results']['non_empty_results']} "
+      f"  Queries with non-empty results: {stats['execution_results']['non_empty_results']} "
       f"({stats['execution_results']['non_empty_rate']:.2f}%)"
     )
+    print(f"  Queries with empty results: {stats['execution_results']['empty_results']}")
 
-    print(f"Queries with empty results: {stats['execution_results']['empty_results']}")
+  if stats['execution_results']['errors']:
+    print('\nError distribution:')
+    total_errors = sum(stats['execution_results']['errors'].values())
+    for error, count in stats['execution_results']['errors'].most_common():
+      percentage = (count / total_errors) * 100
+      print(f'  {count} ({percentage:.2f}%) - {error}')

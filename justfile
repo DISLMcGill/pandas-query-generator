@@ -42,5 +42,5 @@ readme:
 run *args:
   uv run pqg {{args}}
 
-test:
-  uv run pytest --verbose
+test *args:
+  uv run pytest --verbose {{args}}
