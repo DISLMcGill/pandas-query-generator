@@ -159,10 +159,10 @@ class QueryBuilder:
     """
     right_query_structure = QueryStructure(
       allow_groupby_aggregation=False,
-      max_groupby_columns=2,
+      max_groupby_columns=self.query_structure.max_groupby_columns,
       max_merges=self.query_structure.max_merges - 1,
-      max_projection_columns=4,
-      max_selection_conditions=2,
+      max_projection_columns=self.query_structure.max_projection_columns,
+      max_selection_conditions=self.query_structure.max_selection_conditions,
     )
 
     possible_right_entities = []
