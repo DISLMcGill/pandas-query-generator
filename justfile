@@ -30,8 +30,8 @@ example *args:
     --max-groupby-columns 5 \
     --max-merges 5 \
     --max-projection-columns 5 \
-    --max-selection-conditions 5 \
-    --num-queries 1000 \
+    --max-selection-conditions 10 \
+    --num-queries 10000 \
     --output-file results/queries.txt \
     --schema example/schema.json \
     {{args}}
@@ -44,8 +44,8 @@ populate-results-directory *args:
     --max-groupby-columns 5 \
     --max-merges 5 \
     --max-projection-columns 5 \
-    --max-selection-conditions 5 \
-    --num-queries 1000 \
+    --max-selection-conditions 10 \
+    --num-queries 10000 \
     --output-file results/single-line.txt \
     --schema example/schema.json
 
@@ -53,9 +53,9 @@ populate-results-directory *args:
     --max-groupby-columns 5 \
     --max-merges 5 \
     --max-projection-columns 5 \
-    --max-selection-conditions 5 \
+    --max-selection-conditions 10 \
     --multi-line \
-    --num-queries 1000 \
+    --num-queries 10000 \
     --output-file results/multi-line.txt \
     --schema example/schema.json
 

@@ -42,7 +42,14 @@ def main():
     os.makedirs(os.path.dirname(arguments.output_file), exist_ok=True)
 
     with open(arguments.output_file, 'w') as f:
-      f.write('\n\n'.join(str(query) for query in queries))
+      f.write(
+        '\n\n'.join(
+          query
+          for query in filter(
+            lambda content: content != '', map(lambda query: str(query).strip(), set(queries))
+          )
+        )
+      )
 
     if arguments.verbose:
       ctx = multiprocessing.get_context('fork')
@@ -61,8 +68,7 @@ def main():
 
       for i, ((result, error), query) in enumerate(zip(results, queries), 1):
         print(f'Query {i}:\n')
-        print(str(query))
-        print()
+        print(str(query) + '\n')
 
         if result is not None:
           print('Results:')
@@ -70,6 +76,7 @@ def main():
         elif error:
           print('Error:\n')
           print(error)
+
         print()
 
       print_statistics(stats)
