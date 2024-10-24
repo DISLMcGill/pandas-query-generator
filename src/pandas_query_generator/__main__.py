@@ -43,9 +43,10 @@ def main():
     if arguments.sorted:
       queries = SortedSet(queries)
 
-    os.makedirs(os.path.dirname(arguments.output_file), exist_ok=True)
+    if os.path.dirname(arguments.output_file):
+      os.makedirs(os.path.dirname(arguments.output_file), exist_ok=True)
 
-    with open(arguments.output_file, 'w') as f:
+    with open(arguments.output_file, 'w+') as f:
       f.write(
         '\n\n'.join(
           query

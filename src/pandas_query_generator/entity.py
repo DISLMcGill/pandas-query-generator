@@ -1,5 +1,6 @@
 import random
 import string
+import sys
 import typing as t
 from dataclasses import dataclass
 from datetime import date
@@ -92,16 +93,23 @@ class Entity:
       prop_type = data['type']
 
       if prop_type == 'int':
-        properties[name] = PropertyInt(min=data['min'], max=data['max'])
+        properties[name] = PropertyInt(
+          min=data.get('min', -sys.maxsize), max=data.get('max', sys.maxsize)
+        )
       elif prop_type == 'float':
-        properties[name] = PropertyFloat(min=data['min'], max=data['max'])
+        properties[name] = PropertyFloat(min=data.get('min', -1e308), max=data.get('max', 1e308))
       elif prop_type == 'enum':
+        if 'values' not in data:
+          raise ValueError(f'Enum property {name} must specify values')
         properties[name] = PropertyEnum(values=data['values'])
       elif prop_type == 'string':
-        properties[name] = PropertyString(starting_character=data['starting_character'])
+        properties[name] = PropertyString(
+          starting_character=data.get('starting_character', list(string.ascii_letters))
+        )
       elif prop_type == 'date':
         properties[name] = PropertyDate(
-          min=date.fromisoformat(data['min']), max=date.fromisoformat(data['max'])
+          min=date.fromisoformat(data.get('min', '1970-01-01')),
+          max=date.fromisoformat(data.get('max', '2038-01-19')),
         )
       else:
         raise ValueError(f'Unknown property type: {prop_type}')
@@ -164,33 +172,39 @@ class Entity:
 
       if isinstance(primary_key_property, PropertyInt):
         constraint = primary_key_property.max - primary_key_property.min + 1
-        num_rows = constraint if constraint < num_rows else num_rows
+        num_rows = min(constraint, num_rows)
 
     for i in range(num_rows):
       row = {}
 
       for name, property in self.properties.items():
         match property:
-          case PropertyInt(min, max):
+          case PropertyInt(minimum, maximum):
             if (
               self.has_unique_primary_key
               and name == self.primary_key
-              and num_rows == (max - min + 1)
+              and num_rows == (maximum - minimum + 1)
             ):
-              row[name] = i + min
+              row[name] = i + minimum
             else:
-              row[name] = random.randint(min, max)
-          case PropertyFloat(min, max):
-            row[name] = round(random.uniform(min, max), 2)
+              if maximum - minimum > 1e6:
+                row[name] = random.randint(-1000000, 1000000)
+              else:
+                row[name] = random.randint(minimum, maximum)
+          case PropertyFloat(minimum, maximum):
+            if maximum - minimum > 1e6:
+              row[name] = round(random.uniform(-1000000, 1000000), 2)
+            else:
+              row[name] = round(random.uniform(minimum, maximum), 2)
           case PropertyString(starting_character):
             starting_char = random.choice(starting_character)
             random_string = ''.join(random.choices(string.ascii_letters, k=9))
             row[name] = starting_char + random_string
           case PropertyEnum(values):
             row[name] = random.choice(values)
-          case PropertyDate(min, max):
+          case PropertyDate(minimum, maximum):
             row[name] = pd.to_datetime(
-              random.choice(pd.date_range(pd.to_datetime(min), pd.to_datetime(max)))
+              random.choice(pd.date_range(pd.to_datetime(minimum), pd.to_datetime(maximum)))
             ).strftime('%Y-%m-%d')
 
       rows.append(row)

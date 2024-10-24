@@ -2,4 +2,4 @@
 /.DS_Store
 /dist
 __pycache__/
-results/queries.txt
+queries.txt

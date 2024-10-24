@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+for directory in ./examples/*; do
+  base="$(basename "$directory")"
+
+  uv run pqg  \
+    --max-groupby-columns 5 \
+    --max-merges 5 \
+    --max-projection-columns 10 \
+    --max-selection-conditions 10 \
+    --num-queries 10000 \
+    --output-file examples/"$base"/single-line.txt \
+    --schema examples/"$base"/schema.json \
+    --sorted
+
+  uv run pqg  \
+    --max-groupby-columns 5 \
+    --max-merges 5 \
+    --max-projection-columns 10 \
+    --max-selection-conditions 10 \
+    --multi-line \
+    --num-queries 10000 \
+    --output-file examples/"$base"/multi-line.txt \
+    --schema examples/"$base"/schema.json \
+    --sorted
+done
