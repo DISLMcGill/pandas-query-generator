@@ -26,10 +26,10 @@ count:
 
 example *args:
   uv run pqg  \
-    --max-groupby-columns 2 \
-    --max-merges 3 \
+    --max-groupby-columns 5 \
+    --max-merges 5 \
     --max-projection-columns 5 \
-    --max-selection-conditions 4 \
+    --max-selection-conditions 5 \
     --num-queries 1000 \
     --output-file results/queries.txt \
     --schema example/schema.json \
@@ -40,19 +40,19 @@ fmt:
 
 populate-results-directory *args:
   uv run pqg  \
-    --max-groupby-columns 2 \
-    --max-merges 3 \
+    --max-groupby-columns 5 \
+    --max-merges 5 \
     --max-projection-columns 5 \
-    --max-selection-conditions 4 \
+    --max-selection-conditions 5 \
     --num-queries 1000 \
     --output-file results/single-line.txt \
     --schema example/schema.json
 
   uv run pqg  \
-    --max-groupby-columns 2 \
-    --max-merges 3 \
+    --max-groupby-columns 5 \
+    --max-merges 5 \
     --max-projection-columns 5 \
-    --max-selection-conditions 4 \
+    --max-selection-conditions 5 \
     --multi-line \
     --num-queries 1000 \
     --output-file results/multi-line.txt \

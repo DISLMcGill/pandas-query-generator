@@ -37,7 +37,7 @@ def main():
     print(f'Time taken for {description}: {elapsed_time:.2f} seconds')
 
   with timer(f'Generating and executing {arguments.num_queries} queries'):
-    queries = generator.generate(arguments.num_queries)
+    queries = sorted(generator.generate(arguments.num_queries))
 
     os.makedirs(os.path.dirname(arguments.output_file), exist_ok=True)
 

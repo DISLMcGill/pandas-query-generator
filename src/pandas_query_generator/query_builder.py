@@ -13,6 +13,24 @@ from .selection import Selection
 
 
 class QueryBuilder:
+  """
+  A builder class for generating random, valid pandas DataFrame queries.
+
+  This class constructs queries using a combination of operations like selection,
+  projection, merge, and group by aggregation. It ensures that generated queries
+  are valid by tracking available columns and maintaining referential integrity.
+
+  Attributes:
+    schema (Schema): The database schema containing entity definitions.
+    query_structure (QueryStructure): Configuration parameters for query generation.
+    multi_line (bool): Whether to format queries across multiple lines.
+    operations (List[Operation]): List of operations to be applied in the query.
+    entity_name (str): Name of the current entity being queried.
+    entity (Entity): The current entity's schema definition.
+    current_columns (Set[str]): Set of columns currently available for operations.
+    required_columns (Set[str]): Columns that must be preserved (e.g., join keys).
+  """
+
   def __init__(self, schema: Schema, query_structure: QueryStructure, multi_line: bool):
     self.schema: Schema = schema
     self.query_structure: QueryStructure = query_structure
@@ -20,52 +38,66 @@ class QueryBuilder:
     self.operations: t.List[Operation] = []
     self.entity_name = random.choice(list(self.schema.entities.keys()))
     self.entity = self.schema.entities[self.entity_name]
-    self.available_columns = list(self.entity.properties.keys())
-    self.merged_columns: t.Dict[str, t.List[str]] = {}
+    self.current_columns = set(self.entity.properties.keys())
+    self.required_columns: t.Set[str] = set()  # Columns that must be preserved
 
   def build(self) -> Query:
     """
-    Build a query based on the schema and query structure.
+    Build a complete query by randomly combining different operations.
 
-    Generates a random combination of query operations based on probabilities:
-    - 50% chance of adding a selection operation
-    - 50% chance of adding a projection operation
-    - Random number of merge operations (0 to max_merges)
-    - 50% chance of adding a group-by aggregation if allowed
+    The method generates operations based on the following probabilities:
+    - 50% chance of adding a selection (WHERE clause)
+    - 50% chance of adding a projection (SELECT columns)
+    - 0 to max_merges joins with other tables
+    - 50% chance of adding a group by if grouping is enabled
+
+    Each operation is validated to ensure it uses only available columns
+    and maintains referential integrity.
 
     Returns:
-      Query: A query object containing the generated operations.
+      Query: A complete, valid query object with all generated operations.
     """
     if random.random() < 0.5:
-      self.operations.append(self._generate_operation(Selection))
+      selection = self._generate_operation(Selection)
+      self.operations.append(selection)
 
     if random.random() < 0.5:
-      self.operations.append(self._generate_operation(Projection))
+      projection = self._generate_operation(Projection)
+      self.operations.append(projection)
 
     for _ in range(random.randint(0, self.query_structure.max_merges)):
-      self.operations.append(self._generate_operation(Merge))
+      try:
+        merge = self._generate_operation(Merge)
+        self.operations.append(merge)
+      except ValueError:
+        break
 
-    if self.query_structure.max_groupby_columns > 0 and random.random() < 0.5:
-      self.operations.append(self._generate_operation(GroupByAggregation))
+    if (
+      self.query_structure.max_groupby_columns > 0
+      and random.random() < 0.5
+      and self.current_columns
+    ):
+      groupby = self._generate_operation(GroupByAggregation)
+      self.operations.append(groupby)
 
-    return Query(self.entity_name, self.operations, self.multi_line)
+    return Query(self.entity_name, self.operations, self.multi_line, self.current_columns)
 
   def _generate_operation(self, operation: t.Type[Operation]) -> Operation:
     """
-    Generate a specific type of query operation.
+    Factory method to create specific types of query operations.
 
-    This method acts as a factory for creating different types of query operations.
-    It delegates the actual generation to type-specific methods based on the
-    operation type requested.
+    Routes the operation creation to the appropriate specialized method based
+    on the operation type requested. Each specialized method handles the
+    validation and generation logic specific to that operation type.
 
     Args:
-      operation: The type of operation to generate (Selection, Projection, etc.).
+      operation: The type of operation to generate (Selection, Projection, etc.)
 
     Returns:
-      Operation: The generated operation instance.
+      Operation: A newly generated operation of the requested type.
 
     Raises:
-      ValueError: If an unsupported operation type is provided.
+      ValueError: If the operation type is not supported or generation fails.
     """
     if operation == Selection:
       return self._generate_selection()
@@ -80,36 +112,41 @@ class QueryBuilder:
 
   def _generate_selection(self) -> Operation:
     """
-    Generate a selection (WHERE clause) operation.
+    Generate a WHERE clause for filtering rows.
 
-    Creates a selection operation with random conditions based on the entity's
-    property types. Handles different data types and operators appropriately:
+    Creates conditions for filtering data based on column types:
+    - Numeric columns: Comparison operators (==, !=, <, <=, >, >=)
+    - String columns: Equality, inequality, and string operations
+    - Enum columns: Value matching and set membership tests
+    - Date columns: Date comparison operations
 
-    - Numeric (Int/Float): ==, !=, <, <=, >, >=
-    - String: ==, !=, .str.startswith
-    - Enum: ==, !=, .isin
-    - Date: ==, !=, <, <=, >, >=
-
-    Conditions are combined using randomly chosen logical operators (&, |).
+    Conditions are combined using AND (&) or OR (|) operators. The number
+    of conditions is bounded by max_selection_conditions configuration.
 
     Returns:
-      Operation: A Selection operation with randomly generated conditions.
+      Operation: A Selection operation with the generated conditions.
     """
-    conditions = []
+    if not self.current_columns:
+      return Selection([])
 
-    num_conditions = random.randint(1, self.query_structure.max_selection_conditions)
+    num_conditions = random.randint(
+      1, min(self.query_structure.max_selection_conditions, len(self.current_columns))
+    )
+
+    conditions, available_columns = [], list(self.current_columns)
 
     for i in range(num_conditions):
-      column = random.choice(list(self.available_columns))
+      column = random.choice(available_columns)
 
-      prop = self.entity.properties[column]
-
-      next_op = random.choice(['&', '|']) if i < num_conditions - 1 else '&'
+      prop, next_op = (
+        self.entity.properties[column],
+        random.choice(['&', '|']) if i < num_conditions - 1 else '&',
+      )
 
       match prop:
-        case PropertyInt(min, max) | PropertyFloat(min, max):
+        case PropertyInt(minimum, maximum) | PropertyFloat(minimum, maximum):
           op = random.choice(['==', '!=', '<', '<=', '>', '>='])
-          value = random.uniform(min, max)
+          value = random.uniform(minimum, maximum)
           if isinstance(prop, PropertyInt):
             value = int(value)
           conditions.append((f"'{column}'", op, value, next_op))
@@ -128,57 +165,67 @@ class QueryBuilder:
             value = random.choice(values)
             value = f"'{value}'" if "'" not in value else f'"{value}"'
           conditions.append((f"'{column}'", op, value, next_op))
-        case PropertyDate(min, max):
+        case PropertyDate(minimum, maximum):
           op = random.choice(['==', '!=', '<', '<=', '>', '>='])
-          value = f"'{random.choice([min, max]).isoformat()}'"
+          value = f"'{random.choice([minimum, maximum]).isoformat()}'"
           conditions.append((f"'{column}'", op, value, next_op))
 
     return Selection(conditions)
 
   def _generate_projection(self) -> Operation:
     """
-    Generate a projection (SELECT columns) operation.
+    Generate a SELECT clause for choosing columns.
 
-    Creates a projection operation by randomly selecting a subset of columns
-    from the available columns. The number of columns is randomly determined
-    within the bounds specified by max_projection_columns.
+    Randomly selects a subset of available columns while ensuring that
+    required columns (like join keys) are always included. The number
+    of selected columns is bounded by max_projection_columns configuration.
 
-    After generating the projection, updates available_columns to only include
-    the projected columns, affecting subsequent operations.
+    The operation updates the available columns for subsequent operations
+    while maintaining required columns for joins and other operations.
 
     Returns:
-      Operation: A Projection operation with randomly selected columns.
+      Operation: A Projection operation with the selected columns.
     """
-    to_project = random.randint(1, self.query_structure.max_projection_columns)
+    available_for_projection = self.current_columns - self.required_columns
 
-    columns = random.sample(
-      self.available_columns,
-      min(len(self.available_columns), to_project),
+    if not available_for_projection:
+      # If no columns available for projection besides required ones,
+      # project all current columns
+      return Projection(list(self.current_columns))
+
+    to_project = random.randint(
+      1, min(self.query_structure.max_projection_columns, len(available_for_projection))
     )
 
-    self.available_columns = columns
+    # Select random columns plus required columns
+    selected_columns = random.sample(list(available_for_projection), to_project)
+    columns = list(set(selected_columns) | self.required_columns)
+
+    # Update available columns but ensure required ones stay
+    self.current_columns = set(columns)
 
     return Projection(columns)
 
   def _generate_merge(self) -> Operation:
     """
-    Generate a merge (JOIN) operation.
+    Generate a JOIN operation with another table.
 
-    Creates a merge operation that joins the current entity with another entity
-    based on their relationships defined in the schema. Handles both direct
-    foreign key relationships and reverse relationships.
+    Creates a join operation based on foreign key relationships defined
+    in the schema. Ensures join columns are preserved in projections on
+    both sides of the join.
 
-    Features:
-    - Tracks columns from merged entities for join compatibility
-    - Supports both single-column and multi-column joins
-    - Falls back to primary key joins if no valid relationship is found
-    - Recursively generates operations for the right side of the merge
+    The method:
+
+    1. Identifies possible join relationships
+    2. Randomly selects a valid join path
+    3. Creates a new query for the right side
+    4. Ensures join columns are preserved
 
     Returns:
-      Operation: A Merge operation with appropriate join conditions.
+      Operation: A Merge operation with the join conditions.
 
     Raises:
-      ValueError: If no valid entities are available for merging.
+      ValueError: If no valid join relationships are available.
     """
     right_query_structure = QueryStructure(
       max_groupby_columns=0,
@@ -189,64 +236,34 @@ class QueryBuilder:
 
     possible_right_entities = []
 
-    # Track both local and merged columns for join compatibility
-    all_available_columns = set(self.available_columns)
-    for merged_cols in self.merged_columns.values():
-      all_available_columns.update(merged_cols)
-
-    # Check foreign key relationships with current entity
+    # Find all possible join relationships
     for local_col, [foreign_col, foreign_table] in self.entity.foreign_keys.items():
-      if local_col in all_available_columns:
+      if local_col in self.current_columns:
         possible_right_entities.append((local_col, foreign_col, foreign_table))
 
-    # Check reverse relationships
-    for entity_name, entity in self.schema.entities.items():
-      for local_col, [foreign_col, foreign_table] in entity.foreign_keys.items():
-        if foreign_table == self.entity_name and foreign_col in all_available_columns:
-          possible_right_entities.append((foreign_col, local_col, entity_name))
-
-    # If no valid relationships found, use primary keys
     if not possible_right_entities:
-      available_entities = [e for e in self.schema.entities.keys() if e != self.entity_name]
-
-      if not available_entities:
-        raise ValueError('No valid entities for merge')
-
-      right_entity_name = random.choice(available_entities)
-      left_on = self.entity.primary_key
-      right_on = self.schema.entities[right_entity_name].primary_key
+      raise ValueError('No valid entities for merge')
     else:
       left_on, right_on, right_entity_name = random.choice(possible_right_entities)
 
-    # Create builder for right side of merge
+    # Create builder for right side query
     right_builder = QueryBuilder(self.schema, right_query_structure, self.multi_line)
     right_builder.entity_name = right_entity_name
     right_builder.entity = self.schema.entities[right_entity_name]
-    right_builder.available_columns = list(right_builder.entity.properties.keys())
+    right_builder.current_columns = set(right_builder.entity.properties.keys())
 
-    # Build right query and track its columns
+    # Ensure join column is preserved
+    right_builder.required_columns.add(right_on)
+
+    # Update our current columns on this query
     right_query = right_builder.build()
+    self.current_columns = right_query.available_columns
 
-    # If right query has projections, use those columns
-    projected_columns = []
-    for op in right_query.operations:
-      if isinstance(op, Projection):
-        projected_columns = op.columns
-        break
-
-    # If no projection, use all available columns
-    if not projected_columns:
-      projected_columns = right_builder.available_columns
-
-    # Track columns from this merge
-    self.merged_columns[right_entity_name] = projected_columns
-
-    def format_join_columns(columns: t.List[str] | str | None):
-      return (
-        f"[{', '.join(f"'{col}'" for col in columns)}]"
-        if isinstance(columns, list)
-        else f"'{columns}'"
-      )
+    format_join_columns = (
+      lambda columns: f"[{', '.join(f"'{col}'" for col in columns)}]"
+      if isinstance(columns, list)
+      else f"'{columns}'"
+    )
 
     return Merge(
       right=right_query,
@@ -256,27 +273,26 @@ class QueryBuilder:
 
   def _generate_group_by_aggregation(self) -> Operation:
     """
-    Generate a group-by aggregation operation.
+    Generate a GROUP BY clause with aggregation.
 
-    Creates a group-by operation with random columns and an aggregation function.
-    The number of group-by columns is bounded by max_groupby_columns and
-    available columns.
+    Creates a grouping operation that:
+    1. Randomly selects columns to group by
+    2. Chooses an aggregation function (mean, sum, min, max, count)
+    3. Ensures numeric_only parameter is set appropriately
 
-    Features:
-    - Randomly selects columns to group by
-    - Chooses from standard aggregation functions:
-      - mean: Average of numeric columns
-      - sum: Sum of numeric columns
-      - min: Minimum values
-      - max: Maximum values
-      - count: Count of rows in each group
+    The number of grouping columns is bounded by max_groupby_columns
+    configuration and available columns.
 
     Returns:
-      Operation: A GroupByAggregation operation with selected columns and function.
+      Operation: A GroupByAggregation operation with the grouping
+      configuration.
     """
+    if not self.current_columns:
+      return GroupByAggregation([], 'count')
+
     group_columns = random.sample(
-      self.available_columns,
-      random.randint(1, min(self.query_structure.max_groupby_columns, len(self.available_columns))),
+      list(self.current_columns),
+      random.randint(1, min(self.query_structure.max_groupby_columns, len(self.current_columns))),
     )
 
     agg_function = random.choice(['mean', 'sum', 'min', 'max', 'count'])
