@@ -78,7 +78,6 @@ class TestQuery:
     assert str(query) == expected
 
   def test_multiline_query_basic(self, sample_entity):
-    """Test a simple multi-line query with a single operation"""
     query = Query(sample_entity, [Selection([("'age'", '>=', 25, '&')])], True)
 
     result, counter = query.format_multi_line()
@@ -88,7 +87,6 @@ class TestQuery:
     assert counter == 2
 
   def test_multiline_query_multiple_ops(self, sample_entity):
-    """Test a multi-line query with multiple non-merge operations"""
     query = Query(
       sample_entity,
       [
@@ -111,7 +109,6 @@ class TestQuery:
     assert counter == 4
 
   def test_multiline_query_with_merge(self, sample_entity):
-    """Test a multi-line query with a merge operation"""
     right_query = Query('orders', [Selection([("'status'", '==', "'active'", '&')])], False)
 
     query = Query(
@@ -132,8 +129,6 @@ class TestQuery:
     assert counter == 4
 
   def test_multiline_nested_merges(self, sample_entity):
-    """Test a multi-line query with nested merge operations"""
-    # Create a chain of nested queries: customer -> products -> orders
     inner_query = Query('orders', [Selection([("'status'", '==', "'pending'", '&')])], False)
 
     middle_query = Query('products', [Merge(inner_query, 'order_id', 'order_id')], False)
@@ -155,5 +150,6 @@ class TestQuery:
       "df3 = products.merge(df2, left_on='order_id', right_on='order_id')",
       "df4 = df1.merge(df3, left_on='product_id', right_on='product_id')",
     ]
+
     assert result == '\n'.join(expected_lines)
     assert counter == 5
