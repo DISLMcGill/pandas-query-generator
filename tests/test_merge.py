@@ -156,17 +156,11 @@ class TestMerge:
     inner_query = Query('orders', [], False, set())
 
     middle_query = Query(
-        'products', 
-        [Merge(inner_query, "'order_id'", "'order_id'")], 
-        False, 
-        {'order_id'}
+      'products', [Merge(inner_query, "'order_id'", "'order_id'")], False, {'order_id'}
     )
 
     outer_query = Query(
-        'customer', 
-        [Merge(middle_query, "'product_id'", "'product_id'")], 
-        False, 
-        {'product_id'}
+      'customer', [Merge(middle_query, "'product_id'", "'product_id'")], False, {'product_id'}
     )
 
     assert outer_query.complexity == 7
