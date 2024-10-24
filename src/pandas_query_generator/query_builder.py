@@ -33,27 +33,18 @@ class QueryBuilder:
       Query: The generated query.
     """
     if random.random() < 0.5:
-      self._add_operation(self._generate_operation(Selection))
+      self.operations.append(self._generate_operation(Selection))
 
     if random.random() < 0.5:
-      self._add_operation(self._generate_operation(Projection))
+      self.operations.append(self._generate_operation(Projection))
 
     for _ in range(random.randint(0, self.query_structure.max_merges)):
-      self._add_operation(self._generate_operation(Merge))
+      self.operations.append(self._generate_operation(Merge))
 
     if self.query_structure.allow_groupby_aggregation and random.random() < 0.5:
-      self._add_operation(self._generate_operation(GroupByAggregation))
+      self.operations.append(self._generate_operation(GroupByAggregation))
 
     return Query(self.entity_name, self.operations, self.multi_line)
-
-  def _add_operation(self, operation: Operation) -> None:
-    """
-    Add an operation to the list of operations for this query.
-
-    Args:
-      operation (Operation): The operation to add to the query.
-    """
-    self.operations.append(operation)
 
   def _generate_operation(self, operation: t.Type[Operation]) -> Operation:
     """
@@ -100,7 +91,9 @@ class QueryBuilder:
 
     for i in range(num_conditions):
       column = random.choice(list(self.available_columns))
+
       prop = self.entity.properties[column]
+
       next_op = random.choice(['&', '|']) if i < num_conditions - 1 else '&'
 
       match prop:
@@ -109,29 +102,24 @@ class QueryBuilder:
           value = random.uniform(min, max)
           if isinstance(prop, PropertyInt):
             value = int(value)
-          # Numeric values don't need quotes
           conditions.append((f"'{column}'", op, value, next_op))
         case PropertyString(starting_character):
           op = random.choice(['==', '!=', '.str.startswith'])
           value = random.choice(starting_character)
-          # Properly escape quotes in string values
           quoted_value = f"'{value}'" if "'" not in value else f'"{value}"'
           conditions.append((f"'{column}'", op, quoted_value, next_op))
         case PropertyEnum(values):
           op = random.choice(['==', '!=', '.isin'])
           if op == '.isin':
             selected_values = random.sample(values, random.randint(1, len(values)))
-            # Quote each value in the list
             quoted_values = [f"'{v}'" if "'" not in v else f'"{v}"' for v in selected_values]
             value = f"[{', '.join(quoted_values)}]"
           else:
             value = random.choice(values)
-            # Quote single enum values
             value = f"'{value}'" if "'" not in value else f'"{value}"'
           conditions.append((f"'{column}'", op, value, next_op))
         case PropertyDate(min, max):
           op = random.choice(['==', '!=', '<', '<=', '>', '>='])
-          # Quote date values
           value = f"'{random.choice([min, max]).isoformat()}'"
           conditions.append((f"'{column}'", op, value, next_op))
 
