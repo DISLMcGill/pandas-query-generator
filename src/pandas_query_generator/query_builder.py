@@ -2,7 +2,7 @@ import random
 import typing as t
 
 from .entity import PropertyDate, PropertyEnum, PropertyFloat, PropertyInt, PropertyString
-from .group_by import GroupByAggregation
+from .group_by_aggregation import GroupByAggregation
 from .merge import Merge
 from .operation import Operation
 from .projection import Projection

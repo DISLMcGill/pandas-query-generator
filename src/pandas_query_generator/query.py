@@ -1,7 +1,7 @@
 import typing as t
 from dataclasses import dataclass
 
-from .group_by import GroupByAggregation
+from .group_by_aggregation import GroupByAggregation
 from .merge import Merge
 from .operation import Operation
 from .projection import Projection

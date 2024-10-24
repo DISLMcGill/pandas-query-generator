@@ -3,7 +3,7 @@ from collections import Counter
 
 import pandas as pd
 
-from .group_by import GroupByAggregation
+from .group_by_aggregation import GroupByAggregation
 from .merge import Merge
 from .projection import Projection
 from .query import Query
