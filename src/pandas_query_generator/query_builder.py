@@ -259,11 +259,12 @@ class QueryBuilder:
     right_query = right_builder.build()
     self.current_columns = right_query.available_columns
 
-    format_join_columns = (
-      lambda columns: f"[{', '.join(f"'{col}'" for col in columns)}]"
-      if isinstance(columns, list)
-      else f"'{columns}'"
-    )
+    def format_join_columns(columns: str | t.List[str]) -> str:
+      return (
+        f"[{', '.join(f"'{col}'" for col in columns)}]"
+        if isinstance(columns, list)
+        else f"'{columns}'"
+      )
 
     return Merge(
       right=right_query,

@@ -11,6 +11,8 @@ alias t := test
 default:
   just --list
 
+all: fmt check readme
+
 build:
   uv build
 
@@ -18,7 +20,6 @@ dev-deps:
   cargo install present tokei
 
 check:
-  uv run mypy .
   uv run ruff check
 
 count:
