@@ -1,39 +1,36 @@
-import json
 from dataclasses import dataclass
+
+from .arguments import Arguments
 
 
 @dataclass
 class QueryStructure:
   """
-  A high-level structure describing meta-information about the generated queries.
+  A dataclass that encapsulates the configuration parameters controlling query generation.
+  Contains settings for various query features like aggregation, projection, and merging.
   """
 
   allow_groupby_aggregation: bool
-  allow_projection: bool
   max_groupby_columns: int
   max_merges: int
   max_projection_columns: int
   max_selection_conditions: int
 
   @staticmethod
-  def from_file(path: str) -> 'QueryStructure':
+  def from_args(arguments: Arguments) -> 'QueryStructure':
     """
-    Create a QueryStructure instance from a JSON file.
+    Create a QueryStructure instance from command-line arguments.
 
     Args:
-        path: Path to the JSON configuration file
+      arguments: Instance of Arguments containing parsed command-line parameters
 
     Returns:
-        QueryStructure: Instance configured according to the file
+      QueryStructure: Instance configured according to the provided arguments
     """
-    with open(path, 'r') as file:
-      content = json.load(file)
-
     return QueryStructure(
-      allow_groupby_aggregation=content.get('allow_groupby_aggregation', False),
-      allow_projection=content.get('allow_projection', False),
-      max_groupby_columns=content.get('max_groupby_columns', 2),
-      max_merges=content.get('max_merges', 2),
-      max_projection_columns=content.get('max_projection_columns', 4),
-      max_selection_conditions=content.get('max_selection_conditions', 2),
+      allow_groupby_aggregation=arguments.allow_groupby_aggregation,
+      max_groupby_columns=arguments.max_groupby_columns,
+      max_merges=arguments.max_merges,
+      max_projection_columns=arguments.max_projection_columns,
+      max_selection_conditions=arguments.max_selection_conditions,
     )

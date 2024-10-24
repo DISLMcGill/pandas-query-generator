@@ -1,7 +1,0 @@
-{
-  "allow_aggregation": true,
-  "allow_group_by": true,
-  "allow_projection": true,
-  "num_merges": 3,
-  "num_selections": 2
-}

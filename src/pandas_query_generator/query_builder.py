@@ -169,7 +169,6 @@ class QueryBuilder:
     """
     right_query_structure = QueryStructure(
       allow_groupby_aggregation=False,
-      allow_projection=True,
       max_groupby_columns=2,
       max_merges=1,
       max_projection_columns=4,

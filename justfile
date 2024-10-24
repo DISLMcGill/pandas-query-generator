@@ -24,10 +24,13 @@ count:
 
 example *args:
   uv run pqg  \
+    --allow-groupby \
+    --max-merges 3 \
+    --max-projection-columns 5 \
+    --max-selection-conditions 4 \
     --num-queries 1000 \
     --output-file results/queries.txt \
-    --query-structure examples/query_structure.json \
-    --schema examples/data_structure_tpch_csv.json \
+    --schema example/schema.json \
     {{args}}
 
 fmt:

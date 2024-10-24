@@ -23,7 +23,7 @@ def main():
 
   schema, query_structure = (
     Schema.from_file(arguments.schema),
-    QueryStructure.from_file(arguments.query_structure),
+    QueryStructure.from_args(arguments),
   )
 
   sample_data = {entity: schema.entities[entity].generate_dataframe() for entity in schema.entities}
