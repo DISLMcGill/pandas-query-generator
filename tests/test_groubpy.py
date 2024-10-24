@@ -1,4 +1,4 @@
-from pandas_query_generator.group_by import GroupByAggregation
+from pandas_query_generator.group_by_aggregation import GroupByAggregation
 
 
 class TestGroupByAggregation:

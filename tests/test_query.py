@@ -1,6 +1,6 @@
 import pytest
 
-from pandas_query_generator.group_by import GroupByAggregation
+from pandas_query_generator.group_by_aggregation import GroupByAggregation
 from pandas_query_generator.merge import Merge
 from pandas_query_generator.projection import Projection
 from pandas_query_generator.query import Query
