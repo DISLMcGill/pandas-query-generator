@@ -163,4 +163,4 @@ class TestMerge:
       'customer', [Merge(middle_query, "'product_id'", "'product_id'")], False, {'product_id'}
     )
 
-    assert outer_query.complexity == 2
+    assert outer_query.complexity == 7

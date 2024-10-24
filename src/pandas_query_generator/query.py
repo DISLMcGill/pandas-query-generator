@@ -43,49 +43,83 @@ class Query:
       else f'{self.entity}{''.join(op.apply(self.entity) for op in self.operations)}'
     )
 
+  def __hash__(self) -> int:
+    """Hash based on complexity and string representation."""
+    return hash((self.complexity, str(self)))
+
+  def __eq__(self, other: 'Query') -> bool:
+    """Equality comparison based on complexity and string representation."""
+    return (self.complexity, str(self)) == (other.complexity, str(other))
+
   def __lt__(self, other: 'Query') -> bool:
     """Less than comparison based on complexity and string representation."""
     return (self.complexity, str(self)) < (other.complexity, str(other))
 
-  def __le__(self, other: 'Query') -> bool:
-    """Less than or equal comparison based on complexity and string representation."""
-    return (self.complexity, str(self)) <= (other.complexity, str(other))
-
-  def __gt__(self, other: 'Query') -> bool:
-    """Greater than comparison based on complexity and string representation."""
-    return (self.complexity, str(self)) > (other.complexity, str(other))
-
-  def __ge__(self, other: 'Query') -> bool:
-    """Greater than or equal comparison based on complexity and string representation."""
-    return (self.complexity, str(self)) >= (other.complexity, str(other))
-
   def _calculate_complexity(self) -> int:
     """
-    Calculate query complexity based on merge operations.
+    Calculate query complexity based on all operations and their details.
 
     Complexity is determined by:
-    1. Number of top-level merges
-    2. Recursive complexity of nested merges
-    3. Additional weight for deeply nested structures
+    1. Base complexity: Total number of operations
+    2. Merge complexity:
+     - Each merge adds weight of 3 (more complex than other operations)
+     - Additional complexity from nested queries
+    3. Selection complexity: Number of conditions in each selection
+    4. Projection complexity: Number of columns being projected
+    5. GroupBy complexity: Number of grouping columns plus weight of aggregation
 
     Returns:
-      int: Complexity score for the query
+        int: Complexity score for the query
     """
 
     def get_merge_complexity(op: Operation) -> int:
-      if isinstance(op, Merge):
-        nested_complexity = sum(
-          get_merge_complexity(nested_op) for nested_op in op.right.operations
-        )
-        return 1 + nested_complexity
-      return 0
+      return (
+        3 + sum(get_operation_complexity(nested_op) for nested_op in op.right.operations)
+        if isinstance(op, Merge)
+        else 0
+      )
 
-    return sum(get_merge_complexity(op) for op in self.operations)
+    def get_operation_complexity(op: Operation) -> int:
+      if isinstance(op, Selection):
+        return 1 + len(op.conditions)
+      elif isinstance(op, Projection):
+        return 1 + len(op.columns)
+      elif isinstance(op, GroupByAggregation):
+        return 2 + len(op.group_by_columns)
+      elif isinstance(op, Merge):
+        return get_merge_complexity(op)
+      raise ValueError('Unsupported operation type')
+
+    base_complexity = len(self.operations)
+
+    operation_complexity = sum(get_operation_complexity(op) for op in self.operations)
+
+    return base_complexity + operation_complexity
 
   def format_multi_line(self, start_counter: int = 1) -> t.Tuple[str, int]:
-    lines = []
-    df_counter = start_counter
-    current_df = self.entity
+    """
+    Format the query across multiple lines for better readability.
+
+    Transforms the query into a sequence of DataFrame operations where each
+    operation is assigned to a numbered DataFrame variable (df1, df2, etc.).
+    Handles nested operations by recursively formatting sub-queries and
+    maintaining proper DataFrame references.
+
+    Args:
+      start_counter (int): Initial counter value for DataFrame numbering. Defaults to 1.
+
+    Returns:
+      Tuple[str, int]: A tuple containing:
+          - The formatted multi-line query string
+          - The final counter value after processing all operations
+
+    Example:
+      For a query with multiple operations, might return:
+      ("df1 = customer[customer['age'] >= 25]\n"
+       "df2 = df1.merge(orders, left_on='id', right_on='customer_id')",
+       3)
+    """
+    lines, df_counter, current_df = [], start_counter, self.entity
 
     for op in self.operations:
       if isinstance(op, (Selection, Projection, GroupByAggregation)):
@@ -105,7 +139,6 @@ class Query:
           f'left_on={op.left_on}, right_on={op.right_on})'
         )
 
-        current_df = f'df{right_final_counter}'
-        df_counter = right_final_counter + 1
+        current_df, df_counter = f'df{right_final_counter}', right_final_counter + 1
 
     return '\n'.join(lines), df_counter

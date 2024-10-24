@@ -16,6 +16,7 @@ class Arguments:
   num_queries: int
   output_file: str
   schema: str
+  sorted: bool
   verbose: bool
 
   @staticmethod
@@ -83,6 +84,12 @@ class Arguments:
       type=str,
       required=True,
       help='Path to the relational schema JSON file',
+    )
+
+    parser.add_argument(
+      '--sorted',
+      action='store_true',
+      help='Whether or not to sort the queries by complexity',
     )
 
     parser.add_argument(
