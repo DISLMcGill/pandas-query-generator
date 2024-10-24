@@ -1,0 +1,181 @@
+{
+  "entities": {
+    "team": {
+      "properties": {
+        "national_name": {
+          "type": "string",
+          "starting_character": ["t"]
+        },
+        "group": {
+          "type": "enum",
+          "values": ["a", "b", "c", "d", "e", "f", "g", "h"]
+        },
+        "number_player": {
+          "type": "int",
+          "min": 18,
+          "max": 26
+        }
+      },
+      "primary_key": "national_name"
+    },
+    "association": {
+      "properties": {
+        "association_name": {
+          "type": "string",
+          "starting_character": ["f"]
+        },
+        "national_name": {
+          "type": "string",
+          "starting_character": ["t"]
+        },
+        "founded_year": {
+          "type": "int",
+          "min": 1900,
+          "max": 2000
+        },
+        "president": {
+          "type": "string",
+          "starting_character": ["p"]
+        }
+      },
+      "primary_key": "association_name",
+      "foreign_keys": {
+        "national_name": ["national_name", "team"]
+      }
+    },
+    "coach": {
+      "properties": {
+        "coach_id": {
+          "type": "int",
+          "min": 1,
+          "max": 100
+        },
+        "role": {
+          "type": "enum",
+          "values": [
+            "head coach",
+            "assistant coach",
+            "goalkeeper coach",
+            "fitness coach"
+          ]
+        },
+        "national_name": {
+          "type": "string",
+          "starting_character": ["t"]
+        },
+        "name": {
+          "type": "string",
+          "starting_character": ["c"]
+        },
+        "experience_years": {
+          "type": "int",
+          "min": 1,
+          "max": 40
+        }
+      },
+      "primary_key": ["coach_id", "national_name"],
+      "foreign_keys": {
+        "national_name": ["national_name", "team"]
+      }
+    },
+    "stadium": {
+      "properties": {
+        "stadium_id": {
+          "type": "int",
+          "min": 1,
+          "max": 12
+        },
+        "name": {
+          "type": "string",
+          "starting_character": ["s"]
+        },
+        "city": {
+          "type": "string",
+          "starting_character": ["d", "a", "l", "r"]
+        },
+        "location": {
+          "type": "string",
+          "starting_character": ["n", "s", "e", "w", "c"]
+        },
+        "capacity": {
+          "type": "int",
+          "min": 40000,
+          "max": 90000
+        },
+        "year_built": {
+          "type": "int",
+          "min": 1950,
+          "max": 2022
+        }
+      },
+      "primary_key": "stadium_id"
+    },
+    "match": {
+      "properties": {
+        "match_id": {
+          "type": "int",
+          "min": 1,
+          "max": 64
+        },
+        "team1_id": {
+          "type": "string",
+          "starting_character": ["t"]
+        },
+        "team2_id": {
+          "type": "string",
+          "starting_character": ["t"]
+        },
+        "stadium_id": {
+          "type": "int",
+          "min": 1,
+          "max": 12
+        },
+        "match_date": {
+          "type": "date",
+          "min": "2022-11-20",
+          "max": "2022-12-18"
+        },
+        "match_time": {
+          "type": "string",
+          "starting_character": ["1", "2"]
+        },
+        "duration_minutes": {
+          "type": "int",
+          "min": 90,
+          "max": 150
+        },
+        "round": {
+          "type": "enum",
+          "values": [
+            "group stage",
+            "round of 16",
+            "quarter-final",
+            "semi-final",
+            "final"
+          ]
+        },
+        "score_team1": {
+          "type": "int",
+          "min": 0,
+          "max": 7
+        },
+        "score_team2": {
+          "type": "int",
+          "min": 0,
+          "max": 7
+        },
+        "attendance": {
+          "type": "int",
+          "min": 30000,
+          "max": 90000
+        }
+      },
+      "primary_key": "match_id",
+      "foreign_keys": {
+        "team1_id": ["national_name", "team"],
+        "team2_id": ["national_name", "team"],
+        "stadium_id": ["stadium_id", "stadium"]
+      }
+    }
+  }
+}
