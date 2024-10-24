@@ -38,6 +38,26 @@ example *args:
 fmt:
   ruff check --select I --fix && ruff format
 
+populate-results-directory *args:
+  uv run pqg  \
+    --max-groupby-columns 2 \
+    --max-merges 3 \
+    --max-projection-columns 5 \
+    --max-selection-conditions 4 \
+    --num-queries 1000 \
+    --output-file results/single-line.txt \
+    --schema example/schema.json
+
+  uv run pqg  \
+    --max-groupby-columns 2 \
+    --max-merges 3 \
+    --max-projection-columns 5 \
+    --max-selection-conditions 4 \
+    --multi-line \
+    --num-queries 1000 \
+    --output-file results/multi-line.txt \
+    --schema example/schema.json
+
 readme:
   present --in-place README.md
 
