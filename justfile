@@ -29,11 +29,12 @@ example *args:
   uv run pqg  \
     --max-groupby-columns 5 \
     --max-merges 5 \
-    --max-projection-columns 5 \
+    --max-projection-columns 10 \
     --max-selection-conditions 10 \
     --num-queries 10000 \
     --output-file results/queries.txt \
     --schema example/schema.json \
+    --sorted \
     {{args}}
 
 fmt:
@@ -43,21 +44,23 @@ populate-results-directory *args:
   uv run pqg  \
     --max-groupby-columns 5 \
     --max-merges 5 \
-    --max-projection-columns 5 \
+    --max-projection-columns 10 \
     --max-selection-conditions 10 \
     --num-queries 10000 \
     --output-file results/single-line.txt \
-    --schema example/schema.json
+    --schema example/schema.json \
+    --sorted
 
   uv run pqg  \
     --max-groupby-columns 5 \
     --max-merges 5 \
-    --max-projection-columns 5 \
+    --max-projection-columns 10 \
     --max-selection-conditions 10 \
     --multi-line \
     --num-queries 10000 \
     --output-file results/multi-line.txt \
-    --schema example/schema.json
+    --schema example/schema.json \
+    --sorted
 
 readme:
   present --in-place README.md

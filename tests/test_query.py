@@ -194,3 +194,23 @@ class TestQuery:
     assert sorted_queries == [simple_query, single_merge, nested_merge]
     assert sorted_queries[0].complexity < sorted_queries[1].complexity
     assert sorted_queries[1].complexity < sorted_queries[2].complexity
+
+  def test_query_deduplication(self, sample_entity, simple_selection):
+    query1 = Query(sample_entity, [simple_selection], False, {'age', 'status'})
+    query2 = Query(sample_entity, [simple_selection], False, {'age', 'status'})
+
+    query3 = Query(sample_entity, [simple_selection], True, {'age', 'status'})
+
+    queries = {query1, query2, query3}
+
+    assert len(queries) == 2
+
+    expected_single_line = "customer[(customer['age'] >= 25) & (customer['status'] == 'active')]"
+    expected_multi_line = (
+      "df1 = customer[(customer['age'] >= 25) & (customer['status'] == 'active')]"
+    )
+
+    result_strings = {str(q) for q in queries}
+
+    assert expected_single_line in result_strings
+    assert expected_multi_line in result_strings

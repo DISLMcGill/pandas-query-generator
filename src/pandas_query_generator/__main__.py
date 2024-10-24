@@ -3,6 +3,7 @@ import os
 import time
 from contextlib import contextmanager
 
+from sortedcontainers import SortedSet
 from tqdm import tqdm
 
 from .arguments import Arguments
@@ -37,7 +38,10 @@ def main():
     print(f'Time taken for {description}: {elapsed_time:.2f} seconds')
 
   with timer(f'Generating and executing {arguments.num_queries} queries'):
-    queries = sorted(generator.generate(arguments.num_queries))
+    queries = generator.generate(arguments.num_queries)
+
+    if arguments.sorted:
+      queries = SortedSet(queries)
 
     os.makedirs(os.path.dirname(arguments.output_file), exist_ok=True)
 
@@ -46,7 +50,7 @@ def main():
         '\n\n'.join(
           query
           for query in filter(
-            lambda content: content != '', map(lambda query: str(query).strip(), set(queries))
+            lambda content: content != '', map(lambda query: str(query).strip(), queries)
           )
         )
       )
