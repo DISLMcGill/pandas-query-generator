@@ -23,19 +23,24 @@ options:
   -h, --help            show this help message and exit
   --max-groupby-columns MAX_GROUPBY_COLUMNS
                         Maximum number of columns in group by operations
+                        (default: 0)
   --max-merges MAX_MERGES
-                        Maximum number of table merges allowed
+                        Maximum number of table merges allowed (default: 2)
   --max-projection-columns MAX_PROJECTION_COLUMNS
-                        Maximum number of columns to project
+                        Maximum number of columns to project (default: 0)
   --max-selection-conditions MAX_SELECTION_CONDITIONS
                         Maximum number of conditions in selection operations
-  --multi-line          Format queries on multiple lines
+                        (default: 0)
+  --multi-line          Format queries on multiple lines (default: False)
   --num-queries NUM_QUERIES
-                        The number of queries to generate
+                        The number of queries to generate (default: None)
   --output-file OUTPUT_FILE
-                        The name of the file to write the results to
-  --schema SCHEMA       Path to the relational schema JSON file
-  --verbose             Print extra generation information
+                        The name of the file to write the results to (default:
+                        queries.txt)
+  --schema SCHEMA       Path to the relational schema JSON file (default:
+                        None)
+  --verbose             Print extra generation information and statistics
+                        (default: False)
 ```
 
 ### Prior Art

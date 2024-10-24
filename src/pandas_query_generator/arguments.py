@@ -20,7 +20,10 @@ class Arguments:
 
   @staticmethod
   def from_args() -> 'Arguments':
-    parser = argparse.ArgumentParser(description='Pandas Query Generator CLI')
+    parser = argparse.ArgumentParser(
+      description='Pandas Query Generator CLI',
+      formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
 
     parser.add_argument(
       '--max-groupby-columns',
@@ -50,7 +53,7 @@ class Arguments:
       '--max-selection-conditions',
       type=int,
       required=False,
-      default=2,
+      default=0,
       help='Maximum number of conditions in selection operations',
     )
 
@@ -85,7 +88,7 @@ class Arguments:
     parser.add_argument(
       '--verbose',
       action='store_true',
-      help='Print extra generation information',
+      help='Print extra generation information and statistics',
     )
 
     return Arguments(**vars(parser.parse_args()))
