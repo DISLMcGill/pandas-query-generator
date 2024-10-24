@@ -25,7 +25,7 @@ def simple_projection():
 
 @pytest.fixture
 def simple_merge(simple_selection):
-  nested_query = Query('orders', [simple_selection], False)
+  nested_query = Query('orders', [simple_selection], False, {'age', 'status', 'order_id'})
   return Merge(nested_query, "'customer_id'", "'customer_id'")
 
 
@@ -36,16 +36,18 @@ def simple_groupby():
 
 class TestQuery:
   def test_empty_query(self, sample_entity):
-    query = Query(sample_entity, [], False)
+    query = Query(sample_entity, [], False, set())
     assert str(query) == 'customer'
 
   def test_single_operation_query(self, sample_entity, simple_selection):
-    query = Query(sample_entity, [simple_selection], False)
+    query = Query(sample_entity, [simple_selection], False, {'age', 'status'})
     expected = "customer[(customer['age'] >= 25) & (customer['status'] == 'active')]"
     assert str(query) == expected
 
   def test_multiple_operations_query(self, sample_entity, simple_selection, simple_projection):
-    query = Query(sample_entity, [simple_selection, simple_projection], False)
+    query = Query(
+      sample_entity, [simple_selection, simple_projection], False, {'name', 'age', 'email'}
+    )
 
     expected = (
       "customer[(customer['age'] >= 25) & (customer['status'] == 'active')]"
@@ -57,7 +59,12 @@ class TestQuery:
   def test_complex_query_with_merge(
     self, sample_entity, simple_selection, simple_merge, simple_projection
   ):
-    query = Query(sample_entity, [simple_selection, simple_merge, simple_projection], False)
+    query = Query(
+      sample_entity,
+      [simple_selection, simple_merge, simple_projection],
+      False,
+      {'name', 'age', 'email'},
+    )
 
     expected = (
       "customer[(customer['age'] >= 25) & (customer['status'] == 'active')]"
@@ -68,7 +75,7 @@ class TestQuery:
     assert str(query) == expected
 
   def test_query_with_groupby(self, sample_entity, simple_selection, simple_groupby):
-    query = Query(sample_entity, [simple_selection, simple_groupby], False)
+    query = Query(sample_entity, [simple_selection, simple_groupby], False, {'country', 'city'})
 
     expected = (
       "customer[(customer['age'] >= 25) & (customer['status'] == 'active')]"
@@ -78,11 +85,9 @@ class TestQuery:
     assert str(query) == expected
 
   def test_multiline_query_basic(self, sample_entity):
-    query = Query(sample_entity, [Selection([("'age'", '>=', 25, '&')])], True)
-
+    query = Query(sample_entity, [Selection([("'age'", '>=', 25, '&')])], True, {'age'})
     result, counter = query.format_multi_line()
     expected = "df1 = customer[(customer['age'] >= 25)]"
-
     assert result == expected
     assert counter == 2
 
@@ -95,6 +100,7 @@ class TestQuery:
         GroupByAggregation(['country'], 'mean'),
       ],
       True,
+      {'name', 'email', 'country'},
     )
 
     result, counter = query.format_multi_line()
@@ -109,12 +115,15 @@ class TestQuery:
     assert counter == 4
 
   def test_multiline_query_with_merge(self, sample_entity):
-    right_query = Query('orders', [Selection([("'status'", '==', "'active'", '&')])], False)
+    right_query = Query(
+      'orders', [Selection([("'status'", '==', "'active'", '&')])], False, {'status'}
+    )
 
     query = Query(
       sample_entity,
       [Selection([("'age'", '>=', 25, '&')]), Merge(right_query, "'customer_id'", "'customer_id'")],
       True,
+      {'age', 'customer_id'},
     )
 
     result, counter = query.format_multi_line()
@@ -129,9 +138,13 @@ class TestQuery:
     assert counter == 4
 
   def test_multiline_nested_merges(self, sample_entity):
-    inner_query = Query('orders', [Selection([("'status'", '==', "'pending'", '&')])], False)
+    inner_query = Query(
+      'orders', [Selection([("'status'", '==', "'pending'", '&')])], False, {'status'}
+    )
 
-    middle_query = Query('products', [Merge(inner_query, "'order_id'", "'order_id'")], False)
+    middle_query = Query(
+      'products', [Merge(inner_query, "'order_id'", "'order_id'")], False, {'order_id'}
+    )
 
     query = Query(
       sample_entity,
@@ -140,6 +153,7 @@ class TestQuery:
         Merge(middle_query, "'product_id'", "'product_id'"),
       ],
       True,
+      {'active', 'product_id'},
     )
 
     result, counter = query.format_multi_line()
@@ -153,3 +167,30 @@ class TestQuery:
 
     assert result == '\n'.join(expected_lines)
     assert counter == 5
+
+  def test_query_sorting(self, sample_entity):
+    simple_query = Query(sample_entity, [], False, set())
+
+    single_merge = Query(
+      sample_entity, [Merge(Query('orders', [], False, set()), "'id'", "'id'")], False, {'id'}
+    )
+
+    nested_merge = Query(
+      sample_entity,
+      [
+        Merge(
+          Query('orders', [Merge(Query('items', [], False, set()), "'id'", "'id'")], False, {'id'}),
+          "'id'",
+          "'id'",
+        )
+      ],
+      False,
+      {'id'},
+    )
+
+    queries = [nested_merge, simple_query, single_merge]
+    sorted_queries = sorted(queries)
+
+    assert sorted_queries == [simple_query, single_merge, nested_merge]
+    assert sorted_queries[0].complexity < sorted_queries[1].complexity
+    assert sorted_queries[1].complexity < sorted_queries[2].complexity
