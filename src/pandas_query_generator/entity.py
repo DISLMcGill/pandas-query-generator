@@ -148,7 +148,8 @@ class Entity:
       num_rows (int): The number of rows to generate. Default is 200.
 
     Returns:
-      pd.DataFrame: A dataframe populated with randomly generated data based on the entity's properties.
+      pd.DataFrame:
+        A dataframe populated with randomly generated data based on the entity's properties.
 
     Note:
       If the entity has a unique primary key of type int, the number of rows may be limited

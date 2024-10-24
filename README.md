@@ -10,18 +10,37 @@ Below is the standard output of `pqg --help`, which elaborates on the various
 command-line arguments the tool accepts:
 
 ```present uv run pqg --help
-usage: pqg [-h] --schema SCHEMA --params PARAMS
-           [--output-directory OUTPUT_DIRECTORY] [--verbose VERBOSE]
+usage: pqg [-h] [--max-groupby-columns MAX_GROUPBY_COLUMNS]
+           [--max-merges MAX_MERGES]
+           [--max-projection-columns MAX_PROJECTION_COLUMNS]
+           [--max-selection-conditions MAX_SELECTION_CONDITIONS]
+           [--multi-line] --num-queries NUM_QUERIES
+           [--output-file OUTPUT_FILE] --schema SCHEMA [--verbose]
 
 Pandas Query Generator CLI
 
 options:
   -h, --help            show this help message and exit
-  --schema SCHEMA       Path to the relational schema JSON file
-  --params PARAMS       Path to the user-defined parameters JSON file
-  --output-directory OUTPUT_DIRECTORY
-                        Directory to write results to
-  --verbose VERBOSE     Whether or not to print extra generation information
+  --max-groupby-columns MAX_GROUPBY_COLUMNS
+                        Maximum number of columns in group by operations
+                        (default: 0)
+  --max-merges MAX_MERGES
+                        Maximum number of table merges allowed (default: 2)
+  --max-projection-columns MAX_PROJECTION_COLUMNS
+                        Maximum number of columns to project (default: 0)
+  --max-selection-conditions MAX_SELECTION_CONDITIONS
+                        Maximum number of conditions in selection operations
+                        (default: 0)
+  --multi-line          Format queries on multiple lines (default: False)
+  --num-queries NUM_QUERIES
+                        The number of queries to generate (default: None)
+  --output-file OUTPUT_FILE
+                        The name of the file to write the results to (default:
+                        queries.txt)
+  --schema SCHEMA       Path to the relational schema JSON file (default:
+                        None)
+  --verbose             Print extra generation information and statistics
+                        (default: False)
 ```
 
 ### Prior Art

@@ -1,14 +1,9 @@
 from .__main__ import (
   main,
 )
-from .condition import Condition
-from .operators import ComparisonOperator, ConditionalOperator
+from .merge import Merge
+from .projection import Projection
+from .query import Query
 from .selection import Selection
 
-__all__ = [
-  'main',
-  'ComparisonOperator',
-  'Condition',
-  'ConditionalOperator',
-  'Selection',
-]
+__all__ = ['main', 'Selection', 'Projection', 'Merge', 'Query']
