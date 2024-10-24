@@ -8,7 +8,6 @@ class Arguments:
   A wrapper class providing concrete types for parsed command-line arguments.
   """
 
-  allow_groupby_aggregation: bool
   max_groupby_columns: int
   max_merges: int
   max_projection_columns: int
@@ -24,17 +23,11 @@ class Arguments:
     parser = argparse.ArgumentParser(description='Pandas Query Generator CLI')
 
     parser.add_argument(
-      '--allow-groupby-aggregation',
-      action='store_true',
-      help='Allow GROUP BY aggregation in generated queries',
-    )
-
-    parser.add_argument(
       '--max-groupby-columns',
       type=int,
       required=False,
-      default=2,
-      help='Maximum number of columns in GROUP BY clause',
+      default=0,
+      help='Maximum number of columns in group by operations',
     )
 
     parser.add_argument(
@@ -58,7 +51,7 @@ class Arguments:
       type=int,
       required=False,
       default=2,
-      help='Maximum number of conditions in WHERE clause',
+      help='Maximum number of conditions in selection operations',
     )
 
     parser.add_argument(

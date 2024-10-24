@@ -26,7 +26,7 @@ count:
 
 example *args:
   uv run pqg  \
-    --allow-groupby \
+    --max-groupby-columns 2 \
     --max-merges 3 \
     --max-projection-columns 5 \
     --max-selection-conditions 4 \

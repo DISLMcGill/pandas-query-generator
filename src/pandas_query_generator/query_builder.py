@@ -45,7 +45,7 @@ class QueryBuilder:
     for _ in range(random.randint(0, self.query_structure.max_merges)):
       self.operations.append(self._generate_operation(Merge))
 
-    if self.query_structure.allow_groupby_aggregation and random.random() < 0.5:
+    if self.query_structure.max_groupby_columns > 0 and random.random() < 0.5:
       self.operations.append(self._generate_operation(GroupByAggregation))
 
     return Query(self.entity_name, self.operations, self.multi_line)
@@ -181,8 +181,7 @@ class QueryBuilder:
       ValueError: If no valid entities are available for merging.
     """
     right_query_structure = QueryStructure(
-      allow_groupby_aggregation=False,
-      max_groupby_columns=self.query_structure.max_groupby_columns,
+      max_groupby_columns=0,
       max_merges=self.query_structure.max_merges - 1,
       max_projection_columns=self.query_structure.max_projection_columns,
       max_selection_conditions=self.query_structure.max_selection_conditions,

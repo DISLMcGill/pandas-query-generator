@@ -10,7 +10,6 @@ class QueryStructure:
   Contains settings for various query features like aggregation, projection, and merging.
   """
 
-  allow_groupby_aggregation: bool
   max_groupby_columns: int
   max_merges: int
   max_projection_columns: int
@@ -28,7 +27,6 @@ class QueryStructure:
       QueryStructure: Instance configured according to the provided arguments
     """
     return QueryStructure(
-      allow_groupby_aggregation=arguments.allow_groupby_aggregation,
       max_groupby_columns=arguments.max_groupby_columns,
       max_merges=arguments.max_merges,
       max_projection_columns=arguments.max_projection_columns,
