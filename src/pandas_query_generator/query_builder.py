@@ -27,10 +27,14 @@ class QueryBuilder:
     """
     Build a query based on the schema and query structure.
 
-    We add at most 1 selection and 1 projection for each query.
+    Generates a random combination of query operations based on probabilities:
+    - 50% chance of adding a selection operation
+    - 50% chance of adding a projection operation
+    - Random number of merge operations (0 to max_merges)
+    - 50% chance of adding a group-by aggregation if allowed
 
     Returns:
-      Query: The generated query.
+      Query: A query object containing the generated operations.
     """
     if random.random() < 0.5:
       self.operations.append(self._generate_operation(Selection))
@@ -48,19 +52,20 @@ class QueryBuilder:
 
   def _generate_operation(self, operation: t.Type[Operation]) -> Operation:
     """
-    Generate a specific type of operation.
+    Generate a specific type of query operation.
 
-    This method serves as a dispatcher to call the appropriate generation
-    method based on the type of operation requested.
+    This method acts as a factory for creating different types of query operations.
+    It delegates the actual generation to type-specific methods based on the
+    operation type requested.
 
     Args:
-      operation (Type[Operation]): The type of operation to generate.
+      operation: The type of operation to generate (Selection, Projection, etc.).
 
     Returns:
-      Operation: The generated operation.
+      Operation: The generated operation instance.
 
     Raises:
-      ValueError: If an unknown operation type is provided.
+      ValueError: If an unsupported operation type is provided.
     """
     if operation == Selection:
       return self._generate_selection()
@@ -75,15 +80,20 @@ class QueryBuilder:
 
   def _generate_selection(self) -> Operation:
     """
-    Generate a selection operation.
+    Generate a selection (WHERE clause) operation.
 
-    This method creates a selection operation with random conditions based on
-    the properties of the selected entity. It handles different property types
-    (int, float, string, enum, date) and generates appropriate conditions for each.
-    It also randomly selects operators ('&' or '|') between conditions.
+    Creates a selection operation with random conditions based on the entity's
+    property types. Handles different data types and operators appropriately:
+
+    - Numeric (Int/Float): ==, !=, <, <=, >, >=
+    - String: ==, !=, .str.startswith
+    - Enum: ==, !=, .isin
+    - Date: ==, !=, <, <=, >, >=
+
+    Conditions are combined using randomly chosen logical operators (&, |).
 
     Returns:
-      Operation: The generated selection operation.
+      Operation: A Selection operation with randomly generated conditions.
     """
     conditions = []
 
@@ -127,15 +137,17 @@ class QueryBuilder:
 
   def _generate_projection(self) -> Operation:
     """
-    Generate a projection operation.
+    Generate a projection (SELECT columns) operation.
 
-    This method creates a projection operation by randomly selecting a subset
-    of columns from the available columns of the entity. The number of columns
-    to project is also randomly determined, bounded by the maximum specified
-    in the query structure.
+    Creates a projection operation by randomly selecting a subset of columns
+    from the available columns. The number of columns is randomly determined
+    within the bounds specified by max_projection_columns.
+
+    After generating the projection, updates available_columns to only include
+    the projected columns, affecting subsequent operations.
 
     Returns:
-      Operation: The generated projection operation.
+      Operation: A Projection operation with randomly selected columns.
     """
     to_project = random.randint(1, self.query_structure.max_projection_columns)
 
@@ -150,12 +162,23 @@ class QueryBuilder:
 
   def _generate_merge(self) -> Operation:
     """
-    Generate a merge operation with improved column tracking.
+    Generate a merge (JOIN) operation.
 
-    This updated version ensures column compatibility through nested merges by:
-    1. Tracking columns from each merged entity
-    2. Verifying join column availability
-    3. Propagating available columns up the merge chain
+    Creates a merge operation that joins the current entity with another entity
+    based on their relationships defined in the schema. Handles both direct
+    foreign key relationships and reverse relationships.
+
+    Features:
+    - Tracks columns from merged entities for join compatibility
+    - Supports both single-column and multi-column joins
+    - Falls back to primary key joins if no valid relationship is found
+    - Recursively generates operations for the right side of the merge
+
+    Returns:
+      Operation: A Merge operation with appropriate join conditions.
+
+    Raises:
+      ValueError: If no valid entities are available for merging.
     """
     right_query_structure = QueryStructure(
       allow_groupby_aggregation=False,
@@ -234,14 +257,23 @@ class QueryBuilder:
 
   def _generate_group_by_aggregation(self) -> Operation:
     """
-    Generate a group by and aggregation operation.
+    Generate a group-by aggregation operation.
 
-    This method creates a group by and aggregation operation by randomly selecting
-    columns to group by and an aggregation function to apply. The number of columns
-    to group by is bounded by the maximum specified in the query structure.
+    Creates a group-by operation with random columns and an aggregation function.
+    The number of group-by columns is bounded by max_groupby_columns and
+    available columns.
+
+    Features:
+    - Randomly selects columns to group by
+    - Chooses from standard aggregation functions:
+      - mean: Average of numeric columns
+      - sum: Sum of numeric columns
+      - min: Minimum values
+      - max: Maximum values
+      - count: Count of rows in each group
 
     Returns:
-      Operation: The generated GroupByAggregation operation.
+      Operation: A GroupByAggregation operation with selected columns and function.
     """
     group_columns = random.sample(
       self.available_columns,
