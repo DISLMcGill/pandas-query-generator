@@ -1,7 +1,7 @@
 import random
 import typing as t
 
-from .entity import *
+from .entity import PropertyDate, PropertyEnum, PropertyFloat, PropertyInt, PropertyString
 from .group_by import GroupByAggregation
 from .merge import Merge
 from .operation import Operation
@@ -231,16 +231,17 @@ class QueryBuilder:
     # Track columns from this merge
     self.merged_columns[right_entity_name] = projected_columns
 
-    format_join_cols = (
-      lambda cols: f"[{', '.join(f"'{col}'" for col in cols)}]"
-      if isinstance(cols, list)
-      else f"'{cols}'"
-    )
+    def format_join_columns(columns: t.List[str] | str | None):
+      return (
+        f"[{', '.join(f"'{col}'" for col in columns)}]"
+        if isinstance(columns, list)
+        else f"'{columns}'"
+      )
 
     return Merge(
       right=right_query,
-      left_on=format_join_cols(left_on),
-      right_on=format_join_cols(right_on),
+      left_on=format_join_columns(left_on),
+      right_on=format_join_columns(right_on),
     )
 
   def _generate_group_by_aggregation(self) -> Operation:

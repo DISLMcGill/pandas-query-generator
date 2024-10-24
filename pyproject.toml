@@ -41,18 +41,18 @@ quote-style = "single"
 source = ["src"]
 
 [tool.mypy]
-mypy_path = "src"
 check_untyped_defs = true
 disallow_any_generics = true
 ignore_missing_imports = true
+mypy_path = "src"
 no_implicit_optional = true
+no_implicit_reexport = true
 show_error_codes = true
 strict_equality = true
 warn_redundant_casts = true
 warn_return_any = true
 warn_unreachable = true
 warn_unused_configs = true
-no_implicit_reexport = true
 
 [tool.uv]
-dev-dependencies = ["pytest-mock>=3.14.0", "pytest>=8.3.3"]
+dev-dependencies = ["mypy>=1.13.0", "pytest-mock>=3.14.0", "pytest>=8.3.3"]

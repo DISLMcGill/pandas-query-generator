@@ -6,11 +6,10 @@ from contextlib import contextmanager
 from tqdm import tqdm
 
 from .arguments import Arguments
-from .entity import *
 from .generator import Generator
 from .query_structure import QueryStructure
 from .schema import Schema
-from .utils import *
+from .utils import execute_query, generate_query_statistics, print_statistics
 
 
 def execute_query_wrapper(args):

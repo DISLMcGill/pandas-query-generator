@@ -2,6 +2,7 @@ set dotenv-load
 
 export EDITOR := 'nvim'
 
+alias c := check
 alias e := example
 alias f := fmt
 alias r := run
@@ -17,6 +18,7 @@ dev-deps:
   cargo install present tokei
 
 check:
+  uv run mypy .
   uv run ruff check
 
 count:
