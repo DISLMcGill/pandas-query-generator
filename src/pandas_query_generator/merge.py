@@ -4,9 +4,14 @@ from dataclasses import dataclass
 from .operation import Operation
 
 
+@t.runtime_checkable
+class String(t.Protocol):
+  def __str__(self) -> str: ...
+
+
 @dataclass
 class Merge(Operation):
-  right: t.Any
+  right: String  # Any class that implements __str__
   left_on: str
   right_on: str
 
