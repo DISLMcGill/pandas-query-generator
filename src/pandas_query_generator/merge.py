@@ -5,13 +5,15 @@ from .operation import Operation
 
 
 @t.runtime_checkable
-class String(t.Protocol):
+class Query(t.Protocol):
+  operations: t.List[Operation]
+
   def __str__(self) -> str: ...
 
 
 @dataclass
 class Merge(Operation):
-  right: String  # Any class that implements __str__
+  right: Query
   left_on: str
   right_on: str
 
