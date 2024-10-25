@@ -16,7 +16,7 @@ build:
   uv build
 
 dev-deps:
-  cargo install present tokei
+  cargo install present tokei typos
 
 check:
   uv run ruff check
@@ -31,12 +31,10 @@ generate-example-output:
   ./bin/generate-example-output
 
 publish:
-  rm -rf dist
-  uv build
-  uv publish
+  rm -rf dist && uv build && uv publish
 
 readme:
-  present --in-place README.md
+  present --in-place README.md && typos --write-changes README.md
 
 run *args:
   uv run pqg  \
