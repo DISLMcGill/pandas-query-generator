@@ -162,7 +162,7 @@ def print_statistics(stats: QueryStats) -> None:
   print('\nOperation distribution:')
 
   for op, count in stats['operations'].items():
-    percentage = (count / stats['total_queries']) * 100
+    percentage = (count / sum(stats['operations'].values())) * 100
     print(f'  {op}: {count} ({percentage:.2f}%)')
 
   print('\nMerge complexity (number of operations in right query):')
