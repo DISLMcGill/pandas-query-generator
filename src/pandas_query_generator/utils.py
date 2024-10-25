@@ -63,7 +63,6 @@ def execute_query(
     environment = {**sample_data}
     exec(full_query, globals(), environment)
     result = environment.get(query.entity)
-
     if isinstance(result, (pd.DataFrame, pd.Series)):
       return result, None
     return None, f'Result was not a DataFrame or Series: {type(result)}'
@@ -157,58 +156,71 @@ def generate_query_statistics(
 def print_statistics(stats: QueryStats) -> None:
   """Print comprehensive statistics about queries and their execution."""
   print(f"Total queries generated: {stats['total_queries']}")
+
   print(f"Average operations per query: {stats['avg_operations_per_query']:.2f}")
 
   print('\nOperation distribution:')
+
   for op, count in stats['operations'].items():
     percentage = (count / stats['total_queries']) * 100
     print(f'  {op}: {count} ({percentage:.2f}%)')
 
   print('\nMerge complexity (number of operations in right query):')
+
   if stats['merges']:
     for complexity, count in sorted(stats['merges'].items()):
       percentage = (count / stats['operations']['Merge']) * 100
       print(f'  {complexity} operations: {count} ({percentage:.2f}%)')
 
   print('\nSelection complexity (number of conditions):')
+
   if stats['selections']:
     for conditions, count in sorted(stats['selections'].items()):
       percentage = (count / stats['operations']['Selection']) * 100
       print(f'  {conditions} conditions: {count} ({percentage:.2f}%)')
 
   print('\nProjection complexity (number of columns):')
+
   if stats['projections']:
     for columns, count in sorted(stats['projections'].items()):
       percentage = (count / stats['operations']['Projection']) * 100
       print(f'  {columns} columns: {count} ({percentage:.2f}%)')
 
   print('\nGroupBy Aggregation complexity (number of groupby columns):')
+
   if stats['groupby_aggregations']:
     for columns, count in sorted(stats['groupby_aggregations'].items()):
       percentage = (count / stats['operations']['GroupByAggregation']) * 100
       print(f'  {columns} columns: {count} ({percentage:.2f}%)')
 
   print('\nEntity usage:')
+
   for entity, count in stats['entities_used'].items():
     percentage = (count / stats['total_queries']) * 100
     print(f'  {entity}: {count} ({percentage:.2f}%)')
 
   if stats['execution_results'].get('successful_executions', 0) > 0:
     print('\nQuery Execution Results:')
+
     print(
       f"  Successful executions: {stats['execution_results']['successful_executions']} "
       f"({stats['execution_results']['success_rate']:.2f}%)"
     )
+
     print(f"  Failed executions: {stats['execution_results']['failed_executions']}")
+
     print(
       f"  Queries with non-empty results: {stats['execution_results']['non_empty_results']} "
       f"({stats['execution_results']['non_empty_rate']:.2f}%)"
     )
+
     print(f"  Queries with empty results: {stats['execution_results']['empty_results']}")
 
   if stats['execution_results']['errors']:
     print('\nError distribution:')
+
     total_errors = sum(stats['execution_results']['errors'].values())
+
     for error, count in stats['execution_results']['errors'].most_common():
       percentage = (count / total_errors) * 100
       print(f'  {count} ({percentage:.2f}%) - {error}')
