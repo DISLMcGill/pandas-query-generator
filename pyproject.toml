@@ -1,6 +1,6 @@
 [project]
-name = "pandas-query-generator"
-version = "0.0.0"
+name = "pqg"
+version = "0.1.0"
 description = "A synthetic pandas query generation tool"
 readme = "README.md"
 requires-python = ">=3.12"

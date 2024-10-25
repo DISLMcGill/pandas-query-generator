@@ -57,18 +57,15 @@ class QueryBuilder:
     Returns:
       Query: A complete, valid query object with all generated operations.
     """
-    if random.random() < 0.5:
-      selection = self._generate_operation(Selection)
-      self.operations.append(selection)
+    if self.query_structure.max_selection_conditions > 0 and random.random() < 0.5:
+      self.operations.append(self._generate_operation(Selection))
 
-    if random.random() < 0.5:
-      projection = self._generate_operation(Projection)
-      self.operations.append(projection)
+    if self.query_structure.max_projection_columns > 0 and random.random() < 0.5:
+      self.operations.append(self._generate_operation(Projection))
 
     for _ in range(random.randint(0, self.query_structure.max_merges)):
       try:
-        merge = self._generate_operation(Merge)
-        self.operations.append(merge)
+        self.operations.append(self._generate_operation(Merge))
       except ValueError:
         break
 
@@ -77,8 +74,7 @@ class QueryBuilder:
       and random.random() < 0.5
       and self.current_columns
     ):
-      groupby = self._generate_operation(GroupByAggregation)
-      self.operations.append(groupby)
+      self.operations.append(self._generate_operation(GroupByAggregation))
 
     return Query(self.entity_name, self.operations, self.multi_line, self.current_columns)
 
