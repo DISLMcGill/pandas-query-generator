@@ -30,6 +30,11 @@ fmt:
 generate-example-output:
   ./bin/generate-example-output
 
+publish:
+  rm -rf dist
+  uv build
+  uv publish
+
 readme:
   present --in-place README.md
 

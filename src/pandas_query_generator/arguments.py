@@ -1,5 +1,68 @@
 import argparse
+import typing as t
 from dataclasses import dataclass
+
+
+class HelpFormatter(argparse.HelpFormatter):
+  """
+  Custom help formatter that aligns option strings and help text with multi-line usage.
+  """
+
+  def __init__(
+    self,
+    prog: str,
+    indent_increment: int = 2,
+    max_help_position: int = 50,
+    width: t.Optional[int] = None,
+  ):
+    super().__init__(prog, indent_increment, max_help_position, width)
+
+  def _format_usage(self, usage, actions, groups, prefix) -> str:
+    """
+    Format usage section with one flag per line.
+    """
+    actions_str = ' '.join(
+      f'[{a.option_strings[0]}]' if not a.required else f'{a.option_strings[0]}'
+      for a in [a for a in actions if not isinstance(a, argparse._HelpAction)]
+    )
+
+    return f'usage: {self._prog} {actions_str}\n\n'
+
+  def _format_action_invocation(self, action: argparse.Action) -> str:
+    """
+    Formats the action invocation with simplified display.
+    """
+    if not action.option_strings:
+      return self._metavar_formatter(action, action.dest)(1)[0]
+
+    if action.option_strings:
+      if isinstance(action, argparse._HelpAction):
+        return '-h --help'
+      if action.nargs == 0:
+        return action.option_strings[0]
+      if action.required:
+        return f'{action.option_strings[0]} {action.dest.lower()}'
+      return action.option_strings[0]
+
+    return ''
+
+  def _format_action(self, action: argparse.Action) -> str:
+    """
+    Formats each action (argument) with help text.
+    """
+    help_text = (
+      'Show this help message and exit'
+      if isinstance(action, argparse._HelpAction)
+      else (action.help or '')
+    )
+
+    if action.default is not None and action.default != argparse.SUPPRESS:
+      if isinstance(action.default, bool):
+        help_text = f'{help_text} (default: {str(action.default)})'
+      else:
+        help_text = f'{help_text} (default: {action.default})'
+
+    return f'  {self._format_action_invocation(action)} {help_text}\n'
 
 
 @dataclass
@@ -23,7 +86,7 @@ class Arguments:
   def from_args() -> 'Arguments':
     parser = argparse.ArgumentParser(
       description='Pandas Query Generator CLI',
-      formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+      formatter_class=HelpFormatter,
     )
 
     parser.add_argument(

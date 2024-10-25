@@ -1,0 +1,50 @@
+{
+  "entities": {
+    "customer": {
+      "primary_key": "id",
+      "properties": {
+        "id": {
+          "type": "int",
+          "min": 1,
+          "max": 1000
+        },
+        "name": {
+          "type": "string",
+          "starting_character": ["A", "B", "C"]
+        },
+        "status": {
+          "type": "enum",
+          "values": ["active", "inactive"]
+        }
+      },
+      "foreign_keys": {}
+    },
+    "order": {
+      "primary_key": "order_id",
+      "properties": {
+        "order_id": {
+          "type": "int",
+          "min": 1,
+          "max": 5000
+        },
+        "customer_id": {
+          "type": "int",
+          "min": 1,
+          "max": 1000
+        },
+        "amount": {
+          "type": "float",
+          "min": 10.0,
+          "max": 1000.0
+        },
+        "status": {
+          "type": "enum",
+          "values": ["pending", "completed", "cancelled"]
+        }
+      },
+      "foreign_keys": {
+        "customer_id": ["id", "customer"]
+      }
+    }
+  }
+}
