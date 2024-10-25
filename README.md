@@ -262,58 +262,58 @@ the generated queries, here's an example:
 
 ```
 Total queries generated: 100
-Average operations per query: 1.89
+Average operations per query: 1.84
 
 Operation distribution:
-  Selection: 58 (58.00%)
-  Merge: 36 (36.00%)
-  Projection: 50 (50.00%)
-  GroupByAggregation: 45 (45.00%)
+  Selection: 50 (50.00%)
+  Projection: 40 (40.00%)
+  Merge: 48 (48.00%)
+  GroupByAggregation: 46 (46.00%)
 
 Merge complexity (number of operations in right query):
-  0 operations: 7 (19.44%)
-  1 operations: 9 (25.00%)
-  2 operations: 16 (44.44%)
-  3 operations: 4 (11.11%)
+  0 operations: 6 (12.50%)
+  1 operations: 24 (50.00%)
+  2 operations: 16 (33.33%)
+  3 operations: 2 (4.17%)
 
 Selection complexity (number of conditions):
-  1 conditions: 14 (24.14%)
-  2 conditions: 14 (24.14%)
-  3 conditions: 11 (18.97%)
-  4 conditions: 7 (12.07%)
-  5 conditions: 2 (3.45%)
-  6 conditions: 3 (5.17%)
-  7 conditions: 4 (6.90%)
-  8 conditions: 2 (3.45%)
-  9 conditions: 1 (1.72%)
+  1 conditions: 8 (16.00%)
+  2 conditions: 7 (14.00%)
+  3 conditions: 9 (18.00%)
+  4 conditions: 5 (10.00%)
+  5 conditions: 8 (16.00%)
+  6 conditions: 3 (6.00%)
+  7 conditions: 6 (12.00%)
+  8 conditions: 1 (2.00%)
+  9 conditions: 2 (4.00%)
+  10 conditions: 1 (2.00%)
 
 Projection complexity (number of columns):
-  1 columns: 10 (20.00%)
-  2 columns: 9 (18.00%)
-  3 columns: 7 (14.00%)
-  4 columns: 8 (16.00%)
-  5 columns: 3 (6.00%)
-  6 columns: 4 (8.00%)
-  7 columns: 4 (8.00%)
-  8 columns: 1 (2.00%)
-  9 columns: 4 (8.00%)
+  1 columns: 6 (15.00%)
+  2 columns: 12 (30.00%)
+  3 columns: 6 (15.00%)
+  4 columns: 6 (15.00%)
+  5 columns: 4 (10.00%)
+  6 columns: 2 (5.00%)
+  7 columns: 3 (7.50%)
+  8 columns: 1 (2.50%)
 
 GroupBy Aggregation complexity (number of groupby columns):
-  1 columns: 13 (28.89%)
-  2 columns: 9 (20.00%)
-  3 columns: 13 (28.89%)
-  4 columns: 6 (13.33%)
-  5 columns: 4 (8.89%)
+  1 columns: 16 (34.78%)
+  2 columns: 13 (28.26%)
+  3 columns: 7 (15.22%)
+  4 columns: 7 (15.22%)
+  5 columns: 3 (6.52%)
 
 Entity usage:
+  orders: 14 (14.00%)
+  partsupp: 16 (16.00%)
+  nation: 15 (15.00%)
   lineitem: 11 (11.00%)
-  orders: 7 (7.00%)
-  partsupp: 15 (15.00%)
-  nation: 17 (17.00%)
-  customer: 10 (10.00%)
-  region: 14 (14.00%)
-  supplier: 10 (10.00%)
-  part: 16 (16.00%)
+  customer: 13 (13.00%)
+  supplier: 8 (8.00%)
+  region: 12 (12.00%)
+  part: 11 (11.00%)
 
 Query Execution Results:
   Successful executions: 100 (100.00%)
@@ -321,7 +321,7 @@ Query Execution Results:
   Queries with non-empty results: 100 (100.00%)
   Queries with empty results: 0
 
-Time taken for Generating and executing 100 queries: 0.61 seconds
+Time taken for Generating and executing 100 queries: 0.63 seconds
 ```
 
 *n.b.* The command used to generate this information is `pqg --num-queries 100 --schema examples/tpch/schema.json --max-selection-conditions 10 --max-projection-columns 10 --max-groupby-columns 5 --verbose`)
@@ -346,8 +346,9 @@ def generate(self, queries: int) -> t.List[Query]:
     )
 ```
 
-We leverage Python's multiprocessing module to spin up new processes to generate
-and execute queries. 10,000 queries can be generated in under 2 seconds.
+We leverage Python's [multiprocessing](https://docs.python.org/3/library/multiprocessing.html)
+module to spin up new processes to generate and execute queries. 10,000 queries can
+be generated in under 2 seconds.
 
 ## Prior Art
 
