@@ -7,7 +7,6 @@ from pandas_query_generator.query import Query
 from pandas_query_generator.selection import Selection
 
 
-# Test data
 @pytest.fixture
 def sample_entity():
   return 'customer'

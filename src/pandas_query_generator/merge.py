@@ -10,6 +10,8 @@ class Query(t.Protocol):
 
   def __str__(self) -> str: ...
 
+  def format_multi_line(self, start_counter: int = 1) -> t.Tuple[str, int]: ...
+
 
 @dataclass
 class Merge(Operation):

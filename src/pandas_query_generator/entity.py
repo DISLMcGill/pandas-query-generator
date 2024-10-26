@@ -148,7 +148,7 @@ class Entity:
 
     return ranges
 
-  def generate_dataframe(self, num_rows=200) -> pd.DataFrame:
+  def generate_dataframe(self, num_rows=1000) -> pd.DataFrame:
     """
     Generate a Pandas dataframe using this entity's information.
 
