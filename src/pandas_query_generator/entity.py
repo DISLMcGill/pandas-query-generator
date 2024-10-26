@@ -153,7 +153,7 @@ class Entity:
     Generate a Pandas dataframe using this entity's information.
 
     Args:
-      num_rows (int): The number of rows to generate. Default is 200.
+      num_rows (int): The number of rows to generate. Default is 1000.
 
     Returns:
       pd.DataFrame:

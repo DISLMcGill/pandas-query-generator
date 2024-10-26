@@ -1,6 +1,7 @@
 import argparse
 import typing as t
 from dataclasses import dataclass
+from enum import Enum
 
 
 class HelpFormatter(argparse.HelpFormatter):
@@ -65,12 +66,22 @@ class HelpFormatter(argparse.HelpFormatter):
     return f'  {self._format_action_invocation(action)} {help_text}\n'
 
 
+class QueryFilter(str, Enum):
+  """Enum for query filter options"""
+
+  NON_EMPTY = 'non-empty'
+  EMPTY = 'empty'
+  HAS_ERROR = 'has-error'
+  WITHOUT_ERROR = 'without-error'
+
+
 @dataclass
 class Arguments:
   """
   A wrapper class providing concrete types for parsed command-line arguments.
   """
 
+  filter: QueryFilter
   max_groupby_columns: int
   max_merges: int
   max_projection_columns: int
@@ -87,6 +98,15 @@ class Arguments:
     parser = argparse.ArgumentParser(
       description='Pandas Query Generator CLI',
       formatter_class=HelpFormatter,
+    )
+
+    parser.add_argument(
+      '--filter',
+      type=QueryFilter,
+      choices=list(QueryFilter),
+      required=False,
+      default=None,
+      help='Filter generated queries by specific criteria',
     )
 
     parser.add_argument(

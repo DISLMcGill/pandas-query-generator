@@ -18,12 +18,13 @@ Below is the standard output of `pqg --help`, which elaborates on the various
 command-line arguments the tool accepts:
 
 ```present uv run pqg --help
-usage: pqg [--max-groupby-columns] [--max-merges] [--max-projection-columns] [--max-selection-conditions] [--multi-line] --num-queries [--output-file] --schema [--sorted] [--verbose]
+usage: pqg [--filter] [--max-groupby-columns] [--max-merges] [--max-projection-columns] [--max-selection-conditions] [--multi-line] --num-queries [--output-file] --schema [--sorted] [--verbose]
 
 Pandas Query Generator CLI
 
 options:
   -h --help Show this help message and exit
+  --filter Filter generated queries by specific criteria
   --max-groupby-columns Maximum number of columns in group by operations (default: 0)
   --max-merges Maximum number of table merges allowed (default: 2)
   --max-projection-columns Maximum number of columns to project (default: 0)
@@ -262,67 +263,67 @@ the generated queries, here's an example:
 
 ```
 Total queries generated: 100
-Average operations per query: 2.03
+Average operations per query: 1.98
 
 Operation distribution:
-  Projection: 58 (28.57%)
-  GroupByAggregation: 57 (28.08%)
-  Merge: 43 (21.18%)
-  Selection: 45 (22.17%)
+  Projection: 52 (26.26%)
+  Selection: 50 (25.25%)
+  GroupByAggregation: 57 (28.79%)
+  Merge: 39 (19.70%)
 
 Merge complexity (number of operations in right query):
-  0 operations: 3 (6.98%)
-  1 operations: 22 (51.16%)
-  2 operations: 13 (30.23%)
-  3 operations: 5 (11.63%)
+  0 operations: 2 (5.13%)
+  1 operations: 13 (33.33%)
+  2 operations: 20 (51.28%)
+  3 operations: 4 (10.26%)
 
 Selection complexity (number of conditions):
-  1 conditions: 5 (11.11%)
-  2 conditions: 12 (26.67%)
-  3 conditions: 9 (20.00%)
-  4 conditions: 4 (8.89%)
-  5 conditions: 6 (13.33%)
-  6 conditions: 1 (2.22%)
-  7 conditions: 3 (6.67%)
-  8 conditions: 3 (6.67%)
-  9 conditions: 1 (2.22%)
-  10 conditions: 1 (2.22%)
+  1 conditions: 4 (8.00%)
+  2 conditions: 12 (24.00%)
+  3 conditions: 8 (16.00%)
+  4 conditions: 4 (8.00%)
+  5 conditions: 9 (18.00%)
+  6 conditions: 4 (8.00%)
+  7 conditions: 4 (8.00%)
+  8 conditions: 4 (8.00%)
+  9 conditions: 1 (2.00%)
 
 Projection complexity (number of columns):
-  1 columns: 13 (22.41%)
-  2 columns: 11 (18.97%)
-  3 columns: 7 (12.07%)
-  4 columns: 9 (15.52%)
-  5 columns: 4 (6.90%)
-  6 columns: 4 (6.90%)
-  7 columns: 4 (6.90%)
-  8 columns: 5 (8.62%)
-  9 columns: 1 (1.72%)
+  1 columns: 11 (21.15%)
+  2 columns: 6 (11.54%)
+  3 columns: 8 (15.38%)
+  4 columns: 2 (3.85%)
+  5 columns: 7 (13.46%)
+  6 columns: 6 (11.54%)
+  7 columns: 4 (7.69%)
+  8 columns: 4 (7.69%)
+  9 columns: 3 (5.77%)
+  10 columns: 1 (1.92%)
 
 GroupBy Aggregation complexity (number of groupby columns):
-  1 columns: 22 (38.60%)
-  2 columns: 15 (26.32%)
-  3 columns: 12 (21.05%)
-  4 columns: 5 (8.77%)
-  5 columns: 3 (5.26%)
+  1 columns: 18 (31.58%)
+  2 columns: 21 (36.84%)
+  3 columns: 9 (15.79%)
+  4 columns: 4 (7.02%)
+  5 columns: 5 (8.77%)
 
 Entity usage:
+  part: 17 (17.00%)
+  region: 11 (11.00%)
+  supplier: 16 (16.00%)
+  lineitem: 13 (13.00%)
+  partsupp: 11 (11.00%)
   orders: 8 (8.00%)
-  part: 16 (16.00%)
-  partsupp: 16 (16.00%)
-  region: 14 (14.00%)
+  nation: 9 (9.00%)
   customer: 15 (15.00%)
-  nation: 8 (8.00%)
-  lineitem: 16 (16.00%)
-  supplier: 7 (7.00%)
 
 Query Execution Results:
   Successful executions: 100 (100.00%)
   Failed executions: 0
-  Queries with non-empty results: 100 (100.00%)
-  Queries with empty results: 0
+  Queries with non-empty results: 67 (67.00%)
+  Queries with empty results: 33
 
-Time taken for Generating and executing 100 queries: 0.57 seconds
+Time taken for generating and executing 100 queries: 0.63 seconds
 ```
 
 *n.b.* The command used to generate this information is `pqg --num-queries 100 --schema examples/tpch/schema.json --max-selection-conditions 10 --max-projection-columns 10 --max-groupby-columns 5 --verbose`)
