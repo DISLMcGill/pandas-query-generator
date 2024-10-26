@@ -22,7 +22,7 @@ check:
   uv run ruff check
 
 count:
-  tokei
+  tokei src
 
 fmt:
   ruff check --select I --fix && ruff format
