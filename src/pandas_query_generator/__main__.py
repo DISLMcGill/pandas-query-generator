@@ -37,7 +37,13 @@ def main():
     elapsed_time = time.time() - start
     print(f'Time taken for {description}: {elapsed_time:.2f} seconds')
 
-  with timer(f'Generating and executing {arguments.num_queries} queries'):
+  message = (
+    f'generating and executing {arguments.num_queries} queries'
+    if arguments.verbose
+    else f'generating {arguments.num_queries} queries'
+  )
+
+  with timer(message):
     queries = generator.generate(arguments.num_queries)
 
     if arguments.sorted:
