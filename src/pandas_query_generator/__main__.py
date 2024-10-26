@@ -76,9 +76,9 @@ def main():
         print(str(query) + '\n')
 
         if result is not None:
-          print('Results:')
+          print('Results:\n')
           print(result)
-        elif error:
+        elif error is not None:
           print('Error:\n')
           print(error)
 

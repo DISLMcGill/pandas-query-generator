@@ -59,10 +59,7 @@ def execute_query(
       - The error message if execution failed, None if successful
   """
   try:
-    full_query = str(query)
-    environment = {**sample_data}
-    exec(full_query, globals(), environment)
-    result = environment.get(query.entity)
+    result = pd.eval(str(query), local_dict=sample_data)
     if isinstance(result, (pd.DataFrame, pd.Series)):
       return result, None
     return None, f'Result was not a DataFrame or Series: {type(result)}'
