@@ -43,6 +43,25 @@ class QueryStats(t.TypedDict):
   execution_results: ExecutionResults  # Execution statistics and errors
 
 
+def _execute_multi_line_query(
+  query: Query, sample_data: dict
+) -> t.Tuple[t.Optional[t.Union[pd.DataFrame, pd.Series]], t.Optional[str]]:
+  """Execute a multi-line query by executing each line sequentially."""
+  try:
+    local_vars = sample_data.copy()
+
+    for line in str(query).split('\n'):
+      df_name, expression = line.split(' = ', 1)
+      result = eval(expression, {}, local_vars)
+      local_vars[df_name] = result
+
+    # Return the last result (highest numbered df)
+    last_df = max(k for k in local_vars.keys() if k.startswith('df'))
+    return local_vars[last_df], None
+  except Exception as e:
+    return None, f'{type(e).__name__}: {str(e)}'
+
+
 def execute_query(
   query: Query, sample_data: t.Dict[str, pd.DataFrame]
 ) -> t.Tuple[t.Optional[t.Union[pd.DataFrame, pd.Series]], t.Optional[str]]:
@@ -59,6 +78,8 @@ def execute_query(
       - The error message if execution failed, None if successful
   """
   try:
+    if query.multi_line:
+      return _execute_multi_line_query(query, sample_data)
     result = pd.eval(str(query), local_dict=sample_data)
     if isinstance(result, (pd.DataFrame, pd.Series)):
       return result, None
