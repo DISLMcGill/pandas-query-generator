@@ -90,7 +90,7 @@ class Arguments:
   num_queries: int
   output_file: str
   schema: str
-  sorted: bool
+  sort: bool
   verbose: bool
 
   @staticmethod
@@ -170,7 +170,7 @@ class Arguments:
     )
 
     parser.add_argument(
-      '--sorted',
+      '--sort',
       action='store_true',
       help='Whether or not to sort the queries by complexity',
     )

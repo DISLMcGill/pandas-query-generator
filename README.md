@@ -18,7 +18,7 @@ Below is the standard output of `pqg --help`, which elaborates on the various
 command-line arguments the tool accepts:
 
 ```present uv run pqg --help
-usage: pqg [--filter] [--max-groupby-columns] [--max-merges] [--max-projection-columns] [--max-selection-conditions] [--multi-line] --num-queries [--output-file] --schema [--sorted] [--verbose]
+usage: pqg [--filter] [--max-groupby-columns] [--max-merges] [--max-projection-columns] [--max-selection-conditions] [--multi-line] --num-queries [--output-file] --schema [--sort] [--verbose]
 
 Pandas Query Generator CLI
 
@@ -33,7 +33,7 @@ options:
   --num-queries num_queries The number of queries to generate
   --output-file The name of the file to write the results to (default: queries.txt)
   --schema schema Path to the relational schema JSON file
-  --sorted Whether or not to sort the queries by complexity (default: False)
+  --sort Whether or not to sort the queries by complexity (default: False)
   --verbose Print extra generation information and statistics (default: False)
 ```
 
