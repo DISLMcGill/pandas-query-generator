@@ -26,7 +26,10 @@ def main():
     QueryStructure.from_args(arguments),
   )
 
-  sample_data = {entity: schema.entities[entity].generate_dataframe() for entity in schema.entities}
+  sample_data = {}
+
+  for entity in tqdm(schema.entities, desc='Generating sample data', unit='entity'):
+    sample_data[entity] = schema.entities[entity].generate_dataframe()
 
   generator = Generator(schema, query_structure, arguments.multi_line)
 
