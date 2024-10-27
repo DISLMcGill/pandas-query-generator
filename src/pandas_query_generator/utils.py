@@ -3,6 +3,7 @@ from collections import Counter
 
 import pandas as pd
 
+from .arguments import QueryFilter
 from .group_by_aggregation import GroupByAggregation
 from .merge import Merge
 from .projection import Projection
@@ -86,6 +87,58 @@ def execute_query(
     return None, f'Result was not a DataFrame or Series: {type(result)}'
   except Exception as e:
     return None, f'{type(e).__name__}: {str(e)}'
+
+
+def filter_queries(
+  queries: t.List[Query],
+  results: t.List[t.Tuple[t.Optional[t.Union[pd.DataFrame, pd.Series]], t.Optional[str]]],
+  filter_type: QueryFilter,
+) -> t.Tuple[
+  t.List[Query], t.List[t.Tuple[t.Optional[t.Union[pd.DataFrame, pd.Series]], t.Optional[str]]]
+]:
+  """
+  Filter queries based on their execution results.
+
+  Args:
+    queries: List of queries to filter
+    results: List of query execution results and errors
+    filter_type: Type of filter to apply
+
+  Returns:
+    Tuple containing:
+    - List of queries that match the filter criteria
+    - List of corresponding execution results
+  """
+  filtered_queries, filtered_results = [], []
+
+  for query, result_tuple in zip(queries, results):
+    result, error = result_tuple
+
+    match filter_type:
+      case QueryFilter.NON_EMPTY:
+        if result is not None and (
+          (isinstance(result, pd.DataFrame) and not result.empty)
+          or (isinstance(result, pd.Series) and result.size > 0)
+        ):
+          filtered_queries.append(query)
+          filtered_results.append(result_tuple)
+      case QueryFilter.EMPTY:
+        if result is not None and (
+          (isinstance(result, pd.DataFrame) and result.empty)
+          or (isinstance(result, pd.Series) and result.size == 0)
+        ):
+          filtered_queries.append(query)
+          filtered_results.append(result_tuple)
+      case QueryFilter.HAS_ERROR:
+        if error is not None:
+          filtered_queries.append(query)
+          filtered_results.append(result_tuple)
+      case QueryFilter.WITHOUT_ERROR:
+        if error is None:
+          filtered_queries.append(query)
+          filtered_results.append(result_tuple)
+
+  return filtered_queries, filtered_results
 
 
 def generate_query_statistics(

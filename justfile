@@ -44,7 +44,7 @@ run *args:
     --max-selection-conditions 10 \
     --num-queries 10000 \
     --output-file queries.txt \
-    --sorted \
+    --sort \
     {{args}}
 
 test *args:
