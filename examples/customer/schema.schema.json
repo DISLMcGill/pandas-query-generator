@@ -1,0 +1,113 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "type": "object",
+  "properties": {
+    "entities": {
+      "type": "object",
+      "properties": {
+        "customer": {
+          "type": "object",
+          "properties": {
+            "primary_key": { "type": "string" },
+            "properties": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "min": { "type": "integer" },
+                    "max": { "type": "integer" }
+                  },
+                  "required": ["max", "min", "type"]
+                },
+                "name": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "starting_character": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    }
+                  },
+                  "required": ["starting_character", "type"]
+                },
+                "status": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "values": { "type": "array", "items": { "type": "string" } }
+                  },
+                  "required": ["type", "values"]
+                }
+              },
+              "required": ["id", "name", "status"]
+            },
+            "foreign_keys": { "type": "object" }
+          },
+          "required": ["foreign_keys", "primary_key", "properties"]
+        },
+        "order": {
+          "type": "object",
+          "properties": {
+            "primary_key": { "type": "string" },
+            "properties": {
+              "type": "object",
+              "properties": {
+                "order_id": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "min": { "type": "integer" },
+                    "max": { "type": "integer" }
+                  },
+                  "required": ["max", "min", "type"]
+                },
+                "customer_id": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "min": { "type": "integer" },
+                    "max": { "type": "integer" }
+                  },
+                  "required": ["max", "min", "type"]
+                },
+                "amount": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "min": { "type": "number" },
+                    "max": { "type": "number" }
+                  },
+                  "required": ["max", "min", "type"]
+                },
+                "status": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "values": { "type": "array", "items": { "type": "string" } }
+                  },
+                  "required": ["type", "values"]
+                }
+              },
+              "required": ["amount", "customer_id", "order_id", "status"]
+            },
+            "foreign_keys": {
+              "type": "object",
+              "properties": {
+                "customer_id": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                }
+              },
+              "required": ["customer_id"]
+            }
+          },
+          "required": ["foreign_keys", "primary_key", "properties"]
+        }
+      },
+      "required": ["customer", "order"]
+    }
+  },
+  "required": ["entities"]
+}

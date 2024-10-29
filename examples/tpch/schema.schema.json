@@ -1,0 +1,826 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "type": "object",
+  "properties": {
+    "entities": {
+      "type": "object",
+      "properties": {
+        "customer": {
+          "type": "object",
+          "properties": {
+            "properties": {
+              "type": "object",
+              "properties": {
+                "C_CUSTKEY": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "min": { "type": "integer" },
+                    "max": { "type": "integer" }
+                  },
+                  "required": ["max", "min", "type"]
+                },
+                "C_NAME": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "starting_character": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    }
+                  },
+                  "required": ["starting_character", "type"]
+                },
+                "C_ADDRESS": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "starting_character": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    }
+                  },
+                  "required": ["starting_character", "type"]
+                },
+                "C_NATIONKEY": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "min": { "type": "integer" },
+                    "max": { "type": "integer" }
+                  },
+                  "required": ["max", "min", "type"]
+                },
+                "C_PHONE": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "starting_character": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    }
+                  },
+                  "required": ["starting_character", "type"]
+                },
+                "C_ACCTBAL": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "min": { "type": "number" },
+                    "max": { "type": "number" }
+                  },
+                  "required": ["max", "min", "type"]
+                },
+                "MKTSEGMENT": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "values": { "type": "array", "items": { "type": "string" } }
+                  },
+                  "required": ["type", "values"]
+                },
+                "C_COMMENT": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "starting_character": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    }
+                  },
+                  "required": ["starting_character", "type"]
+                }
+              },
+              "required": [
+                "C_ACCTBAL",
+                "C_ADDRESS",
+                "C_COMMENT",
+                "C_CUSTKEY",
+                "C_NAME",
+                "C_NATIONKEY",
+                "C_PHONE",
+                "MKTSEGMENT"
+              ]
+            },
+            "primary_key": { "type": "string" },
+            "foreign_keys": {
+              "type": "object",
+              "properties": {
+                "C_NATIONKEY": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                }
+              },
+              "required": ["C_NATIONKEY"]
+            }
+          },
+          "required": ["foreign_keys", "primary_key", "properties"]
+        },
+        "lineitem": {
+          "type": "object",
+          "properties": {
+            "properties": {
+              "type": "object",
+              "properties": {
+                "L_ORDERKEY": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "min": { "type": "integer" },
+                    "max": { "type": "integer" }
+                  },
+                  "required": ["max", "min", "type"]
+                },
+                "L_PARTKEY": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "min": { "type": "integer" },
+                    "max": { "type": "integer" }
+                  },
+                  "required": ["max", "min", "type"]
+                },
+                "L_SUPPKEY": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "min": { "type": "integer" },
+                    "max": { "type": "integer" }
+                  },
+                  "required": ["max", "min", "type"]
+                },
+                "LINENUMBER": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "min": { "type": "integer" },
+                    "max": { "type": "integer" }
+                  },
+                  "required": ["max", "min", "type"]
+                },
+                "QUANTITY": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "min": { "type": "integer" },
+                    "max": { "type": "integer" }
+                  },
+                  "required": ["max", "min", "type"]
+                },
+                "EXTENDEDPRICE": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "min": { "type": "number" },
+                    "max": { "type": "number" }
+                  },
+                  "required": ["max", "min", "type"]
+                },
+                "DISCOUNT": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "min": { "type": "number" },
+                    "max": { "type": "number" }
+                  },
+                  "required": ["max", "min", "type"]
+                },
+                "TAX": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "min": { "type": "number" },
+                    "max": { "type": "number" }
+                  },
+                  "required": ["max", "min", "type"]
+                },
+                "RETURNFLAG": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "values": { "type": "array", "items": { "type": "string" } }
+                  },
+                  "required": ["type", "values"]
+                },
+                "LINESTATUS": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "values": { "type": "array", "items": { "type": "string" } }
+                  },
+                  "required": ["type", "values"]
+                },
+                "SHIPDATE": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "min": { "type": "string" },
+                    "max": { "type": "string" }
+                  },
+                  "required": ["max", "min", "type"]
+                },
+                "COMMITDATE": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "min": { "type": "string" },
+                    "max": { "type": "string" }
+                  },
+                  "required": ["max", "min", "type"]
+                },
+                "RECEIPTDATE": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "min": { "type": "string" },
+                    "max": { "type": "string" }
+                  },
+                  "required": ["max", "min", "type"]
+                },
+                "SHIPINSTRUCT": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "values": { "type": "array", "items": { "type": "string" } }
+                  },
+                  "required": ["type", "values"]
+                },
+                "SHIPMODE": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "values": { "type": "array", "items": { "type": "string" } }
+                  },
+                  "required": ["type", "values"]
+                },
+                "L_COMMENT": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "starting_character": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    }
+                  },
+                  "required": ["starting_character", "type"]
+                }
+              },
+              "required": [
+                "COMMITDATE",
+                "DISCOUNT",
+                "EXTENDEDPRICE",
+                "LINENUMBER",
+                "LINESTATUS",
+                "L_COMMENT",
+                "L_ORDERKEY",
+                "L_PARTKEY",
+                "L_SUPPKEY",
+                "QUANTITY",
+                "RECEIPTDATE",
+                "RETURNFLAG",
+                "SHIPDATE",
+                "SHIPINSTRUCT",
+                "SHIPMODE",
+                "TAX"
+              ]
+            },
+            "primary_key": { "type": "array", "items": { "type": "string" } },
+            "foreign_keys": {
+              "type": "object",
+              "properties": {
+                "L_ORDERKEY": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                },
+                "L_PARTKEY": { "type": "array", "items": { "type": "string" } },
+                "L_SUPPKEY": { "type": "array", "items": { "type": "string" } }
+              },
+              "required": ["L_ORDERKEY", "L_PARTKEY", "L_SUPPKEY"]
+            }
+          },
+          "required": ["foreign_keys", "primary_key", "properties"]
+        },
+        "nation": {
+          "type": "object",
+          "properties": {
+            "properties": {
+              "type": "object",
+              "properties": {
+                "N_NATIONKEY": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "min": { "type": "integer" },
+                    "max": { "type": "integer" }
+                  },
+                  "required": ["max", "min", "type"]
+                },
+                "N_NAME": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "starting_character": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    }
+                  },
+                  "required": ["starting_character", "type"]
+                },
+                "N_REGIONKEY": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "min": { "type": "integer" },
+                    "max": { "type": "integer" }
+                  },
+                  "required": ["max", "min", "type"]
+                },
+                "N_COMMENT": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "starting_character": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    }
+                  },
+                  "required": ["starting_character", "type"]
+                }
+              },
+              "required": ["N_COMMENT", "N_NAME", "N_NATIONKEY", "N_REGIONKEY"]
+            },
+            "primary_key": { "type": "string" },
+            "foreign_keys": {
+              "type": "object",
+              "properties": {
+                "N_REGIONKEY": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                }
+              },
+              "required": ["N_REGIONKEY"]
+            }
+          },
+          "required": ["foreign_keys", "primary_key", "properties"]
+        },
+        "orders": {
+          "type": "object",
+          "properties": {
+            "properties": {
+              "type": "object",
+              "properties": {
+                "O_ORDERKEY": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "min": { "type": "integer" },
+                    "max": { "type": "integer" }
+                  },
+                  "required": ["max", "min", "type"]
+                },
+                "O_CUSTKEY": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "min": { "type": "integer" },
+                    "max": { "type": "integer" }
+                  },
+                  "required": ["max", "min", "type"]
+                },
+                "ORDERSTATUS": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "values": { "type": "array", "items": { "type": "string" } }
+                  },
+                  "required": ["type", "values"]
+                },
+                "TOTALPRICE": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "min": { "type": "number" },
+                    "max": { "type": "number" }
+                  },
+                  "required": ["max", "min", "type"]
+                },
+                "ORDERDATE": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "min": { "type": "string" },
+                    "max": { "type": "string" }
+                  },
+                  "required": ["max", "min", "type"]
+                },
+                "ORDERPRIORITY": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "values": { "type": "array", "items": { "type": "string" } }
+                  },
+                  "required": ["type", "values"]
+                },
+                "CLERK": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "starting_character": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    }
+                  },
+                  "required": ["starting_character", "type"]
+                },
+                "SHIPPRIORITY": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "min": { "type": "integer" },
+                    "max": { "type": "integer" }
+                  },
+                  "required": ["max", "min", "type"]
+                },
+                "O_COMMENT": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "starting_character": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    }
+                  },
+                  "required": ["starting_character", "type"]
+                }
+              },
+              "required": [
+                "CLERK",
+                "ORDERDATE",
+                "ORDERPRIORITY",
+                "ORDERSTATUS",
+                "O_COMMENT",
+                "O_CUSTKEY",
+                "O_ORDERKEY",
+                "SHIPPRIORITY",
+                "TOTALPRICE"
+              ]
+            },
+            "primary_key": { "type": "string" },
+            "foreign_keys": {
+              "type": "object",
+              "properties": {
+                "O_CUSTKEY": { "type": "array", "items": { "type": "string" } }
+              },
+              "required": ["O_CUSTKEY"]
+            }
+          },
+          "required": ["foreign_keys", "primary_key", "properties"]
+        },
+        "part": {
+          "type": "object",
+          "properties": {
+            "properties": {
+              "type": "object",
+              "properties": {
+                "P_PARTKEY": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "min": { "type": "integer" },
+                    "max": { "type": "integer" }
+                  },
+                  "required": ["max", "min", "type"]
+                },
+                "P_NAME": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "starting_character": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    }
+                  },
+                  "required": ["starting_character", "type"]
+                },
+                "MFGR": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "values": { "type": "array", "items": { "type": "string" } }
+                  },
+                  "required": ["type", "values"]
+                },
+                "BRAND": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "values": { "type": "array", "items": { "type": "string" } }
+                  },
+                  "required": ["type", "values"]
+                },
+                "TYPE": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "starting_character": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    }
+                  },
+                  "required": ["starting_character", "type"]
+                },
+                "SIZE": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "min": { "type": "integer" },
+                    "max": { "type": "integer" }
+                  },
+                  "required": ["max", "min", "type"]
+                },
+                "CONTAINER": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "starting_character": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    }
+                  },
+                  "required": ["starting_character", "type"]
+                },
+                "RETAILPRICE": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "min": { "type": "number" },
+                    "max": { "type": "number" }
+                  },
+                  "required": ["max", "min", "type"]
+                },
+                "PT_COMMENT": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "starting_character": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    }
+                  },
+                  "required": ["starting_character", "type"]
+                }
+              },
+              "required": [
+                "BRAND",
+                "CONTAINER",
+                "MFGR",
+                "PT_COMMENT",
+                "P_NAME",
+                "P_PARTKEY",
+                "RETAILPRICE",
+                "SIZE",
+                "TYPE"
+              ]
+            },
+            "primary_key": { "type": "string" }
+          },
+          "required": ["primary_key", "properties"]
+        },
+        "partsupp": {
+          "type": "object",
+          "properties": {
+            "properties": {
+              "type": "object",
+              "properties": {
+                "PS_PARTKEY": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "min": { "type": "integer" },
+                    "max": { "type": "integer" }
+                  },
+                  "required": ["max", "min", "type"]
+                },
+                "PS_SUPPKEY": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "min": { "type": "integer" },
+                    "max": { "type": "integer" }
+                  },
+                  "required": ["max", "min", "type"]
+                },
+                "AVAILQTY": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "min": { "type": "integer" },
+                    "max": { "type": "integer" }
+                  },
+                  "required": ["max", "min", "type"]
+                },
+                "SUPPLYCOST": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "min": { "type": "number" },
+                    "max": { "type": "number" }
+                  },
+                  "required": ["max", "min", "type"]
+                },
+                "P_COMMENT": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "starting_character": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    }
+                  },
+                  "required": ["starting_character", "type"]
+                }
+              },
+              "required": [
+                "AVAILQTY",
+                "PS_PARTKEY",
+                "PS_SUPPKEY",
+                "P_COMMENT",
+                "SUPPLYCOST"
+              ]
+            },
+            "primary_key": { "type": "array", "items": { "type": "string" } },
+            "foreign_keys": {
+              "type": "object",
+              "properties": {
+                "PS_PARTKEY": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                },
+                "PS_SUPPKEY": { "type": "array", "items": { "type": "string" } }
+              },
+              "required": ["PS_PARTKEY", "PS_SUPPKEY"]
+            }
+          },
+          "required": ["foreign_keys", "primary_key", "properties"]
+        },
+        "region": {
+          "type": "object",
+          "properties": {
+            "properties": {
+              "type": "object",
+              "properties": {
+                "R_REGIONKEY": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "min": { "type": "integer" },
+                    "max": { "type": "integer" }
+                  },
+                  "required": ["max", "min", "type"]
+                },
+                "R_NAME": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "starting_character": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    }
+                  },
+                  "required": ["starting_character", "type"]
+                },
+                "R_COMMENT": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "starting_character": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    }
+                  },
+                  "required": ["starting_character", "type"]
+                }
+              },
+              "required": ["R_COMMENT", "R_NAME", "R_REGIONKEY"]
+            },
+            "primary_key": { "type": "string" }
+          },
+          "required": ["primary_key", "properties"]
+        },
+        "supplier": {
+          "type": "object",
+          "properties": {
+            "properties": {
+              "type": "object",
+              "properties": {
+                "S_SUPPKEY": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "min": { "type": "integer" },
+                    "max": { "type": "integer" }
+                  },
+                  "required": ["max", "min", "type"]
+                },
+                "S_NAME": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "starting_character": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    }
+                  },
+                  "required": ["starting_character", "type"]
+                },
+                "S_ADDRESS": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "starting_character": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    }
+                  },
+                  "required": ["starting_character", "type"]
+                },
+                "S_NATIONKEY": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "min": { "type": "integer" },
+                    "max": { "type": "integer" }
+                  },
+                  "required": ["max", "min", "type"]
+                },
+                "S_PHONE": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "starting_character": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    }
+                  },
+                  "required": ["starting_character", "type"]
+                },
+                "S_ACCTBAL": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "min": { "type": "number" },
+                    "max": { "type": "number" }
+                  },
+                  "required": ["max", "min", "type"]
+                },
+                "S_COMMENT": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "starting_character": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    }
+                  },
+                  "required": ["starting_character", "type"]
+                }
+              },
+              "required": [
+                "S_ACCTBAL",
+                "S_ADDRESS",
+                "S_COMMENT",
+                "S_NAME",
+                "S_NATIONKEY",
+                "S_PHONE",
+                "S_SUPPKEY"
+              ]
+            },
+            "primary_key": { "type": "string" },
+            "foreign_keys": {
+              "type": "object",
+              "properties": {
+                "S_NATIONKEY": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                }
+              },
+              "required": ["S_NATIONKEY"]
+            }
+          },
+          "required": ["foreign_keys", "primary_key", "properties"]
+        }
+      },
+      "required": [
+        "customer",
+        "lineitem",
+        "nation",
+        "orders",
+        "part",
+        "partsupp",
+        "region",
+        "supplier"
+      ]
+    }
+  },
+  "required": ["entities"]
+}
