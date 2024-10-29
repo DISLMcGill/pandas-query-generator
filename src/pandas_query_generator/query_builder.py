@@ -38,8 +38,8 @@ class QueryBuilder:
     self.operations: t.List[Operation] = []
     self.entity_name = random.choice(list(self.schema.entities.keys()))
     self.entity = self.schema.entities[self.entity_name]
-    self.current_columns = set(self.entity.properties.keys())
-    self.required_columns: t.Set[str] = set()  # Columns that must be preserved
+    self.current_columns: t.Set[str] = set(self.entity.properties.keys())
+    self.required_columns: t.Set[str] = set()
 
   def build(self) -> Query:
     """
@@ -57,10 +57,18 @@ class QueryBuilder:
     Returns:
       Query: A complete, valid query object with all generated operations.
     """
-    if self.query_structure.max_selection_conditions > 0 and random.random() < 0.5:
+    if (
+      self.current_columns
+      and self.query_structure.max_selection_conditions > 0
+      and random.random() < self.query_structure.selection_probability
+    ):
       self.operations.append(self._generate_operation(Selection))
 
-    if self.query_structure.max_projection_columns > 0 and random.random() < 0.5:
+    if (
+      self.current_columns
+      and self.query_structure.max_projection_columns > 0
+      and random.random() < self.query_structure.projection_probability
+    ):
       self.operations.append(self._generate_operation(Projection))
 
     for _ in range(random.randint(0, self.query_structure.max_merges)):
@@ -70,9 +78,9 @@ class QueryBuilder:
         break
 
     if (
-      self.query_structure.max_groupby_columns > 0
-      and random.random() < 0.5
-      and self.current_columns
+      self.current_columns
+      and self.query_structure.max_groupby_columns > 0
+      and random.random() < self.query_structure.groupby_aggregation_probability
     ):
       self.operations.append(self._generate_operation(GroupByAggregation))
 
@@ -122,9 +130,6 @@ class QueryBuilder:
     Returns:
       Operation: A Selection operation with the generated conditions.
     """
-    if not self.current_columns:
-      return Selection([])
-
     num_conditions = random.randint(
       1, min(self.query_structure.max_selection_conditions, len(self.current_columns))
     )
@@ -185,8 +190,6 @@ class QueryBuilder:
     available_for_projection = self.current_columns - self.required_columns
 
     if not available_for_projection:
-      # If no columns available for projection besides required ones,
-      # project all current columns
       return Projection(list(self.current_columns))
 
     to_project = random.randint(
@@ -224,10 +227,13 @@ class QueryBuilder:
       ValueError: If no valid join relationships are available.
     """
     right_query_structure = QueryStructure(
+      groupby_aggregation_probability=0,
       max_groupby_columns=0,
       max_merges=self.query_structure.max_merges - 1,
       max_projection_columns=self.query_structure.max_projection_columns,
       max_selection_conditions=self.query_structure.max_selection_conditions,
+      projection_probability=self.query_structure.projection_probability,
+      selection_probability=self.query_structure.selection_probability,
     )
 
     possible_right_entities = []
@@ -253,7 +259,7 @@ class QueryBuilder:
 
     # Update our current columns on this query
     right_query = right_builder.build()
-    self.current_columns = right_query.available_columns
+    self.current_columns = right_query.columns
 
     def format_join_columns(columns: str | t.List[str]) -> str:
       return (
@@ -284,9 +290,6 @@ class QueryBuilder:
       Operation: A GroupByAggregation operation with the grouping
       configuration.
     """
-    if not self.current_columns:
-      return GroupByAggregation([], 'count')
-
     group_columns = random.sample(
       list(self.current_columns),
       random.randint(1, min(self.query_structure.max_groupby_columns, len(self.current_columns))),
