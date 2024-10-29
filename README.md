@@ -25,7 +25,7 @@ Pandas Query Generator CLI
 options:
   -h --help Show this help message and exit
   --filter Filter generated queries by specific criteria
-  --groupby-aggregation-probability Probability of including aggregation in group by operations (default: 0.5)
+  --groupby-aggregation-probability Probability of including groupby aggregation operations (default: 0.5)
   --max-groupby-columns Maximum number of columns in group by operations (default: 5)
   --max-merges Maximum number of table merges allowed (default: 2)
   --max-projection-columns Maximum number of columns to project (default: 5)

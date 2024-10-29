@@ -117,7 +117,7 @@ class Arguments:
       type=float,
       required=False,
       default=0.5,
-      help='Probability of including aggregation in group by operations',
+      help='Probability of including groupby aggregation operations',
     )
 
     parser.add_argument(
