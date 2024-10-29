@@ -82,6 +82,7 @@ class Arguments:
   """
 
   filter: QueryFilter
+  groupby_aggregation_probability: float
   max_groupby_columns: int
   max_merges: int
   max_projection_columns: int
@@ -89,7 +90,9 @@ class Arguments:
   multi_line: bool
   num_queries: int
   output_file: str
+  projection_probability: float
   schema: str
+  selection_probability: float
   sort: bool
   verbose: bool
 
@@ -110,10 +113,18 @@ class Arguments:
     )
 
     parser.add_argument(
+      '--groupby-aggregation-probability',
+      type=float,
+      required=False,
+      default=0.5,
+      help='Probability of including groupby aggregation operations',
+    )
+
+    parser.add_argument(
       '--max-groupby-columns',
       type=int,
       required=False,
-      default=0,
+      default=5,
       help='Maximum number of columns in group by operations',
     )
 
@@ -129,7 +140,7 @@ class Arguments:
       '--max-projection-columns',
       type=int,
       required=False,
-      default=0,
+      default=5,
       help='Maximum number of columns to project',
     )
 
@@ -137,7 +148,7 @@ class Arguments:
       '--max-selection-conditions',
       type=int,
       required=False,
-      default=0,
+      default=5,
       help='Maximum number of conditions in selection operations',
     )
 
@@ -163,10 +174,26 @@ class Arguments:
     )
 
     parser.add_argument(
+      '--projection-probability',
+      type=float,
+      required=False,
+      default=0.5,
+      help='Probability of including projection operations',
+    )
+
+    parser.add_argument(
       '--schema',
       type=str,
       required=True,
       help='Path to the relational schema JSON file',
+    )
+
+    parser.add_argument(
+      '--selection-probability',
+      type=float,
+      required=False,
+      default=0.5,
+      help='Probability of including selection operations',
     )
 
     parser.add_argument(

@@ -28,12 +28,12 @@ class Query:
     entity: str,
     operations: t.List[Operation],
     multi_line: bool,
-    available_columns: t.Set[str],
+    columns: t.Set[str],
   ):
     self.entity = entity
     self.operations = operations
     self.multi_line = multi_line
-    self.available_columns = available_columns
+    self.columns = columns
     self.complexity = self._calculate_complexity()
 
   def __str__(self) -> str:

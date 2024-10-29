@@ -18,21 +18,24 @@ Below is the standard output of `pqg --help`, which elaborates on the various
 command-line arguments the tool accepts:
 
 ```present uv run pqg --help
-usage: pqg [--filter] [--max-groupby-columns] [--max-merges] [--max-projection-columns] [--max-selection-conditions] [--multi-line] --num-queries [--output-file] --schema [--sort] [--verbose]
+usage: pqg [--filter] [--groupby-aggregation-probability] [--max-groupby-columns] [--max-merges] [--max-projection-columns] [--max-selection-conditions] [--multi-line] --num-queries [--output-file] [--projection-probability] --schema [--selection-probability] [--sort] [--verbose]
 
 Pandas Query Generator CLI
 
 options:
   -h --help Show this help message and exit
   --filter Filter generated queries by specific criteria
-  --max-groupby-columns Maximum number of columns in group by operations (default: 0)
+  --groupby-aggregation-probability Probability of including groupby aggregation operations (default: 0.5)
+  --max-groupby-columns Maximum number of columns in group by operations (default: 5)
   --max-merges Maximum number of table merges allowed (default: 2)
-  --max-projection-columns Maximum number of columns to project (default: 0)
-  --max-selection-conditions Maximum number of conditions in selection operations (default: 0)
+  --max-projection-columns Maximum number of columns to project (default: 5)
+  --max-selection-conditions Maximum number of conditions in selection operations (default: 5)
   --multi-line Format queries on multiple lines (default: False)
   --num-queries num_queries The number of queries to generate
   --output-file The name of the file to write the results to (default: queries.txt)
+  --projection-probability Probability of including projection operations (default: 0.5)
   --schema schema Path to the relational schema JSON file
+  --selection-probability Probability of including selection operations (default: 0.5)
   --sort Whether or not to sort the queries by complexity (default: False)
   --verbose Print extra generation information and statistics (default: False)
 ```
