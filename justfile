@@ -15,6 +15,20 @@ all: fmt check readme
 build:
   uv build
 
+demo:
+  just run \
+    --groupby-aggregation-probability 0.5 \
+    --max-groupby-columns 5 \
+    --max-merges 10 \
+    --max-projection-columns 10 \
+    --max-selection-conditions 10 \
+    --num-queries 1000 \
+    --projection-probability 0.5 \
+    --schema examples/tpch/schema.json \
+    --selection-probability 0.5 \
+    --sort \
+    --verbose
+
 dev-deps:
   cargo install present tokei typos
 
@@ -37,15 +51,7 @@ readme:
   present --in-place README.md && typos --write-changes README.md
 
 run *args:
-  uv run pqg  \
-    --max-groupby-columns 5 \
-    --max-merges 5 \
-    --max-projection-columns 10 \
-    --max-selection-conditions 10 \
-    --num-queries 10000 \
-    --output-file queries.txt \
-    --sort \
-    {{args}}
+  uv run pqg {{args}}
 
 test *args:
   uv run pytest --verbose {{args}}
