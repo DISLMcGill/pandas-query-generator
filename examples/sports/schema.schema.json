@@ -1,0 +1,419 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "type": "object",
+  "properties": {
+    "entities": {
+      "type": "object",
+      "properties": {
+        "team": {
+          "type": "object",
+          "properties": {
+            "properties": {
+              "type": "object",
+              "properties": {
+                "national_name": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "starting_character": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    }
+                  },
+                  "required": ["starting_character", "type"]
+                },
+                "group": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "values": { "type": "array", "items": { "type": "string" } }
+                  },
+                  "required": ["type", "values"]
+                },
+                "number_player": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "min": { "type": "integer" },
+                    "max": { "type": "integer" }
+                  },
+                  "required": ["max", "min", "type"]
+                }
+              },
+              "required": ["group", "national_name", "number_player"]
+            },
+            "primary_key": { "type": "string" }
+          },
+          "required": ["primary_key", "properties"]
+        },
+        "association": {
+          "type": "object",
+          "properties": {
+            "properties": {
+              "type": "object",
+              "properties": {
+                "association_name": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "starting_character": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    }
+                  },
+                  "required": ["starting_character", "type"]
+                },
+                "national_name": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "starting_character": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    }
+                  },
+                  "required": ["starting_character", "type"]
+                },
+                "founded_year": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "min": { "type": "integer" },
+                    "max": { "type": "integer" }
+                  },
+                  "required": ["max", "min", "type"]
+                },
+                "president": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "starting_character": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    }
+                  },
+                  "required": ["starting_character", "type"]
+                }
+              },
+              "required": [
+                "association_name",
+                "founded_year",
+                "national_name",
+                "president"
+              ]
+            },
+            "primary_key": { "type": "string" },
+            "foreign_keys": {
+              "type": "object",
+              "properties": {
+                "national_name": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                }
+              },
+              "required": ["national_name"]
+            }
+          },
+          "required": ["foreign_keys", "primary_key", "properties"]
+        },
+        "coach": {
+          "type": "object",
+          "properties": {
+            "properties": {
+              "type": "object",
+              "properties": {
+                "coach_id": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "min": { "type": "integer" },
+                    "max": { "type": "integer" }
+                  },
+                  "required": ["max", "min", "type"]
+                },
+                "role": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "values": { "type": "array", "items": { "type": "string" } }
+                  },
+                  "required": ["type", "values"]
+                },
+                "national_name": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "starting_character": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    }
+                  },
+                  "required": ["starting_character", "type"]
+                },
+                "name": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "starting_character": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    }
+                  },
+                  "required": ["starting_character", "type"]
+                },
+                "experience_years": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "min": { "type": "integer" },
+                    "max": { "type": "integer" }
+                  },
+                  "required": ["max", "min", "type"]
+                }
+              },
+              "required": [
+                "coach_id",
+                "experience_years",
+                "name",
+                "national_name",
+                "role"
+              ]
+            },
+            "primary_key": { "type": "array", "items": { "type": "string" } },
+            "foreign_keys": {
+              "type": "object",
+              "properties": {
+                "national_name": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                }
+              },
+              "required": ["national_name"]
+            }
+          },
+          "required": ["foreign_keys", "primary_key", "properties"]
+        },
+        "stadium": {
+          "type": "object",
+          "properties": {
+            "properties": {
+              "type": "object",
+              "properties": {
+                "stadium_id": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "min": { "type": "integer" },
+                    "max": { "type": "integer" }
+                  },
+                  "required": ["max", "min", "type"]
+                },
+                "name": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "starting_character": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    }
+                  },
+                  "required": ["starting_character", "type"]
+                },
+                "city": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "starting_character": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    }
+                  },
+                  "required": ["starting_character", "type"]
+                },
+                "location": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "starting_character": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    }
+                  },
+                  "required": ["starting_character", "type"]
+                },
+                "capacity": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "min": { "type": "integer" },
+                    "max": { "type": "integer" }
+                  },
+                  "required": ["max", "min", "type"]
+                },
+                "year_built": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "min": { "type": "integer" },
+                    "max": { "type": "integer" }
+                  },
+                  "required": ["max", "min", "type"]
+                }
+              },
+              "required": [
+                "capacity",
+                "city",
+                "location",
+                "name",
+                "stadium_id",
+                "year_built"
+              ]
+            },
+            "primary_key": { "type": "string" }
+          },
+          "required": ["primary_key", "properties"]
+        },
+        "match": {
+          "type": "object",
+          "properties": {
+            "properties": {
+              "type": "object",
+              "properties": {
+                "match_id": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "min": { "type": "integer" },
+                    "max": { "type": "integer" }
+                  },
+                  "required": ["max", "min", "type"]
+                },
+                "team1_id": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "starting_character": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    }
+                  },
+                  "required": ["starting_character", "type"]
+                },
+                "team2_id": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "starting_character": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    }
+                  },
+                  "required": ["starting_character", "type"]
+                },
+                "stadium_id": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "min": { "type": "integer" },
+                    "max": { "type": "integer" }
+                  },
+                  "required": ["max", "min", "type"]
+                },
+                "match_date": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "min": { "type": "string" },
+                    "max": { "type": "string" }
+                  },
+                  "required": ["max", "min", "type"]
+                },
+                "match_time": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "starting_character": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    }
+                  },
+                  "required": ["starting_character", "type"]
+                },
+                "duration_minutes": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "min": { "type": "integer" },
+                    "max": { "type": "integer" }
+                  },
+                  "required": ["max", "min", "type"]
+                },
+                "round": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "values": { "type": "array", "items": { "type": "string" } }
+                  },
+                  "required": ["type", "values"]
+                },
+                "score_team1": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "min": { "type": "integer" },
+                    "max": { "type": "integer" }
+                  },
+                  "required": ["max", "min", "type"]
+                },
+                "score_team2": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "min": { "type": "integer" },
+                    "max": { "type": "integer" }
+                  },
+                  "required": ["max", "min", "type"]
+                },
+                "attendance": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "min": { "type": "integer" },
+                    "max": { "type": "integer" }
+                  },
+                  "required": ["max", "min", "type"]
+                }
+              },
+              "required": [
+                "attendance",
+                "duration_minutes",
+                "match_date",
+                "match_id",
+                "match_time",
+                "round",
+                "score_team1",
+                "score_team2",
+                "stadium_id",
+                "team1_id",
+                "team2_id"
+              ]
+            },
+            "primary_key": { "type": "string" },
+            "foreign_keys": {
+              "type": "object",
+              "properties": {
+                "team1_id": { "type": "array", "items": { "type": "string" } },
+                "team2_id": { "type": "array", "items": { "type": "string" } },
+                "stadium_id": { "type": "array", "items": { "type": "string" } }
+              },
+              "required": ["stadium_id", "team1_id", "team2_id"]
+            }
+          },
+          "required": ["foreign_keys", "primary_key", "properties"]
+        }
+      },
+      "required": ["association", "coach", "match", "stadium", "team"]
+    }
+  },
+  "required": ["entities"]
+}
