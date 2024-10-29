@@ -4,23 +4,29 @@ for directory in ./examples/*; do
   base="$(basename "$directory")"
 
   uv run pqg  \
+    --groupby-aggregation-probability 0.5 \
     --max-groupby-columns 5 \
-    --max-merges 5 \
+    --max-merges 10 \
     --max-projection-columns 10 \
     --max-selection-conditions 10 \
-    --num-queries 10000 \
+    --num-queries 1000 \
     --output-file examples/"$base"/single-line.txt \
+    --projection-probability 0.5 \
     --schema examples/"$base"/schema.json \
-    --sorted
+    --selection-probability 0.5 \
+    --sort
 
   uv run pqg  \
+    --groupby-aggregation-probability 0.5 \
     --max-groupby-columns 5 \
-    --max-merges 5 \
+    --max-merges 10 \
     --max-projection-columns 10 \
     --max-selection-conditions 10 \
     --multi-line \
-    --num-queries 10000 \
+    --num-queries 1000 \
     --output-file examples/"$base"/multi-line.txt \
+    --projection-probability 0.5 \
     --schema examples/"$base"/schema.json \
-    --sorted
+    --selection-probability 0.5 \
+    --sort
 done
