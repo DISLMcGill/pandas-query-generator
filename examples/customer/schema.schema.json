@@ -12,7 +12,7 @@
             "properties": {
               "type": "object",
               "properties": {
-                "id": {
+                "C_CUSTKEY": {
                   "type": "object",
                   "properties": {
                     "type": { "type": "string" },
@@ -21,7 +21,7 @@
                   },
                   "required": ["max", "min", "type"]
                 },
-                "name": {
+                "C_NAME": {
                   "type": "object",
                   "properties": {
                     "type": { "type": "string" },
@@ -32,7 +32,7 @@
                   },
                   "required": ["starting_character", "type"]
                 },
-                "status": {
+                "C_STATUS": {
                   "type": "object",
                   "properties": {
                     "type": { "type": "string" },
@@ -41,7 +41,7 @@
                   "required": ["type", "values"]
                 }
               },
-              "required": ["id", "name", "status"]
+              "required": ["C_CUSTKEY", "C_NAME", "C_STATUS"]
             },
             "foreign_keys": { "type": "object" }
           },
@@ -54,7 +54,7 @@
             "properties": {
               "type": "object",
               "properties": {
-                "order_id": {
+                "O_ORDERKEY": {
                   "type": "object",
                   "properties": {
                     "type": { "type": "string" },
@@ -63,7 +63,7 @@
                   },
                   "required": ["max", "min", "type"]
                 },
-                "customer_id": {
+                "O_CUSTKEY": {
                   "type": "object",
                   "properties": {
                     "type": { "type": "string" },
@@ -72,7 +72,7 @@
                   },
                   "required": ["max", "min", "type"]
                 },
-                "amount": {
+                "O_TOTALPRICE": {
                   "type": "object",
                   "properties": {
                     "type": { "type": "string" },
@@ -81,7 +81,7 @@
                   },
                   "required": ["max", "min", "type"]
                 },
-                "status": {
+                "O_ORDERSTATUS": {
                   "type": "object",
                   "properties": {
                     "type": { "type": "string" },
@@ -90,17 +90,19 @@
                   "required": ["type", "values"]
                 }
               },
-              "required": ["amount", "customer_id", "order_id", "status"]
+              "required": [
+                "O_CUSTKEY",
+                "O_ORDERKEY",
+                "O_ORDERSTATUS",
+                "O_TOTALPRICE"
+              ]
             },
             "foreign_keys": {
               "type": "object",
               "properties": {
-                "customer_id": {
-                  "type": "array",
-                  "items": { "type": "string" }
-                }
+                "O_CUSTKEY": { "type": "array", "items": { "type": "string" } }
               },
-              "required": ["customer_id"]
+              "required": ["O_CUSTKEY"]
             }
           },
           "required": ["foreign_keys", "primary_key", "properties"]

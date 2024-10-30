@@ -11,7 +11,7 @@
             "properties": {
               "type": "object",
               "properties": {
-                "national_name": {
+                "T_TEAMKEY": {
                   "type": "object",
                   "properties": {
                     "type": { "type": "string" },
@@ -22,7 +22,7 @@
                   },
                   "required": ["starting_character", "type"]
                 },
-                "group": {
+                "T_GROUP": {
                   "type": "object",
                   "properties": {
                     "type": { "type": "string" },
@@ -30,7 +30,7 @@
                   },
                   "required": ["type", "values"]
                 },
-                "number_player": {
+                "T_PLAYERCOUNT": {
                   "type": "object",
                   "properties": {
                     "type": { "type": "string" },
@@ -40,7 +40,7 @@
                   "required": ["max", "min", "type"]
                 }
               },
-              "required": ["group", "national_name", "number_player"]
+              "required": ["T_GROUP", "T_PLAYERCOUNT", "T_TEAMKEY"]
             },
             "primary_key": { "type": "string" }
           },
@@ -52,7 +52,7 @@
             "properties": {
               "type": "object",
               "properties": {
-                "association_name": {
+                "A_ASSOCKEY": {
                   "type": "object",
                   "properties": {
                     "type": { "type": "string" },
@@ -63,7 +63,7 @@
                   },
                   "required": ["starting_character", "type"]
                 },
-                "national_name": {
+                "A_TEAMKEY": {
                   "type": "object",
                   "properties": {
                     "type": { "type": "string" },
@@ -74,7 +74,7 @@
                   },
                   "required": ["starting_character", "type"]
                 },
-                "founded_year": {
+                "A_FOUNDEDYEAR": {
                   "type": "object",
                   "properties": {
                     "type": { "type": "string" },
@@ -83,7 +83,7 @@
                   },
                   "required": ["max", "min", "type"]
                 },
-                "president": {
+                "A_PRESIDENT": {
                   "type": "object",
                   "properties": {
                     "type": { "type": "string" },
@@ -96,22 +96,19 @@
                 }
               },
               "required": [
-                "association_name",
-                "founded_year",
-                "national_name",
-                "president"
+                "A_ASSOCKEY",
+                "A_FOUNDEDYEAR",
+                "A_PRESIDENT",
+                "A_TEAMKEY"
               ]
             },
             "primary_key": { "type": "string" },
             "foreign_keys": {
               "type": "object",
               "properties": {
-                "national_name": {
-                  "type": "array",
-                  "items": { "type": "string" }
-                }
+                "A_TEAMKEY": { "type": "array", "items": { "type": "string" } }
               },
-              "required": ["national_name"]
+              "required": ["A_TEAMKEY"]
             }
           },
           "required": ["foreign_keys", "primary_key", "properties"]
@@ -122,7 +119,7 @@
             "properties": {
               "type": "object",
               "properties": {
-                "coach_id": {
+                "C_COACHKEY": {
                   "type": "object",
                   "properties": {
                     "type": { "type": "string" },
@@ -131,7 +128,7 @@
                   },
                   "required": ["max", "min", "type"]
                 },
-                "role": {
+                "C_ROLE": {
                   "type": "object",
                   "properties": {
                     "type": { "type": "string" },
@@ -139,7 +136,7 @@
                   },
                   "required": ["type", "values"]
                 },
-                "national_name": {
+                "C_TEAMKEY": {
                   "type": "object",
                   "properties": {
                     "type": { "type": "string" },
@@ -150,7 +147,7 @@
                   },
                   "required": ["starting_character", "type"]
                 },
-                "name": {
+                "C_NAME": {
                   "type": "object",
                   "properties": {
                     "type": { "type": "string" },
@@ -161,7 +158,7 @@
                   },
                   "required": ["starting_character", "type"]
                 },
-                "experience_years": {
+                "C_EXPYEARS": {
                   "type": "object",
                   "properties": {
                     "type": { "type": "string" },
@@ -172,23 +169,20 @@
                 }
               },
               "required": [
-                "coach_id",
-                "experience_years",
-                "name",
-                "national_name",
-                "role"
+                "C_COACHKEY",
+                "C_EXPYEARS",
+                "C_NAME",
+                "C_ROLE",
+                "C_TEAMKEY"
               ]
             },
             "primary_key": { "type": "array", "items": { "type": "string" } },
             "foreign_keys": {
               "type": "object",
               "properties": {
-                "national_name": {
-                  "type": "array",
-                  "items": { "type": "string" }
-                }
+                "C_TEAMKEY": { "type": "array", "items": { "type": "string" } }
               },
-              "required": ["national_name"]
+              "required": ["C_TEAMKEY"]
             }
           },
           "required": ["foreign_keys", "primary_key", "properties"]
@@ -199,7 +193,7 @@
             "properties": {
               "type": "object",
               "properties": {
-                "stadium_id": {
+                "S_STADIUMKEY": {
                   "type": "object",
                   "properties": {
                     "type": { "type": "string" },
@@ -208,7 +202,7 @@
                   },
                   "required": ["max", "min", "type"]
                 },
-                "name": {
+                "S_NAME": {
                   "type": "object",
                   "properties": {
                     "type": { "type": "string" },
@@ -219,7 +213,7 @@
                   },
                   "required": ["starting_character", "type"]
                 },
-                "city": {
+                "S_CITY": {
                   "type": "object",
                   "properties": {
                     "type": { "type": "string" },
@@ -230,7 +224,7 @@
                   },
                   "required": ["starting_character", "type"]
                 },
-                "location": {
+                "S_LOCATION": {
                   "type": "object",
                   "properties": {
                     "type": { "type": "string" },
@@ -241,7 +235,7 @@
                   },
                   "required": ["starting_character", "type"]
                 },
-                "capacity": {
+                "S_CAPACITY": {
                   "type": "object",
                   "properties": {
                     "type": { "type": "string" },
@@ -250,7 +244,7 @@
                   },
                   "required": ["max", "min", "type"]
                 },
-                "year_built": {
+                "S_YEARBUILT": {
                   "type": "object",
                   "properties": {
                     "type": { "type": "string" },
@@ -261,12 +255,12 @@
                 }
               },
               "required": [
-                "capacity",
-                "city",
-                "location",
-                "name",
-                "stadium_id",
-                "year_built"
+                "S_CAPACITY",
+                "S_CITY",
+                "S_LOCATION",
+                "S_NAME",
+                "S_STADIUMKEY",
+                "S_YEARBUILT"
               ]
             },
             "primary_key": { "type": "string" }
@@ -279,7 +273,7 @@
             "properties": {
               "type": "object",
               "properties": {
-                "match_id": {
+                "M_MATCHKEY": {
                   "type": "object",
                   "properties": {
                     "type": { "type": "string" },
@@ -288,7 +282,7 @@
                   },
                   "required": ["max", "min", "type"]
                 },
-                "team1_id": {
+                "M_TEAM1KEY": {
                   "type": "object",
                   "properties": {
                     "type": { "type": "string" },
@@ -299,7 +293,7 @@
                   },
                   "required": ["starting_character", "type"]
                 },
-                "team2_id": {
+                "M_TEAM2KEY": {
                   "type": "object",
                   "properties": {
                     "type": { "type": "string" },
@@ -310,7 +304,7 @@
                   },
                   "required": ["starting_character", "type"]
                 },
-                "stadium_id": {
+                "M_STADIUMKEY": {
                   "type": "object",
                   "properties": {
                     "type": { "type": "string" },
@@ -319,7 +313,7 @@
                   },
                   "required": ["max", "min", "type"]
                 },
-                "match_date": {
+                "M_DATE": {
                   "type": "object",
                   "properties": {
                     "type": { "type": "string" },
@@ -328,7 +322,7 @@
                   },
                   "required": ["max", "min", "type"]
                 },
-                "match_time": {
+                "M_TIME": {
                   "type": "object",
                   "properties": {
                     "type": { "type": "string" },
@@ -339,7 +333,7 @@
                   },
                   "required": ["starting_character", "type"]
                 },
-                "duration_minutes": {
+                "M_DURATION": {
                   "type": "object",
                   "properties": {
                     "type": { "type": "string" },
@@ -348,7 +342,7 @@
                   },
                   "required": ["max", "min", "type"]
                 },
-                "round": {
+                "M_ROUND": {
                   "type": "object",
                   "properties": {
                     "type": { "type": "string" },
@@ -356,7 +350,7 @@
                   },
                   "required": ["type", "values"]
                 },
-                "score_team1": {
+                "M_SCORE1": {
                   "type": "object",
                   "properties": {
                     "type": { "type": "string" },
@@ -365,7 +359,7 @@
                   },
                   "required": ["max", "min", "type"]
                 },
-                "score_team2": {
+                "M_SCORE2": {
                   "type": "object",
                   "properties": {
                     "type": { "type": "string" },
@@ -374,7 +368,7 @@
                   },
                   "required": ["max", "min", "type"]
                 },
-                "attendance": {
+                "M_ATTENDANCE": {
                   "type": "object",
                   "properties": {
                     "type": { "type": "string" },
@@ -385,28 +379,37 @@
                 }
               },
               "required": [
-                "attendance",
-                "duration_minutes",
-                "match_date",
-                "match_id",
-                "match_time",
-                "round",
-                "score_team1",
-                "score_team2",
-                "stadium_id",
-                "team1_id",
-                "team2_id"
+                "M_ATTENDANCE",
+                "M_DATE",
+                "M_DURATION",
+                "M_MATCHKEY",
+                "M_ROUND",
+                "M_SCORE1",
+                "M_SCORE2",
+                "M_STADIUMKEY",
+                "M_TEAM1KEY",
+                "M_TEAM2KEY",
+                "M_TIME"
               ]
             },
             "primary_key": { "type": "string" },
             "foreign_keys": {
               "type": "object",
               "properties": {
-                "team1_id": { "type": "array", "items": { "type": "string" } },
-                "team2_id": { "type": "array", "items": { "type": "string" } },
-                "stadium_id": { "type": "array", "items": { "type": "string" } }
+                "M_TEAM1KEY": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                },
+                "M_TEAM2KEY": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                },
+                "M_STADIUMKEY": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                }
               },
-              "required": ["stadium_id", "team1_id", "team2_id"]
+              "required": ["M_STADIUMKEY", "M_TEAM1KEY", "M_TEAM2KEY"]
             }
           },
           "required": ["foreign_keys", "primary_key", "properties"]

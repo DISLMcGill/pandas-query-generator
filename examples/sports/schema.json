@@ -2,55 +2,55 @@
   "entities": {
     "team": {
       "properties": {
-        "national_name": {
+        "T_TEAMKEY": {
           "type": "string",
           "starting_character": ["t"]
         },
-        "group": {
+        "T_GROUP": {
           "type": "enum",
           "values": ["a", "b", "c", "d", "e", "f", "g", "h"]
         },
-        "number_player": {
+        "T_PLAYERCOUNT": {
           "type": "int",
           "min": 18,
           "max": 26
         }
       },
-      "primary_key": "national_name"
+      "primary_key": "T_TEAMKEY"
     },
     "association": {
       "properties": {
-        "association_name": {
+        "A_ASSOCKEY": {
           "type": "string",
           "starting_character": ["f"]
         },
-        "national_name": {
+        "A_TEAMKEY": {
           "type": "string",
           "starting_character": ["t"]
         },
-        "founded_year": {
+        "A_FOUNDEDYEAR": {
           "type": "int",
           "min": 1900,
           "max": 2000
         },
-        "president": {
+        "A_PRESIDENT": {
           "type": "string",
           "starting_character": ["p"]
         }
       },
-      "primary_key": "association_name",
+      "primary_key": "A_ASSOCKEY",
       "foreign_keys": {
-        "national_name": ["national_name", "team"]
+        "A_TEAMKEY": ["T_TEAMKEY", "team"]
       }
     },
     "coach": {
       "properties": {
-        "coach_id": {
+        "C_COACHKEY": {
           "type": "int",
           "min": 1,
           "max": 100
         },
-        "role": {
+        "C_ROLE": {
           "type": "enum",
           "values": [
             "head coach",
@@ -59,92 +59,92 @@
             "fitness coach"
           ]
         },
-        "national_name": {
+        "C_TEAMKEY": {
           "type": "string",
           "starting_character": ["t"]
         },
-        "name": {
+        "C_NAME": {
           "type": "string",
           "starting_character": ["c"]
         },
-        "experience_years": {
+        "C_EXPYEARS": {
           "type": "int",
           "min": 1,
           "max": 40
         }
       },
-      "primary_key": ["coach_id", "national_name"],
+      "primary_key": ["C_COACHKEY", "C_TEAMKEY"],
       "foreign_keys": {
-        "national_name": ["national_name", "team"]
+        "C_TEAMKEY": ["T_TEAMKEY", "team"]
       }
     },
     "stadium": {
       "properties": {
-        "stadium_id": {
+        "S_STADIUMKEY": {
           "type": "int",
           "min": 1,
           "max": 12
         },
-        "name": {
+        "S_NAME": {
           "type": "string",
           "starting_character": ["s"]
         },
-        "city": {
+        "S_CITY": {
           "type": "string",
           "starting_character": ["d", "a", "l", "r"]
         },
-        "location": {
+        "S_LOCATION": {
           "type": "string",
           "starting_character": ["n", "s", "e", "w", "c"]
         },
-        "capacity": {
+        "S_CAPACITY": {
           "type": "int",
           "min": 40000,
           "max": 90000
         },
-        "year_built": {
+        "S_YEARBUILT": {
           "type": "int",
           "min": 1950,
           "max": 2022
         }
       },
-      "primary_key": "stadium_id"
+      "primary_key": "S_STADIUMKEY"
     },
     "match": {
       "properties": {
-        "match_id": {
+        "M_MATCHKEY": {
           "type": "int",
           "min": 1,
           "max": 64
         },
-        "team1_id": {
+        "M_TEAM1KEY": {
           "type": "string",
           "starting_character": ["t"]
         },
-        "team2_id": {
+        "M_TEAM2KEY": {
           "type": "string",
           "starting_character": ["t"]
         },
-        "stadium_id": {
+        "M_STADIUMKEY": {
           "type": "int",
           "min": 1,
           "max": 12
         },
-        "match_date": {
+        "M_DATE": {
           "type": "date",
           "min": "2022-11-20",
           "max": "2022-12-18"
         },
-        "match_time": {
+        "M_TIME": {
           "type": "string",
           "starting_character": ["1", "2"]
         },
-        "duration_minutes": {
+        "M_DURATION": {
           "type": "int",
           "min": 90,
           "max": 150
         },
-        "round": {
+        "M_ROUND": {
           "type": "enum",
           "values": [
             "group stage",
@@ -154,27 +154,27 @@
             "final"
           ]
         },
-        "score_team1": {
+        "M_SCORE1": {
           "type": "int",
           "min": 0,
           "max": 7
         },
-        "score_team2": {
+        "M_SCORE2": {
           "type": "int",
           "min": 0,
           "max": 7
         },
-        "attendance": {
+        "M_ATTENDANCE": {
           "type": "int",
           "min": 30000,
           "max": 90000
         }
       },
-      "primary_key": "match_id",
+      "primary_key": "M_MATCHKEY",
       "foreign_keys": {
-        "team1_id": ["national_name", "team"],
-        "team2_id": ["national_name", "team"],
-        "stadium_id": ["stadium_id", "stadium"]
+        "M_TEAM1KEY": ["T_TEAMKEY", "team"],
+        "M_TEAM2KEY": ["T_TEAMKEY", "team"],
+        "M_STADIUMKEY": ["S_STADIUMKEY", "stadium"]
       }
     }
   }
