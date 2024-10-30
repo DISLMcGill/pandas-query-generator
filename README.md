@@ -53,23 +53,25 @@ A sample schema looks like this:
 {
   "entities": {
     "customer": {
-      "primary_key": "id",
+      "primary_key": "C_CUSTKEY",
       "properties": {
-        "id": { "type": "int", "min": 1, "max": 1000 },
-        "name": { "type": "string", "starting_character": ["A", "B", "C"] },
-        "status": { "type": "enum", "values": ["active", "inactive"] }
+        "C_CUSTKEY": { "type": "int", "min": 1, "max": 1000 },
+        "C_NAME": { "type": "string", "starting_character": ["A", "B", "C"] },
+        "C_STATUS": { "type": "enum", "values": ["active", "inactive"] }
       },
       "foreign_keys": {}
     },
     "order": {
-      "primary_key": "order_id",
+      "primary_key": "O_ORDERKEY",
       "properties": {
-        "order_id": { "type": "int", "min": 1, "max": 5000 },
-        "customer_id": { "type": "int", "min": 1, "max": 1000 },
-        "amount": { "type": "float", "min": 10.0, "max": 1000.0 },
-        "status": { "type": "enum", "values": ["pending", "completed", "cancelled"] }
+        "O_ORDERKEY": { "type": "int", "min": 1, "max": 5000 },
+        "O_CUSTKEY": { "type": "int", "min": 1, "max": 1000 },
+        "O_TOTALPRICE": { "type": "float", "min": 10.0, "max": 1000.0 },
+        "O_ORDERSTATUS": { "type": "enum", "values": ["pending", "completed", "cancelled"] }
       },
-      "foreign_keys": { "customer_id": ["id", "customer"] }
+      "foreign_keys": {
+        "O_CUSTKEY": ["C_CUSTKEY", "customer"]
+      }
     }
   }
 }
