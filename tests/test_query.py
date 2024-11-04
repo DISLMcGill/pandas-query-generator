@@ -213,25 +213,3 @@ class TestQuery:
 
     assert expected_single_line in result_strings
     assert expected_multi_line in result_strings
-
-  def test_merge_count(self, sample_entity):
-    single_merge = Query(
-      sample_entity, [Merge(Query('orders', [], False, set()), "'id'", "'id'")], False, {'id'}
-    )
-
-    assert single_merge.merge_count == 1
-
-    nested_merge = Query(
-      sample_entity,
-      [
-        Merge(
-          Query('orders', [Merge(Query('items', [], False, set()), "'id'", "'id'")], False, {'id'}),
-          "'id'",
-          "'id'",
-        )
-      ],
-      False,
-      {'id'},
-    )
-
-    assert nested_merge.merge_count == 2

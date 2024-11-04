@@ -96,21 +96,6 @@ class Query:
 
     return base_complexity + operation_complexity
 
-  @property
-  def merge_count(self) -> int:
-    """
-    Count the total number of merge operations in the query, including nested merges.
-
-    Returns:
-      int: Total number of merge operations
-    """
-    return sum(
-      1 + sum(1 for nested_op in op.right.operations if isinstance(nested_op, Merge))
-      if isinstance(op, Merge)
-      else 0
-      for op in self.operations
-    )
-
   def format_multi_line(self, start_counter: int = 1) -> t.Tuple[str, int]:
     """
     Format the query across multiple lines for better readability.
