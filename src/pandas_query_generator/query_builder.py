@@ -245,21 +245,23 @@ class QueryBuilder:
 
     if not possible_right_entities:
       raise ValueError('No valid entities for merge')
-    else:
-      left_on, right_on, right_entity_name = random.choice(possible_right_entities)
+
+    # Pick a random entity to merge with
+    left_on, right_on, right_entity_name = random.choice(possible_right_entities)
 
     # Create builder for right side query
     right_builder = QueryBuilder(self.schema, right_query_structure, self.multi_line)
     right_builder.entity_name = right_entity_name
     right_builder.entity = self.schema.entities[right_entity_name]
     right_builder.current_columns = set(right_builder.entity.properties.keys())
-
-    # Ensure join column is preserved
     right_builder.required_columns.add(right_on)
 
-    # Update our current columns on this query
+    # Build the right query
     right_query = right_builder.build()
+
+    # Adjust this query
     self.current_columns = right_query.columns
+    self.query_structure.max_merges -= right_query.merge_count
 
     def format_join_columns(columns: str | t.List[str]) -> str:
       return (
