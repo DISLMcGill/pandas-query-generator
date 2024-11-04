@@ -62,18 +62,20 @@ class QueryBuilder:
       and self.query_structure.max_selection_conditions > 0
       and random.random() < self.query_structure.selection_probability
     ):
-      self.operations.append(self._generate_operation(Selection))
+      self.operations.append(self._generate_selection())
 
     if (
       self.current_columns
       and self.query_structure.max_projection_columns > 0
       and random.random() < self.query_structure.projection_probability
     ):
-      self.operations.append(self._generate_operation(Projection))
+      self.operations.append(self._generate_projection())
 
-    for _ in range(random.randint(0, self.query_structure.max_merges)):
+    num_merges = random.randint(0, self.query_structure.max_merges)
+
+    for _ in range(num_merges):
       try:
-        self.operations.append(self._generate_operation(Merge))
+        self.operations.append(self._generate_merge(num_merges))
       except ValueError:
         break
 
@@ -82,37 +84,9 @@ class QueryBuilder:
       and self.query_structure.max_groupby_columns > 0
       and random.random() < self.query_structure.groupby_aggregation_probability
     ):
-      self.operations.append(self._generate_operation(GroupByAggregation))
+      self.operations.append(self._generate_group_by_aggregation())
 
     return Query(self.entity_name, self.operations, self.multi_line, self.current_columns)
-
-  def _generate_operation(self, operation: t.Type[Operation]) -> Operation:
-    """
-    Factory method to create specific types of query operations.
-
-    Routes the operation creation to the appropriate specialized method based
-    on the operation type requested. Each specialized method handles the
-    validation and generation logic specific to that operation type.
-
-    Args:
-      operation: The type of operation to generate (Selection, Projection, etc.)
-
-    Returns:
-      Operation: A newly generated operation of the requested type.
-
-    Raises:
-      ValueError: If the operation type is not supported or generation fails.
-    """
-    if operation == Selection:
-      return self._generate_selection()
-    elif operation == Projection:
-      return self._generate_projection()
-    elif operation == Merge:
-      return self._generate_merge()
-    elif operation == GroupByAggregation:
-      return self._generate_group_by_aggregation()
-    else:
-      raise ValueError(f'Unknown operation type: {operation}')
 
   def _generate_selection(self) -> Operation:
     """
@@ -205,7 +179,7 @@ class QueryBuilder:
 
     return Projection(columns)
 
-  def _generate_merge(self) -> Operation:
+  def _generate_merge(self, num_merges: int) -> Operation:
     """
     Generate a JOIN operation with another table.
 
@@ -229,7 +203,7 @@ class QueryBuilder:
     right_query_structure = QueryStructure(
       groupby_aggregation_probability=0,
       max_groupby_columns=0,
-      max_merges=self.query_structure.max_merges - 1,
+      max_merges=self.query_structure.max_merges - num_merges,
       max_projection_columns=self.query_structure.max_projection_columns,
       max_selection_conditions=self.query_structure.max_selection_conditions,
       projection_probability=self.query_structure.projection_probability,
@@ -238,7 +212,6 @@ class QueryBuilder:
 
     possible_right_entities = []
 
-    # Find all possible join relationships
     for local_col, [foreign_col, foreign_table] in self.entity.foreign_keys.items():
       if local_col in self.current_columns:
         possible_right_entities.append((local_col, foreign_col, foreign_table))
@@ -246,22 +219,16 @@ class QueryBuilder:
     if not possible_right_entities:
       raise ValueError('No valid entities for merge')
 
-    # Pick a random entity to merge with
     left_on, right_on, right_entity_name = random.choice(possible_right_entities)
 
-    # Create builder for right side query
     right_builder = QueryBuilder(self.schema, right_query_structure, self.multi_line)
     right_builder.entity_name = right_entity_name
     right_builder.entity = self.schema.entities[right_entity_name]
     right_builder.current_columns = set(right_builder.entity.properties.keys())
     right_builder.required_columns.add(right_on)
-
-    # Build the right query
     right_query = right_builder.build()
 
-    # Adjust this query
     self.current_columns = right_query.columns
-    self.query_structure.max_merges -= right_query.merge_count
 
     def format_join_columns(columns: str | t.List[str]) -> str:
       return (
