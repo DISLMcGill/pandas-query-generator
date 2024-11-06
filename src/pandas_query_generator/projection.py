@@ -10,7 +10,7 @@ class Projection(Operation):
   Represents a projection operation in a query.
 
   Attributes:
-    columns (List[str]): List of column names to project.
+    columns (Set[str]): A set of column names to project.
   """
 
   columns: t.List[str] = field(default_factory=list)
