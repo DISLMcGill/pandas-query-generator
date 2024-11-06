@@ -10,11 +10,6 @@ from .query import Query
 from .utils import execute_query
 
 
-def execute_query_wrapper(args):
-  query, sample_data = args
-  return execute_query(query, sample_data)
-
-
 @dataclass
 class QueryPool:
   queries: t.List[Query]

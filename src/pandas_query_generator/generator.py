@@ -20,15 +20,16 @@ class Generator:
   def _generate_single_query(schema, query_structure, multi_line, _):
     return QueryBuilder(schema, query_structure, multi_line).build()
 
-  def generate(self, queries: int) -> t.List[Query]:
+  def generate(self, queries: int, with_status: bool = False) -> t.List[Query]:
+    f = partial(self._generate_single_query, self.schema, self.query_structure, self.multi_line)
+
     with multiprocessing.Pool() as pool:
-      generate_func = partial(
-        self._generate_single_query, self.schema, self.query_structure, self.multi_line
-      )
+      if not with_status:
+        return list(pool.imap(f, range(queries)))
 
       return list(
         tqdm(
-          pool.imap(generate_func, range(queries)),
+          pool.imap(f, range(queries)),
           total=queries,
           desc='Generating queries',
           unit='query',

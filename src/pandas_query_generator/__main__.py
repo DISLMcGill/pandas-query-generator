@@ -49,7 +49,7 @@ def main():
   )
 
   with timer(message):
-    queries = generator.generate(arguments.num_queries)
+    queries = generator.generate(arguments.num_queries, with_status=True)
 
     results = None
 
