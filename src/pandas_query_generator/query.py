@@ -34,7 +34,6 @@ class Query:
     self.operations = operations
     self.multi_line = multi_line
     self.columns = columns
-    self.complexity = self._calculate_complexity()
 
   def __str__(self) -> str:
     return (
@@ -55,7 +54,8 @@ class Query:
     """Less than comparison based on complexity and string representation."""
     return (self.complexity, str(self)) < (other.complexity, str(other))
 
-  def _calculate_complexity(self) -> int:
+  @property
+  def complexity(self) -> int:
     """
     Calculate query complexity based on all operations and their details.
 
@@ -95,6 +95,49 @@ class Query:
     operation_complexity = sum(get_operation_complexity(op) for op in self.operations)
 
     return base_complexity + operation_complexity
+
+  @property
+  def merge_count(self) -> int:
+    """
+    Count the total number of merge operations in the query, including nested merges.
+
+    Returns:
+      int: Total number of merge operations
+    """
+    return sum(
+      1 + sum(1 for nested_op in op.right.operations if isinstance(nested_op, Merge))
+      if isinstance(op, Merge)
+      else 0
+      for op in self.operations
+    )
+
+  @property
+  def merge_entities(self) -> t.Set[str]:
+    """
+    Get the set of all entities involved in this query, including the base entity and all merged entities.
+
+    This property maintains a complete picture of table dependencies by tracking:
+    1. The base entity of the query
+    2. All entities that have been merged directly into this query
+    3. All entities that have been merged into sub-queries (nested merges)
+
+    The tracking helps prevent:
+    - Circular dependencies (e.g., orders → customers → orders)
+    - Redundant joins (e.g., merging the same table multiple times)
+    - Invalid join paths
+
+    Returns:
+      Set[str]:
+        A set of entity names (table names) that are part of this query's join graph.
+        Includes both the base entity and all merged entities.
+    """
+    merged = {self.entity}
+
+    for op in self.operations:
+      if isinstance(op, Merge):
+        merged.update(op.entities)
+
+    return merged
 
   def format_multi_line(self, start_counter: int = 1) -> t.Tuple[str, int]:
     """

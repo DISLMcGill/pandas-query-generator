@@ -164,3 +164,40 @@ class TestMerge:
     )
 
     assert outer_query.complexity == 7
+
+  def test_merge_entities_property(self):
+    simple_query = Query('orders', [], False, set())
+
+    simple_merge = Merge(simple_query, "'customer_id'", "'order_id'")
+
+    assert simple_merge.entities == {'orders'}
+
+    nested_ops_query = Query(
+      'orders', [Selection([("'status'", '==', "'active'", '&')])], False, {'status'}
+    )
+    nested_ops_merge = Merge(nested_ops_query, "'customer_id'", "'order_id'")
+
+    assert nested_ops_merge.entities == {'orders'}
+
+    items_query = Query('items', [], False, set())
+
+    orders_query = Query(
+      'orders', [Merge(items_query, "'order_id'", "'item_id'")], False, {'order_id', 'item_id'}
+    )
+    customer_merge = Merge(orders_query, "'customer_id'", "'order_id'")
+
+    assert customer_merge.entities == {'orders', 'items'}
+
+    nation_query = Query('nation', [], False, set())
+
+    supplier_query = Query(
+      'supplier', [Merge(nation_query, "'nation_id'", "'nation_id'")], False, {'nation_id'}
+    )
+
+    lineitem_query = Query(
+      'lineitem', [Merge(supplier_query, "'supplier_id'", "'supplier_id'")], False, {'supplier_id'}
+    )
+
+    complex_merge = Merge(lineitem_query, "'order_id'", "'order_id'")
+
+    assert complex_merge.entities == {'lineitem', 'supplier', 'nation'}

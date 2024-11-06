@@ -40,6 +40,7 @@ class QueryBuilder:
     self.entity = self.schema.entities[self.entity_name]
     self.current_columns: t.Set[str] = set(self.entity.properties.keys())
     self.required_columns: t.Set[str] = set()
+    self.merge_entities = {self.entity_name}
 
   def build(self) -> Query:
     """
@@ -170,14 +171,11 @@ class QueryBuilder:
       1, min(self.query_structure.max_projection_columns, len(available_for_projection))
     )
 
-    # Select random columns plus required columns
-    selected_columns = random.sample(list(available_for_projection), to_project)
-    columns = list(set(selected_columns) | self.required_columns)
+    columns = set(random.sample(list(available_for_projection), to_project)) | self.required_columns
 
-    # Update available columns but ensure required ones stay
-    self.current_columns = set(columns)
+    self.current_columns = columns
 
-    return Projection(columns)
+    return Projection(list(columns))
 
   def _generate_merge(self, num_merges: int) -> Operation:
     """
@@ -213,7 +211,7 @@ class QueryBuilder:
     possible_right_entities = []
 
     for local_col, [foreign_col, foreign_table] in self.entity.foreign_keys.items():
-      if local_col in self.current_columns:
+      if local_col in self.current_columns and foreign_table not in self.merge_entities:
         possible_right_entities.append((local_col, foreign_col, foreign_table))
 
     if not possible_right_entities:
@@ -226,9 +224,12 @@ class QueryBuilder:
     right_builder.entity = self.schema.entities[right_entity_name]
     right_builder.current_columns = set(right_builder.entity.properties.keys())
     right_builder.required_columns.add(right_on)
+
     right_query = right_builder.build()
 
-    self.current_columns = right_query.columns
+    self.current_columns = self.current_columns.union(right_query.columns)
+    self.merge_entities = self.merge_entities.union(right_query.merge_entities)
+    self.query_structure.max_merges = self.query_structure.max_merges - right_query.merge_count
 
     def format_join_columns(columns: str | t.List[str]) -> str:
       return (
