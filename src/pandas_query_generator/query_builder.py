@@ -1,7 +1,7 @@
 import random
 import typing as t
 
-from .entity import PropertyDate, PropertyEnum, PropertyFloat, PropertyInt, PropertyString
+from .entity import Entity, PropertyDate, PropertyEnum, PropertyFloat, PropertyInt, PropertyString
 from .group_by_aggregation import GroupByAggregation
 from .merge import Merge
 from .operation import Operation
@@ -34,13 +34,12 @@ class QueryBuilder:
   def __init__(self, schema: Schema, query_structure: QueryStructure, multi_line: bool):
     self.schema: Schema = schema
     self.query_structure: QueryStructure = query_structure
-    self.multi_line = multi_line
-    self.operations: t.List[Operation] = []
-    self.entity_name = random.choice(list(self.schema.entities.keys()))
-    self.entity = self.schema.entities[self.entity_name]
-    self.current_columns: t.Set[str] = set(self.entity.properties.keys())
+    self.multi_line: bool = multi_line
+    self.entity: Entity = random.choice(list(self.schema.entities))
+    self.columns: t.Set[str] = set(self.entity.properties.keys())
     self.required_columns: t.Set[str] = set()
-    self.merge_entities = {self.entity_name}
+    self.merge_entities: t.Set[str] = {self.entity.name}
+    self.operations: t.List[Operation] = []
 
   def build(self) -> Query:
     """
@@ -59,14 +58,14 @@ class QueryBuilder:
       Query: A complete, valid query object with all generated operations.
     """
     if (
-      self.current_columns
+      self.columns
       and self.query_structure.max_selection_conditions > 0
       and random.random() < self.query_structure.selection_probability
     ):
       self.operations.append(self._generate_selection())
 
     if (
-      self.current_columns
+      self.columns
       and self.query_structure.max_projection_columns > 0
       and random.random() < self.query_structure.projection_probability
     ):
@@ -81,13 +80,13 @@ class QueryBuilder:
         break
 
     if (
-      self.current_columns
+      self.columns
       and self.query_structure.max_groupby_columns > 0
       and random.random() < self.query_structure.groupby_aggregation_probability
     ):
       self.operations.append(self._generate_group_by_aggregation())
 
-    return Query(self.entity_name, self.operations, self.multi_line, self.current_columns)
+    return Query(self.entity.name, self.operations, self.multi_line, self.columns)
 
   def _generate_selection(self) -> Operation:
     """
@@ -106,10 +105,10 @@ class QueryBuilder:
       Operation: A Selection operation with the generated conditions.
     """
     num_conditions = random.randint(
-      1, min(self.query_structure.max_selection_conditions, len(self.current_columns))
+      1, min(self.query_structure.max_selection_conditions, len(self.columns))
     )
 
-    conditions, available_columns = [], list(self.current_columns)
+    conditions, available_columns = [], list(self.columns)
 
     for i in range(num_conditions):
       column = random.choice(available_columns)
@@ -162,10 +161,10 @@ class QueryBuilder:
     Returns:
       Operation: A Projection operation with the selected columns.
     """
-    available_for_projection = self.current_columns - self.required_columns
+    available_for_projection = self.columns - self.required_columns
 
     if not available_for_projection:
-      return Projection(list(self.current_columns))
+      return Projection(list(self.columns))
 
     to_project = random.randint(
       1, min(self.query_structure.max_projection_columns, len(available_for_projection))
@@ -173,7 +172,7 @@ class QueryBuilder:
 
     columns = set(random.sample(list(available_for_projection), to_project)) | self.required_columns
 
-    self.current_columns = columns
+    self.columns = columns
 
     return Projection(list(columns))
 
@@ -198,6 +197,18 @@ class QueryBuilder:
     Raises:
       ValueError: If no valid join relationships are available.
     """
+
+    possible_right_entities = []
+
+    for local_col, [foreign_col, foreign_table] in self.entity.foreign_keys.items():
+      if local_col in self.columns and foreign_table not in self.merge_entities:
+        possible_right_entities.append((local_col, foreign_col, foreign_table))
+
+    if not possible_right_entities:
+      raise ValueError('No valid entities for merge')
+
+    left_on, right_on, right_entity_name = random.choice(possible_right_entities)
+
     right_query_structure = QueryStructure(
       groupby_aggregation_probability=0,
       max_groupby_columns=0,
@@ -208,26 +219,14 @@ class QueryBuilder:
       selection_probability=self.query_structure.selection_probability,
     )
 
-    possible_right_entities = []
-
-    for local_col, [foreign_col, foreign_table] in self.entity.foreign_keys.items():
-      if local_col in self.current_columns and foreign_table not in self.merge_entities:
-        possible_right_entities.append((local_col, foreign_col, foreign_table))
-
-    if not possible_right_entities:
-      raise ValueError('No valid entities for merge')
-
-    left_on, right_on, right_entity_name = random.choice(possible_right_entities)
-
     right_builder = QueryBuilder(self.schema, right_query_structure, self.multi_line)
-    right_builder.entity_name = right_entity_name
-    right_builder.entity = self.schema.entities[right_entity_name]
-    right_builder.current_columns = set(right_builder.entity.properties.keys())
+    right_builder.entity = self.schema[right_entity_name]
+    right_builder.columns = set(right_builder.entity.properties.keys())
     right_builder.required_columns.add(right_on)
 
     right_query = right_builder.build()
 
-    self.current_columns = self.current_columns.union(right_query.columns)
+    self.columns = self.columns.union(right_query.columns)
     self.merge_entities = self.merge_entities.union(right_query.merge_entities)
     self.query_structure.max_merges = self.query_structure.max_merges - right_query.merge_count
 
@@ -261,8 +260,8 @@ class QueryBuilder:
       configuration.
     """
     group_columns = random.sample(
-      list(self.current_columns),
-      random.randint(1, min(self.query_structure.max_groupby_columns, len(self.current_columns))),
+      list(self.columns),
+      random.randint(1, min(self.query_structure.max_groupby_columns, len(self.columns))),
     )
 
     agg_function = random.choice(['mean', 'sum', 'min', 'max', 'count'])

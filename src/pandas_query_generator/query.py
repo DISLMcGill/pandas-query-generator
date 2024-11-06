@@ -46,12 +46,16 @@ class Query:
     """Hash based on complexity and string representation."""
     return hash((self.complexity, str(self)))
 
-  def __eq__(self, other: 'Query') -> bool:
+  def __eq__(self, other: object) -> bool:
     """Equality comparison based on complexity and string representation."""
+    if not isinstance(other, Query):
+      return NotImplemented
     return (self.complexity, str(self)) == (other.complexity, str(other))
 
-  def __lt__(self, other: 'Query') -> bool:
+  def __lt__(self, other: object) -> bool:
     """Less than comparison based on complexity and string representation."""
+    if not isinstance(other, Query):
+      return NotImplemented
     return (self.complexity, str(self)) < (other.complexity, str(other))
 
   @property

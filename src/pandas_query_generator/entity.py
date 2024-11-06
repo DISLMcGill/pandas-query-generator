@@ -54,7 +54,7 @@ class PropertyDate:
 Property = t.Union[PropertyInt, PropertyFloat, PropertyEnum, PropertyString, PropertyDate]
 
 
-@dataclass
+@dataclass(frozen=True)
 class Entity:
   """
   Represents entity information parsed from schema files.
@@ -64,17 +64,48 @@ class Entity:
   generally look (see `QueryStructure`).
 
   Attributes:
+    name (str): The name of the entity.
     primary_key (str | t.List[str] | None): The primary key(s) of the entity.
     properties (t.Dict[str, Property]): A dictionary of property names to their definitions.
     foreign_keys (t.Dict[str, t.List[str]]): A dictionary of foreign key relationships.
   """
 
+  name: str
   primary_key: str | t.List[str] | None
   properties: t.Dict[str, Property]
   foreign_keys: t.Dict[str, t.List[str]]
 
+  def __hash__(self) -> int:
+    """
+    Generate a hash based on the entity's name.
+
+    Since entity names must be unique within a schema, using the name
+    as the hash basis ensures proper hash table behavior.
+
+    Returns:
+      int: Hash value for the entity.
+    """
+    return hash(self.name)
+
+  def __eq__(self, other: object) -> bool:
+    """
+    Compare this entity with another for equality.
+
+    Entities are considered equal if they have the same name,
+    as names must be unique within a schema.
+
+    Args:
+      other: The object to compare with.
+
+    Returns:
+      bool: True if the objects are equal, False otherwise.
+    """
+    if not isinstance(other, Entity):
+      return NotImplemented
+    return self.name == other.name
+
   @staticmethod
-  def from_configuration(config: t.Dict) -> 'Entity':
+  def from_configuration(name: str, config: t.Dict) -> 'Entity':
     """
     Create an Entity instance from a configuration dictionary.
 
@@ -89,25 +120,27 @@ class Entity:
     """
     properties = {}
 
-    for name, data in config.get('properties', {}).items():
+    for prop_name, data in config.get('properties', {}).items():
       prop_type = data['type']
 
       if prop_type == 'int':
-        properties[name] = PropertyInt(
+        properties[prop_name] = PropertyInt(
           min=data.get('min', -sys.maxsize), max=data.get('max', sys.maxsize)
         )
       elif prop_type == 'float':
-        properties[name] = PropertyFloat(min=data.get('min', -1e308), max=data.get('max', 1e308))
+        properties[prop_name] = PropertyFloat(
+          min=data.get('min', -1e308), max=data.get('max', 1e308)
+        )
       elif prop_type == 'enum':
         if 'values' not in data:
-          raise ValueError(f'Enum property {name} must specify values')
-        properties[name] = PropertyEnum(values=data['values'])
+          raise ValueError(f'Enum property {prop_name} must specify values')
+        properties[prop_name] = PropertyEnum(values=data['values'])
       elif prop_type == 'string':
-        properties[name] = PropertyString(
+        properties[prop_name] = PropertyString(
           starting_character=data.get('starting_character', list(string.ascii_letters))
         )
       elif prop_type == 'date':
-        properties[name] = PropertyDate(
+        properties[prop_name] = PropertyDate(
           min=date.fromisoformat(data.get('min', '1970-01-01')),
           max=date.fromisoformat(data.get('max', '2038-01-19')),
         )
@@ -115,6 +148,7 @@ class Entity:
         raise ValueError(f'Unknown property type: {prop_type}')
 
     return Entity(
+      name=name,
       primary_key=config.get('primary_key', None),
       properties=properties,
       foreign_keys=config.get('foreign_keys', {}),
