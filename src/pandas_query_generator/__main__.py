@@ -29,7 +29,7 @@ def main():
   sample_data = {}
 
   for entity in tqdm(schema.entities, desc='Generating sample data', unit='entity'):
-    sample_data[entity] = schema.entities[entity].generate_dataframe()
+    sample_data[entity.name] = entity.generate_dataframe()
 
   generator = Generator(schema, query_structure, arguments.multi_line)
 

@@ -1,25 +1,63 @@
 import json
 import typing as t
-from dataclasses import dataclass
+from collections.abc import Mapping
+from dataclasses import dataclass, field
 
 from .entity import Entity
 
 
 @dataclass
-class Schema:
+class Schema(Mapping):
   """
-  Represents a schema containing multiple entities.
+  A dictionary-like class representing a database schema containing multiple entities.
 
-  This class is responsible for loading and storing multiple Entity objects
-  from a configuration file. It provides a convenient way to access and
-  manage multiple entities within a single schema.
+  The Schema class provides dictionary-style access to Entity objects, allowing for
+  both iteration over entities and direct access to specific entities by name.
 
   Attributes:
-    entities (t.Dict[str, Entity]):
-      A dictionary mapping entity names to their corresponding Entity objects.
+    entities (t.Set[Entity]): Set of Entity objects in the schema.
+    _entity_map (t.Dict[str, Entity]): Internal mapping of entity names to Entity objects.
   """
 
-  entities: t.Dict[str, Entity]
+  entities: t.Set[Entity] = field(default_factory=set)
+  _entity_map: t.Dict[str, Entity] = field(init=False)
+
+  def __post_init__(self):
+    """Initialize the internal entity mapping after entity set is created."""
+    self._entity_map = {entity.name: entity for entity in self.entities}
+
+  def __getitem__(self, key: str) -> Entity:
+    """
+    Get an entity by name using dictionary-style access.
+
+    Args:
+      key (str): The name of the entity to retrieve.
+
+    Returns:
+      Entity: The requested entity.
+
+    Raises:
+      KeyError: If no entity exists with the given name.
+    """
+    return self._entity_map[key]
+
+  def __iter__(self) -> t.Iterator[Entity]:
+    """
+    Iterate over all entities in the schema.
+
+    Returns:
+      Iterator[Entity]: Iterator yielding Entity objects.
+    """
+    return iter(self.entities)
+
+  def __len__(self) -> int:
+    """
+    Get the number of entities in the schema.
+
+    Returns:
+      int: Total number of entities.
+    """
+    return len(self.entities)
 
   @staticmethod
   def from_file(path: str) -> 'Schema':
@@ -57,12 +95,11 @@ class Schema:
       raise IOError(f'Error reading file {path}: {str(e)}') from e
 
     if 'entities' not in content:
-      return Schema(entities={})
+      return Schema(entities=set())
 
-    entities = content['entities']
-
-    return Schema(
-      entities={
-        name: Entity.from_configuration(configuration) for name, configuration in entities.items()
-      }
+    entities = set(
+      Entity.from_configuration(name, configuration)
+      for name, configuration in content['entities'].items()
     )
+
+    return Schema(entities)

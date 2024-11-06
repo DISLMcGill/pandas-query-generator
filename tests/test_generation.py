@@ -47,9 +47,7 @@ def test_schema_query_generation_and_execution(
 ):
   example_name, schema = schema_fixture
 
-  sample_data = {
-    entity_name: entity.generate_dataframe() for entity_name, entity in schema.entities.items()
-  }
+  sample_data = {entity.name: entity.generate_dataframe() for entity in schema.entities}
 
   generator = Generator(schema, query_structure, multi_line=False)
 
