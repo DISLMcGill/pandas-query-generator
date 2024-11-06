@@ -114,7 +114,8 @@ class Query:
   @property
   def merge_entities(self) -> t.Set[str]:
     """
-    Get the set of all entities involved in this query, including the base entity and all merged entities.
+    Get the set of all entities involved in this query, including
+    the base entity and all merged entities.
 
     This property maintains a complete picture of table dependencies by tracking:
     1. The base entity of the query
