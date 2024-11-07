@@ -31,7 +31,7 @@ def main():
   for entity in tqdm(schema.entities, desc='Generating sample data', unit='entity'):
     sample_data[entity.name] = entity.generate_dataframe()
 
-  generator = Generator(schema, query_structure, arguments.multi_line)
+  generator = Generator(schema, query_structure)
 
   @contextmanager
   def timer(description):
@@ -49,7 +49,7 @@ def main():
   )
 
   with timer(message):
-    queries = generator.generate(arguments.num_queries)
+    queries = generator.generate(arguments.num_queries, arguments.multi_line)
 
     results = None
 
