@@ -49,7 +49,7 @@ def test_schema_query_generation_and_execution(
 
   sample_data = {entity.name: entity.generate_dataframe() for entity in schema.entities}
 
-  generator = Generator(schema, query_structure, multi_line=False)
+  generator = Generator(schema, query_structure)
 
   queries = generator.generate(100)
 
