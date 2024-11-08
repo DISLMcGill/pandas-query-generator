@@ -14,20 +14,12 @@ def main() -> None:
 
   schema, query_structure = Schema.from_file(arguments.schema), QueryStructure.from_args(arguments)
 
-  will_execute = arguments.verbose or arguments.filter is not None
-
-  message = (
-    f'generating and executing {arguments.num_queries} queries'
-    if will_execute
-    else f'generating {arguments.num_queries} queries'
-  )
+  generator = Generator(schema, query_structure)
 
   sample_data = {}
 
   for entity in tqdm(schema.entities, desc='Generating sample data', unit='entity'):
     sample_data[entity.name] = entity.generate_dataframe()
-
-  generator = Generator(schema, query_structure)
 
   @contextmanager
   def timer(description: str):
@@ -36,6 +28,14 @@ def main() -> None:
     yield
     elapsed_time = time.time() - start
     print(f'Time taken for {description}: {elapsed_time:.2f} seconds')
+
+  will_execute = arguments.verbose or arguments.filter is not None
+
+  message = (
+    f'generating and executing {arguments.num_queries} queries'
+    if will_execute
+    else f'generating {arguments.num_queries} queries'
+  )
 
   with timer(message):
     query_pool = generator.generate(
