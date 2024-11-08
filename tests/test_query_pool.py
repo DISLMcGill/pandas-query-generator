@@ -181,6 +181,12 @@ class TestQueryPoolStatistics:
 
     assert stats.total_queries == 0
     assert stats.avg_operations_per_query == 0.0
+    assert stats.avg_merge_count == 0.0
+    assert stats.avg_selection_conditions == 0.0
+    assert stats.avg_projection_columns == 0.0
+    assert stats.avg_groupby_columns == 0.0
+    assert stats.max_merge_depth == 0
+    assert stats.max_merge_chain == 0
     assert len(stats.operations) == 0
 
   def test_operation_counting(
@@ -194,6 +200,102 @@ class TestQueryPoolStatistics:
     assert stats.operations['Projection'] == 1
     assert stats.operations['GroupByAggregation'] == 1
     assert stats.operations['Merge'] == 1
+
+    assert stats.avg_operations_per_query == 1.0
+    assert stats.avg_merge_count == 0.25
+    assert stats.avg_selection_conditions == 1.0
+    assert stats.avg_projection_columns == 2.0
+    assert stats.avg_groupby_columns == 1.0
+
+  def test_merge_depth_statistics(self):
+    innermost_query = Query('items', [], False, set())
+
+    inner_merge = Query(
+      'orders', [Merge(innermost_query, "'order_id'", "'item_id'")], False, {'order_id', 'item_id'}
+    )
+
+    outer_query = Query(
+      'customers',
+      [Merge(inner_merge, "'customer_id'", "'order_id'")],
+      False,
+      {'customer_id', 'order_id'},
+    )
+
+    pool = QueryPool([outer_query])
+    stats = pool.calculate_statistics()
+
+    assert stats.max_merge_depth == 2
+    assert stats.max_merge_chain == 2
+    assert stats.avg_merge_count == 2.0
+
+  def test_complex_query_statistics(self):
+    nested_query = Query(
+      'orders',
+      [
+        Selection([("'status'", '==', "'active'", '&')]),
+        Projection(['order_id', 'amount', 'status']),
+      ],
+      False,
+      {'order_id', 'amount', 'status'},
+    )
+
+    complex_query = Query(
+      'customers',
+      [
+        Selection(
+          [
+            ("'age'", '>=', 30, '&'),
+            ("'country'", '==', "'US'", '&'),
+            ("'status'", '==', "'active'", '|'),
+          ]
+        ),
+        Merge(nested_query, "'id'", "'customer_id'"),
+        Projection(['name', 'age', 'country', 'amount']),
+        GroupByAggregation(['country', 'status'], 'mean'),
+      ],
+      False,
+      {'name', 'age', 'country', 'amount', 'status'},
+    )
+
+    pool = QueryPool([complex_query])
+    stats = pool.calculate_statistics()
+
+    assert stats.total_queries == 1
+    assert stats.avg_operations_per_query == 4.0
+    assert stats.avg_merge_count == 1.0
+    assert stats.avg_selection_conditions == 3.0
+    assert stats.avg_projection_columns == 4.0
+    assert stats.avg_groupby_columns == 2.0
+    assert stats.max_merge_depth == 1
+    assert stats.max_merge_chain == 1
+
+  def test_multiple_queries_statistics(self):
+    query1 = Query('customers', [Selection([("'age'", '>=', 30, '&')])], False, {'age'})
+
+    query2 = Query(
+      'customers', [Projection(['name', 'age', 'country'])], False, {'name', 'age', 'country'}
+    )
+
+    query3 = Query(
+      'orders',
+      [
+        Selection([("'amount'", '>', 100, '&'), ("'status'", '==', "'pending'", '|')]),
+        Projection(['order_id', 'amount']),
+      ],
+      False,
+      {'order_id', 'amount', 'status'},
+    )
+
+    pool = QueryPool([query1, query2, query3])
+    stats = pool.calculate_statistics()
+
+    assert stats.total_queries == 3
+    assert stats.avg_operations_per_query == 4 / 3
+    assert stats.avg_merge_count == 0.0
+    assert stats.avg_selection_conditions == 1.5
+    assert stats.avg_projection_columns == 2.5
+    assert stats.max_merge_depth == 0
+    assert stats.max_merge_chain == 0
 
   def test_execution_statistics(self, sample_dataframes, simple_selection):
     pool = QueryPool([simple_selection])

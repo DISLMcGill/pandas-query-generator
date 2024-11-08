@@ -44,6 +44,12 @@ class QueryStatistics:
   groupby_aggregations: Counter[int] = field(default_factory=Counter)
   entities_used: Counter[str] = field(default_factory=Counter)
   avg_operations_per_query: float = 0.0
+  avg_merge_count: float = 0.0
+  avg_selection_conditions: float = 0.0
+  avg_projection_columns: float = 0.0
+  avg_groupby_columns: float = 0.0
+  max_merge_depth: int = 0
+  max_merge_chain: int = 0
   execution_results: ExecutionStatistics = field(default_factory=ExecutionStatistics)
 
 
@@ -215,27 +221,79 @@ class QueryPool:
 
     total_operations = 0
 
+    total_merges = 0
+    total_selection_conditions = 0
+    total_projection_columns = 0
+    total_groupby_columns = 0
+
+    max_merge_depth = max_merge_chain = 0
+
     for query in self.queries:
       statistics.entities_used[query.entity] += 1
 
+      query_merge_depth = query_merge_chain = current_merge_depth = 0
+
       for op in query.operations:
         total_operations += 1
+
         if isinstance(op, Merge):
+          total_merges += 1
+          query_merge_chain += 1
+          current_merge_depth += 1
           statistics.merges[len(op.right.operations)] += 1
+
+          def count_nested_merges(nested_ops):
+            nested_depth = 0
+            for nested_op in nested_ops:
+              if isinstance(nested_op, Merge):
+                nested_depth = max(
+                  nested_depth, 1 + count_nested_merges(nested_op.right.operations)
+                )
+            return nested_depth
+
+          query_merge_depth = max(
+            query_merge_depth, current_merge_depth + count_nested_merges(op.right.operations)
+          )
         elif isinstance(op, Selection):
+          total_selection_conditions += len(op.conditions)
           statistics.selections[len(op.conditions)] += 1
         elif isinstance(op, Projection):
+          total_projection_columns += len(op.columns)
           statistics.projections[len(op.columns)] += 1
         elif isinstance(op, GroupByAggregation):
+          total_groupby_columns += len(op.group_by_columns)
           statistics.groupby_aggregations[len(op.group_by_columns)] += 1
+
         statistics.operations[type(op).__name__] = (
           statistics.operations.get(type(op).__name__, 0) + 1
         )
 
-    if self.queries:
-      statistics.avg_operations_per_query = total_operations / len(self.queries)
+      max_merge_depth = max(max_merge_depth, query_merge_depth)
+      max_merge_chain = max(max_merge_chain, query_merge_chain)
 
-    if self._results:
+    if statistics.total_queries > 0:
+      statistics.avg_operations_per_query = total_operations / statistics.total_queries
+
+      merge_count = statistics.operations.get('Merge', 0)
+      if merge_count > 0:
+        statistics.avg_merge_count = total_merges / statistics.total_queries
+
+      selection_count = statistics.operations.get('Selection', 0)
+      if selection_count > 0:
+        statistics.avg_selection_conditions = total_selection_conditions / selection_count
+
+      projection_count = statistics.operations.get('Projection', 0)
+      if projection_count > 0:
+        statistics.avg_projection_columns = total_projection_columns / projection_count
+
+      groupby_count = statistics.operations.get('GroupByAggregation', 0)
+      if groupby_count > 0:
+        statistics.avg_groupby_columns = total_groupby_columns / groupby_count
+
+    statistics.max_merge_depth = max_merge_depth
+    statistics.max_merge_chain = max_merge_chain
+
+    if len(self._results) > 0:
       statistics.execution_results = self._calculate_execution_statistics()
 
     return statistics
@@ -271,31 +329,51 @@ class QueryPool:
     lines = [
       f'Total queries generated: {statistics.total_queries}',
       f'Average operations per query: {statistics.avg_operations_per_query:.2f}',
-      '\nOperation distribution:',
+      '',
+      'Operation Averages:',
+      f'  Average merges per query: {statistics.avg_merge_count:.2f}',
+      f'  Average conditions per selection: {statistics.avg_selection_conditions:.2f}',
+      f'  Average columns per projection: {statistics.avg_projection_columns:.2f}',
+      f'  Average columns per group by: {statistics.avg_groupby_columns:.2f}',
+      '',
+      'Merge Complexity:',
+      f'  Maximum merge depth: {statistics.max_merge_depth}',
+      f'  Maximum merge chain length: {statistics.max_merge_chain}',
+      '',
+      'Operation Distribution:',
     ]
 
     if statistics.operations:
       total_ops = sum(statistics.operations.values())
-
       for op, count in statistics.operations.items():
         percentage = (count / total_ops) * 100
         lines.append(f'  {op}: {count} ({percentage:.2f}%)')
 
     if statistics.merges:
-      lines.append('\nMerge complexity (number of operations in right query):')
-
+      lines.append('\nMerge Operation Details:')
       for complexity, count in sorted(statistics.merges.items()):
         percentage = (count / statistics.operations['Merge']) * 100
-        lines.append(f'  {complexity} operations: {count} ({percentage:.2f}%)')
+        lines.append(f'  {complexity} operations in right query: {count} ({percentage:.2f}%)')
 
     if statistics.selections:
-      lines.append('\nSelection complexity (number of conditions):')
-
+      lines.append('\nSelection Condition Distribution:')
       for conditions, count in sorted(statistics.selections.items()):
         percentage = (count / statistics.operations['Selection']) * 100
         lines.append(f'  {conditions} conditions: {count} ({percentage:.2f}%)')
 
-    lines.extend(self._format_execution_statistics(statistics.execution_results))
+    if statistics.projections:
+      lines.append('\nProjection Column Distribution:')
+      for columns, count in sorted(statistics.projections.items()):
+        percentage = (count / statistics.operations['Projection']) * 100
+        lines.append(f'  {columns} columns: {count} ({percentage:.2f}%)')
+
+    if statistics.groupby_aggregations:
+      lines.append('\nGroup By Column Distribution:')
+      for columns, count in sorted(statistics.groupby_aggregations.items()):
+        percentage = (count / statistics.operations['GroupByAggregation']) * 100
+        lines.append(f'  {columns} columns: {count} ({percentage:.2f}%)')
+
+    lines.extend([''] + self._format_execution_statistics(statistics.execution_results))
 
     return '\n'.join(lines)
 
