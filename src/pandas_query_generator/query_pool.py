@@ -86,8 +86,9 @@ class QueryPool:
     """Iterate over the queries in the pool."""
     return iter(self.queries)
 
+  @staticmethod
   def _execute_multi_line_query(
-    self, query: Query, sample_data: t.Dict[str, pd.DataFrame]
+    query: Query, sample_data: t.Dict[str, pd.DataFrame]
   ) -> QueryResult:
     """Execute a multi-line query by executing each line sequentially."""
     try:
@@ -101,13 +102,12 @@ class QueryPool:
     except Exception as e:
       return None, f'{type(e).__name__}: {str(e)}'
 
-  def _execute_single_query(
-    self, query: Query, sample_data: t.Dict[str, pd.DataFrame]
-  ) -> QueryResult:
+  @staticmethod
+  def _execute_single_query(query: Query, sample_data: t.Dict[str, pd.DataFrame]) -> QueryResult:
     """Execute a single query and handle any errors."""
     try:
       if query.multi_line:
-        return self._execute_multi_line_query(query, sample_data)
+        return QueryPool._execute_multi_line_query(query, sample_data)
       result = pd.eval(str(query), local_dict=sample_data)
       if isinstance(result, (pd.DataFrame, pd.Series)):
         return result, None
@@ -142,11 +142,11 @@ class QueryPool:
     if len(self._results) > 0 and not force_execute:
       return self._results
 
-    f = partial(self._execute_single_query, sample_data=sample_data)
-
     ctx = mp.get_context('fork')
 
     with ctx.Pool(num_processes) as pool:
+      f = partial(self._execute_single_query, sample_data=sample_data)
+
       iterator = pool.imap(f, self.queries)
 
       if with_status:
