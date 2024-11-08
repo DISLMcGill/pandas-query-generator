@@ -185,10 +185,7 @@ class QueryPool:
     filtered_queries, filtered_results = [], []
 
     for query, result_tuple in zip(self.queries, self._results):
-      (
-        result,
-        error,
-      ) = result_tuple
+      result, error = result_tuple
 
       should_keep = False
 
@@ -219,14 +216,9 @@ class QueryPool:
     statistics = QueryStatistics()
     statistics.total_queries = len(self.queries)
 
-    total_operations = 0
-
-    total_merges = 0
-    total_selection_conditions = 0
-    total_projection_columns = 0
-    total_groupby_columns = 0
-
-    max_merge_depth = max_merge_chain = 0
+    total_operations = total_merges = total_selection_conditions = total_projection_columns = (
+      total_groupby_columns
+    ) = max_merge_depth = max_merge_chain = 0
 
     for query in self.queries:
       statistics.entities_used[query.entity] += 1
@@ -244,11 +236,13 @@ class QueryPool:
 
           def count_nested_merges(nested_ops):
             nested_depth = 0
+
             for nested_op in nested_ops:
               if isinstance(nested_op, Merge):
                 nested_depth = max(
                   nested_depth, 1 + count_nested_merges(nested_op.right.operations)
                 )
+
             return nested_depth
 
           query_merge_depth = max(
@@ -380,7 +374,7 @@ class QueryPool:
   def _format_execution_statistics(self, statistics: ExecutionStatistics) -> t.List[str]:
     """Format execution statistics into a list of strings."""
     lines = [
-      '\nQuery Execution Results:',
+      'Query Execution Results:',
       f'  Successful executions: {statistics.successful_executions} '
       f'({statistics.success_rate:.2f}%)',
       f'  Failed executions: {statistics.failed_executions}',
