@@ -46,15 +46,13 @@ def test_schema_query_generation_and_execution(
 ):
   example_name, schema = schema_fixture
 
-  sample_data = {entity.name: entity.generate_dataframe() for entity in schema.entities}
-
   generator = Generator(schema, query_structure)
 
   query_pool = generator.generate(100)
 
   non_empty_results = 0
 
-  for query, (result, error) in zip(query_pool.queries, query_pool.execute(sample_data)):
+  for query, (result, error) in query_pool.items():
     assert (
       error is None
     ), f'Single-line query execution failed with error: {error}\nQuery: {str(query)}'

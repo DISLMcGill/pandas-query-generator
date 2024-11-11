@@ -1,5 +1,6 @@
 import multiprocessing as mp
 import os
+import statistics as stats
 import typing as t
 from collections import Counter
 from dataclasses import dataclass, field
@@ -9,6 +10,7 @@ import pandas as pd
 from tqdm import tqdm
 
 from pandas_query_generator.arguments import QueryFilter
+from pandas_query_generator.query_structure import QueryStructure
 
 from .group_by_aggregation import GroupByAggregation
 from .merge import Merge
@@ -21,70 +23,182 @@ QueryResult = t.Tuple[t.Optional[t.Union[pd.DataFrame, pd.Series]], t.Optional[s
 
 @dataclass
 class ExecutionStatistics:
-  """Statistics about query execution results"""
+  """
+  Statistics about query execution results.
 
-  successful_executions: int = 0
-  failed_executions: int = 0
-  non_empty_results: int = 0
-  empty_results: int = 0
-  success_rate: float = 0.0
-  non_empty_rate: float = 0.0
+  Tracks the success/failure rates of query executions and categorizes results.
+
+  Attributes:
+    successful: Number of queries that executed without error
+    failed: Number of queries that raised an error during execution
+    non_empty: Number of queries that returned non-empty result sets
+    empty: Number of queries that returned empty result sets
+    errors: Counter mapping error types to their occurrence count
+  """
+
+  successful: int = 0
+  failed: int = 0
+  non_empty: int = 0
+  empty: int = 0
   errors: Counter[str] = field(default_factory=Counter)
+
+  def __str__(self) -> str:
+    total = self.successful + self.failed
+
+    if total == 0:
+      return ''
+
+    success_rate, empty_rate = (
+      (self.successful / total) * 100,
+      (self.empty / total) * 100 if total > 0 else 0,
+    )
+
+    lines = [
+      f'Execution Results (n = {total}):',
+      f'  Success Rate: {success_rate:5.1f}% ({self.successful} / {total})',
+      f'  Queries with Empty Result Sets: {empty_rate:4.1f}% ({self.empty} / {total})',
+    ]
+
+    if self.errors:
+      lines.extend(
+        ['', 'Errors:', *[f'  {error}: {count}' for error, count in self.errors.most_common()]]
+      )
+
+    return '\n'.join(lines)
 
 
 @dataclass
 class QueryStatistics:
-  """Comprehensive statistics about queries and their execution"""
-
-  total_queries: int = 0
-  operations: t.Dict[str, int] = field(default_factory=dict)
-  merges: Counter[int] = field(default_factory=Counter)
-  selections: Counter[int] = field(default_factory=Counter)
-  projections: Counter[int] = field(default_factory=Counter)
-  groupby_aggregations: Counter[int] = field(default_factory=Counter)
-  entities_used: Counter[str] = field(default_factory=Counter)
-  avg_operations_per_query: float = 0.0
-  avg_merge_count: float = 0.0
-  avg_selection_conditions: float = 0.0
-  avg_projection_columns: float = 0.0
-  avg_groupby_columns: float = 0.0
-  max_merge_depth: int = 0
-  max_merge_chain: int = 0
-  execution_results: ExecutionStatistics = field(default_factory=ExecutionStatistics)
-
-
-@dataclass
-class QueryPool:
   """
-  A pool of database queries with methods for execution, filtering, and analysis.
+  Statistics comparing actual query characteristics against target parameters.
 
-  This class manages a collection of Query objects and provides functionality for:
-  - Parallel query execution against sample data
-  - Filtering queries based on execution results
-  - Generating and displaying query statistics
-  - Saving queries to files
-
-  The class maintains both the queries and their execution results (if any) to avoid
-  redundant executions when performing multiple operations.
+  Analyzes how closely generated queries match the desired structure parameters
+  and collects distributions of various operation characteristics.
 
   Attributes:
-    queries (List[Query]): List of Query objects in the pool
-    _results (List[QueryResult]): Cached execution results for the queries
-        Each result is a tuple of (Optional[DataFrame/Series], Optional[str])
-        representing (result, error_message)
-    _pool: Optional process pool to reuse
+    query_structure: Target parameters for query generation
+    total_queries: Total number of queries analyzed
+    queries_with_selection: Number of queries containing selection operations
+    queries_with_projection: Number of queries containing projection operations
+    queries_with_groupby: Number of queries containing groupby operations
+    queries_with_merge: Number of queries containing merge operations
+    selection_conditions: List of condition counts from each selection operation
+    projection_columns: List of column counts from each projection operation
+    groupby_columns: List of column counts from each groupby operation
+    merge_count: List of merge counts from each query
+    execution_results: Statistics about query execution outcomes
   """
 
-  queries: t.List[Query]
-  _results: t.List[QueryResult] = field(default_factory=list)
+  query_structure: QueryStructure
+  total_queries: int = 0
+  queries_with_selection: int = 0
+  queries_with_projection: int = 0
+  queries_with_groupby: int = 0
+  queries_with_merge: int = 0
+  selection_conditions: t.List[int] = field(default_factory=list)
+  projection_columns: t.List[int] = field(default_factory=list)
+  groupby_columns: t.List[int] = field(default_factory=list)
+  merge_count: t.List[int] = field(default_factory=list)
+  execution_results: ExecutionStatistics = field(default_factory=ExecutionStatistics)
+
+  def __str__(self) -> str:
+    if self.total_queries == 0:
+      return ''
+
+    selection_probability, projection_probability, merge_probability, groupby_probability = (
+      self.queries_with_selection / self.total_queries * 100,
+      self.queries_with_projection / self.total_queries * 100,
+      self.queries_with_merge / self.total_queries * 100,
+      self.queries_with_groupby / self.total_queries * 100,
+    )
+
+    def safe_stats(values: t.List[int]) -> tuple[float, float, int]:
+      if not values:
+        return 0.0, 0.0, 0
+      return (stats.mean(values), stats.stdev(values) if len(values) > 1 else 0.0, max(values))
+
+    selection_mean, selection_std, selection_max = safe_stats(self.selection_conditions)
+    projection_mean, projection_std, projection_max = safe_stats(self.projection_columns)
+    merge_mean, merge_std, merge_max = safe_stats(self.merge_count)
+    groupby_mean, groupby_std, groupby_max = safe_stats(self.groupby_columns)
+
+    lines = [
+      f'Query Statistics (n = {self.total_queries})',
+      '',
+      'Operation Frequencies (actual vs target):',
+      f'  Selection:  {selection_probability:5.1f}% vs{self.query_structure.selection_probability*100:5.1f}%',
+      f'  Projection: {projection_probability:5.1f}% vs{self.query_structure.projection_probability*100:5.1f}%',
+      f'  GroupBy:    {groupby_probability:5.1f}% vs{self.query_structure.groupby_aggregation_probability*100:5.1f}%',
+      f'  Merge:      {merge_probability:5.1f}%',
+      '',
+      'Operation Counts (avg ± std | max vs limit):',
+    ]
+
+    if self.selection_conditions:
+      lines.append(
+        f'  Selection conditions: {selection_mean:.1f} ± {selection_std:.1f} | '
+        f'{selection_max} vs {self.query_structure.max_selection_conditions}'
+      )
+
+    if self.projection_columns:
+      lines.append(
+        f'  Projection columns:   {projection_mean:.1f} ± {projection_std:.1f} | '
+        f'{projection_max} vs {self.query_structure.max_projection_columns}'
+      )
+
+    if self.groupby_columns:
+      lines.append(
+        f'  GroupBy columns:      {groupby_mean:.1f} ± {groupby_std:.1f} | '
+        f'{groupby_max} vs {self.query_structure.max_groupby_columns}'
+      )
+
+    if self.merge_count:
+      lines.append(
+        f'  Merges per query:     {merge_mean:.1f} ± {merge_std:.1f} | '
+        f'{merge_max} vs {self.query_structure.max_merges}'
+      )
+
+    lines.extend(['', str(self.execution_results)])
+
+    return '\n'.join(lines)
+
+
+class QueryPool:
+  """
+  Manages a collection of database queries with execution and analysis capabilities.
+
+  Provides functionality for executing queries in parallel, filtering based on results,
+  computing statistics, and managing query persistence. The pool maintains execution
+  results to avoid redundant computation when performing multiple operations.
+
+  Attributes:
+    _queries: List of Query objects in the pool
+    _query_structure: Parameters controlling query generation
+    _sample_data: Dictionary mapping entity names to sample DataFrames
+    _results: Cached query execution results (DataFrame/Series, error message)
+    _with_status: Whether to display progress bars during operations
+  """
+
+  def __init__(
+    self,
+    queries: t.List[Query],
+    query_structure: QueryStructure,
+    sample_data: t.Dict[str, pd.DataFrame],
+    with_status: bool = False,
+  ):
+    self._queries = queries
+    self._query_structure = query_structure
+    self._sample_data = sample_data
+    self._results: t.List[QueryResult] = []
+    self._with_status = with_status
 
   def __len__(self) -> int:
     """Return the number of queries in the pool."""
-    return len(self.queries)
+    return len(self._queries)
 
   def __iter__(self) -> t.Iterator[Query]:
     """Iterate over the queries in the pool."""
-    return iter(self.queries)
+    return iter(self._queries)
 
   @staticmethod
   def _execute_multi_line_query(
@@ -117,26 +231,23 @@ class QueryPool:
 
   def execute(
     self,
-    sample_data: t.Dict[str, pd.DataFrame],
-    with_status: bool = False,
     force_execute: bool = False,
     num_processes: t.Optional[int] = None,
   ) -> t.List[QueryResult]:
     """
-    Execute all queries in parallel against the provided sample data.
+    Execute all queries in parallel against the sample data.
+
+    Uses multiprocessing to evaluate queries concurrently. Results are cached
+    to avoid re-execution unless explicitly requested.
 
     Args:
-      sample_data: Dictionary mapping entity names to their sample DataFrames
-      with_status: If True, displays a progress bar during execution
-      force_execute: If True, re-executes all queries even if results exist
-      num_processes:
-        Optional number of processes for parallel execution.
-        If None, uses the system's CPU count
+      force_execute: If True, re-execute all queries even if results exist
+      num_processes: Number of parallel processes to use. Defaults to CPU count.
 
     Returns:
-      List of QueryResult tuples containing (result, error) for each query
+      List of tuples containing (result, error) for each query
     """
-    if len(self.queries) == 0:
+    if len(self._queries) == 0:
       return []
 
     if len(self._results) > 0 and not force_execute:
@@ -145,12 +256,12 @@ class QueryPool:
     ctx = mp.get_context('fork')
 
     with ctx.Pool(num_processes) as pool:
-      f = partial(self._execute_single_query, sample_data=sample_data)
+      f = partial(self._execute_single_query, sample_data=self._sample_data)
 
-      iterator = pool.imap(f, self.queries)
+      iterator = pool.imap(f, self._queries)
 
-      if with_status:
-        iterator = tqdm(iterator, total=len(self.queries), desc='Executing queries', unit='query')
+      if self._with_status:
+        iterator = tqdm(iterator, total=len(self._queries), desc='Executing queries', unit='query')
 
       self._results = list(iterator)
 
@@ -158,33 +269,25 @@ class QueryPool:
 
   def filter(
     self,
-    sample_data: t.Dict[str, pd.DataFrame],
     filter_type: QueryFilter,
     force_execute: bool = False,
-    with_status: bool = False,
   ) -> None:
     """
     Filter queries based on their execution results.
 
+    Modifies the query pool in-place to keep only queries matching the filter
+    criteria. Executes queries if results don't exist.
+
     Args:
-      sample_data: Dictionary mapping entity names to their sample DataFrames
-      filter_type: Type of filter to apply (NON_EMPTY, EMPTY, HAS_ERROR, WITHOUT_ERROR)
-      force_execute: If True, re-executes all queries even if results exist
-      with_status: If True, displays a progress bar during execution
-
-    This method modifies the query pool in-place, keeping only queries that match
-    the filter criteria. If execution results don't exist or force_reexecute is True,
-    it executes the queries first.
+      filter_type: Criteria for keeping queries (NON_EMPTY, EMPTY, etc.)
+      force_execute: If True, re-execute queries before filtering
     """
-    if len(self.queries) == 0:
-      return
-
     if not self._results or force_execute:
-      self._results = self.execute(sample_data, with_status)
+      self._results = self.execute()
 
     filtered_queries, filtered_results = [], []
 
-    for query, result_tuple in zip(self.queries, self._results):
+    for query, result_tuple in zip(self._queries, self._results):
       result, error = result_tuple
 
       should_keep = False
@@ -209,276 +312,136 @@ class QueryPool:
         filtered_queries.append(query)
         filtered_results.append(result_tuple)
 
-    self.queries, self._results = filtered_queries, filtered_results
+    self._queries, self._results = filtered_queries, filtered_results
 
-  def calculate_statistics(self) -> QueryStatistics:
-    """Generate comprehensive statistics about the queries and their execution."""
-    statistics = QueryStatistics()
-    statistics.total_queries = len(self.queries)
-
-    total_operations = total_merges = total_selection_conditions = total_projection_columns = (
-      total_groupby_columns
-    ) = max_merge_depth = max_merge_chain = 0
-
-    for query in self.queries:
-      statistics.entities_used[query.entity] += 1
-
-      query_merge_depth = query_merge_chain = current_merge_depth = 0
-
-      for op in query.operations:
-        total_operations += 1
-
-        if isinstance(op, Merge):
-          total_merges += 1
-          query_merge_chain += 1
-          current_merge_depth += 1
-          statistics.merges[len(op.right.operations)] += 1
-
-          def count_nested_merges(nested_ops):
-            nested_depth = 0
-
-            for nested_op in nested_ops:
-              if isinstance(nested_op, Merge):
-                nested_depth = max(
-                  nested_depth, 1 + count_nested_merges(nested_op.right.operations)
-                )
-
-            return nested_depth
-
-          query_merge_depth = max(
-            query_merge_depth, current_merge_depth + count_nested_merges(op.right.operations)
-          )
-        elif isinstance(op, Selection):
-          total_selection_conditions += len(op.conditions)
-          statistics.selections[len(op.conditions)] += 1
-        elif isinstance(op, Projection):
-          total_projection_columns += len(op.columns)
-          statistics.projections[len(op.columns)] += 1
-        elif isinstance(op, GroupByAggregation):
-          total_groupby_columns += len(op.group_by_columns)
-          statistics.groupby_aggregations[len(op.group_by_columns)] += 1
-
-        statistics.operations[type(op).__name__] = (
-          statistics.operations.get(type(op).__name__, 0) + 1
-        )
-
-      max_merge_depth = max(max_merge_depth, query_merge_depth)
-      max_merge_chain = max(max_merge_chain, query_merge_chain)
-
-    if statistics.total_queries > 0:
-      statistics.avg_operations_per_query = total_operations / statistics.total_queries
-
-      merge_count = statistics.operations.get('Merge', 0)
-      if merge_count > 0:
-        statistics.avg_merge_count = total_merges / statistics.total_queries
-
-      selection_count = statistics.operations.get('Selection', 0)
-      if selection_count > 0:
-        statistics.avg_selection_conditions = total_selection_conditions / selection_count
-
-      projection_count = statistics.operations.get('Projection', 0)
-      if projection_count > 0:
-        statistics.avg_projection_columns = total_projection_columns / projection_count
-
-      groupby_count = statistics.operations.get('GroupByAggregation', 0)
-      if groupby_count > 0:
-        statistics.avg_groupby_columns = total_groupby_columns / groupby_count
-
-    statistics.max_merge_depth = max_merge_depth
-    statistics.max_merge_chain = max_merge_chain
-
-    if len(self._results) > 0:
-      statistics.execution_results = self._calculate_execution_statistics()
-
-    return statistics
-
-  def _calculate_execution_statistics(self) -> ExecutionStatistics:
-    """Calculate statistics about query execution results."""
-    statistics = ExecutionStatistics()
-
-    for result, error in self._results:
-      if error is not None:
-        statistics.failed_executions += 1
-        statistics.errors[error] += 1
-      else:
-        statistics.successful_executions += 1
-        if isinstance(result, (pd.DataFrame, pd.Series)):
-          if (isinstance(result, pd.DataFrame) and not result.empty) or (
-            isinstance(result, pd.Series) and result.size > 0
-          ):
-            statistics.non_empty_results += 1
-
-    total = len(self._results)
-    successful = statistics.successful_executions
-    statistics.empty_results = total - statistics.non_empty_results
-
-    if total > 0:
-      statistics.success_rate = (successful / total) * 100
-      statistics.non_empty_rate = (statistics.non_empty_results / total) * 100
-
-    return statistics
-
-  def _format_statistics(self, statistics: QueryStatistics) -> str:
-    """Format statistics into a readable string."""
-    lines = [
-      f'Total queries generated: {statistics.total_queries}',
-      f'Average operations per query: {statistics.avg_operations_per_query:.2f}',
-      '',
-      'Operation Averages:',
-      f'  Average merges per query: {statistics.avg_merge_count:.2f}',
-      f'  Average conditions per selection: {statistics.avg_selection_conditions:.2f}',
-      f'  Average columns per projection: {statistics.avg_projection_columns:.2f}',
-      f'  Average columns per group by: {statistics.avg_groupby_columns:.2f}',
-      '',
-      'Merge Complexity:',
-      f'  Maximum merge depth: {statistics.max_merge_depth}',
-      f'  Maximum merge chain length: {statistics.max_merge_chain}',
-      '',
-      'Operation Distribution:',
-    ]
-
-    if statistics.operations:
-      total_ops = sum(statistics.operations.values())
-      for op, count in statistics.operations.items():
-        percentage = (count / total_ops) * 100
-        lines.append(f'  {op}: {count} ({percentage:.2f}%)')
-
-    if statistics.merges:
-      lines.append('\nMerge Operation Details:')
-      for complexity, count in sorted(statistics.merges.items()):
-        percentage = (count / statistics.operations['Merge']) * 100
-        lines.append(f'  {complexity} operations in right query: {count} ({percentage:.2f}%)')
-
-    if statistics.selections:
-      lines.append('\nSelection Condition Distribution:')
-      for conditions, count in sorted(statistics.selections.items()):
-        percentage = (count / statistics.operations['Selection']) * 100
-        lines.append(f'  {conditions} conditions: {count} ({percentage:.2f}%)')
-
-    if statistics.projections:
-      lines.append('\nProjection Column Distribution:')
-      for columns, count in sorted(statistics.projections.items()):
-        percentage = (count / statistics.operations['Projection']) * 100
-        lines.append(f'  {columns} columns: {count} ({percentage:.2f}%)')
-
-    if statistics.groupby_aggregations:
-      lines.append('\nGroup By Column Distribution:')
-      for columns, count in sorted(statistics.groupby_aggregations.items()):
-        percentage = (count / statistics.operations['GroupByAggregation']) * 100
-        lines.append(f'  {columns} columns: {count} ({percentage:.2f}%)')
-
-    lines.extend([''] + self._format_execution_statistics(statistics.execution_results))
-
-    return '\n'.join(lines)
-
-  def _format_execution_statistics(self, statistics: ExecutionStatistics) -> t.List[str]:
-    """Format execution statistics into a list of strings."""
-    lines = [
-      'Query Execution Results:',
-      f'  Successful executions: {statistics.successful_executions} '
-      f'({statistics.success_rate:.2f}%)',
-      f'  Failed executions: {statistics.failed_executions}',
-      f'  Queries with non-empty results: {statistics.non_empty_results} '
-      f'({statistics.non_empty_rate:.2f}%)',
-      f'  Queries with empty results: {statistics.empty_results}',
-    ]
-
-    if statistics.errors:
-      lines.append('\nError distribution:')
-      total_errors = sum(statistics.errors.values())
-      for error, count in statistics.errors.most_common():
-        percentage = (count / total_errors) * 100
-        lines.append(f'  {count} ({percentage:.2f}%) - {error}')
-
-    return lines
-
-  def print_statistics(
-    self,
-    sample_data: t.Dict[str, pd.DataFrame],
-    force_execute: bool = False,
-    with_status: bool = False,
-  ) -> None:
+  def items(self) -> t.Iterator[tuple[Query, QueryResult]]:
     """
-    Generate and print detailed statistics about the queries and their execution.
+    Iterate over query-result pairs.
+
+    Each iteration yields a tuple containing a query and its execution result.
+    If results haven't been computed yet, executes the queries first.
+
+    Yields:
+      tuple[Query, QueryResult]: Pairs of (query, (result, error))
+    """
+    if not self._results:
+      self.execute()
+    return zip(self._queries, self._results)
+
+  def results(self) -> t.Iterator[QueryResult]:
+    """
+    Iterate over query results.
+
+    If results haven't been computed yet, executes the queries first.
+
+    Yields:
+        QueryResult: Pairs of (result, error) for each query
+    """
+    if not self._results:
+      self.execute()
+    return iter(self._results)
+
+  def statistics(self, force_execute: bool = False) -> QueryStatistics:
+    """
+    Generate comprehensive statistics about the query pool.
+
+    Analyzes query characteristics and execution results to measure how well
+    the generated queries match the target parameters.
 
     Args:
-      sample_data: Dictionary mapping entity names to their sample DataFrames
-      force_execute: If True, re-executes all queries even if results exist
-      with_status: If True, displays a progress bar during execution
+      force_execute: If True, re-execute queries before analysis
+
+    Returns:
+      Statistics comparing actual vs. target characteristics
     """
-    if len(self.queries) == 0:
-      return
-
     if not self._results or force_execute:
-      self._results = self.execute(sample_data, with_status)
+      self._results = self.execute()
 
-    statistics = self.calculate_statistics()
+    statistics = QueryStatistics(query_structure=self._query_structure)
+    statistics.total_queries = len(self._queries)
 
-    for i, ((result, error), query) in enumerate(zip(self._results, self.queries), 1):
-      print(f'Query {i}:\n')
-      print(str(query) + '\n')
+    for query in self._queries:
+      has_selection = has_projection = has_groupby = False
+      selection_count = projection_count = groupby_count = 0
 
-      if result is not None:
-        print('Results:\n')
-        print(result)
-      elif error is not None:
-        print('Error:\n')
-        print(error)
+      for op in query.operations:
+        match op:
+          case Selection(conditions):
+            has_selection = True
+            selection_count = len(conditions)
+          case Projection(columns):
+            has_projection = True
+            projection_count = len(columns)
+          case GroupByAggregation(columns, _):
+            has_groupby = True
+            groupby_count = len(columns)
+          case Merge():
+            ...
 
-      print()
+      if has_selection:
+        statistics.queries_with_selection += 1
+        statistics.selection_conditions.append(selection_count)
 
-    print(self._format_statistics(statistics))
+      if has_projection:
+        statistics.queries_with_projection += 1
+        statistics.projection_columns.append(projection_count)
+
+      if has_groupby:
+        statistics.queries_with_groupby += 1
+        statistics.groupby_columns.append(groupby_count)
+
+      merge_count = query.merge_count
+
+      if merge_count > 0:
+        statistics.queries_with_merge += 1
+        statistics.merge_count.append(merge_count)
+
+    if self._results:
+      for result, error in self._results:
+        if error is not None:
+          statistics.execution_results.failed += 1
+          statistics.execution_results.errors[error] += 1
+        else:
+          statistics.execution_results.successful += 1
+          if result is not None:
+            if (isinstance(result, pd.DataFrame) and not result.empty) or (
+              isinstance(result, pd.Series) and result.size > 0
+            ):
+              statistics.execution_results.non_empty += 1
+            else:
+              statistics.execution_results.empty += 1
+
+    return statistics
 
   def save(self, output_file: str, create_dirs: bool = True) -> None:
     """
-    Save all queries to a file, one query per line.
+    Save all queries to a file.
+
+    Each query is saved on a separate line in its string representation.
+    Empty queries are filtered out and whitespace is trimmed.
 
     Args:
       output_file: Path to the output file
-      create_dirs: If True, creates parent directories if they don't exist
-
-    The queries are saved in their string representation, with empty queries
-    filtered out and whitespace trimmed.
+      create_dirs: If True, creates parent directories if needed
     """
     if create_dirs and os.path.dirname(output_file):
       os.makedirs(os.path.dirname(output_file), exist_ok=True)
 
-    queries = filter(None, map(lambda q: str(q).strip(), self.queries))
+    queries = filter(None, map(lambda q: str(q).strip(), self._queries))
 
     with open(output_file, 'w+') as f:
       f.write('\n\n'.join(queries))
 
   def sort(self) -> None:
     """
-    Sort queries by their complexity and update results accordingly.
+    Sort queries by their complexity.
 
-    The sorting is stable and maintains the association between queries
-    and their execution results (if any exist).
-
-    Duplicate queries are removed, keeping the one with a successful result if available.
+    Orders queries based on their complexity score while maintaining the
+    association between queries and their execution results if they exist.
     """
     if not self._results:
-      unique_queries = {}
-
-      for query in self.queries:
-        key = (str(query), query.complexity)
-        if key not in unique_queries:
-          unique_queries[key] = query
-
-      self.queries = sorted(unique_queries.values())
+      self._queries = sorted(self._queries)
     else:
-      unique_queries = {}
-
-      for query, (result, error) in zip(self.queries, self._results):
-        key = (str(query), query.complexity)
-
-        existing = unique_queries.get(key)
-
-        if (not existing) or (error is None and existing[1][1] is not None):
-          unique_queries[key] = (query, (result, error))
-
-      if unique_queries:
-        sorted_pairs = sorted(unique_queries.values(), key=lambda x: x[0])
-        self.queries, self._results = map(list, zip(*sorted_pairs))
-      else:
-        self.queries, self._results = [], []
+      pairs = list(zip(self._queries, self._results))
+      pairs.sort(key=lambda x: x[0])
+      self._queries, self._results = map(list, zip(*pairs))
