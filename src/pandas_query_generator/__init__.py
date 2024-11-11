@@ -12,6 +12,7 @@ from .group_by_aggregation import GroupByAggregation
 from .merge import Merge
 from .projection import Projection
 from .query import Query
+from .query_pool import QueryPool
 from .schema import Schema
 from .selection import Selection
 
@@ -28,6 +29,7 @@ __all__ = [
   'PropertyInt',
   'PropertyString',
   'Query',
+  'QueryPool',
   'Schema',
   'Selection',
 ]
