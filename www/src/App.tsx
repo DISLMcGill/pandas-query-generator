@@ -210,7 +210,7 @@ query_pool = generator.generate(10)
                   <Textarea
                     value={schema}
                     onChange={(e) => setSchema(e.target.value)}
-                    className="font-mono h-full"
+                    className="font-mono min-h-[500px]"
                     placeholder="Enter your schema JSON here..."
                   />
                 </CardContent>
