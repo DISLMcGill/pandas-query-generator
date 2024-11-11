@@ -136,7 +136,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "pandas", specifier = ">=2.2.0" },
-    { name = "tqdm", specifier = ">=4.67.0" },
+    { name = "tqdm", specifier = ">=4.66.2" },
 ]
 
 [package.metadata.requires-dev]
