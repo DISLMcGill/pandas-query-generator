@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
-import { Loader2 } from "lucide-react";
+import { Github, Loader2 } from "lucide-react";
 import { useToast } from "./hooks/use-toast";
 import {
   ResizableHandle,
@@ -184,12 +184,20 @@ generator = Generator(schema, query_structure)
 
   return (
     <div className="container mx-auto p-4 space-y-4">
-      <p className="font-semibold text-3xl text-center">
-        Pandas Query Generator 🐼
-      </p>
-      <p className="italic text-xl text-center">
-        An interactive web demonstration
-      </p>
+      <div className="flex items-center justify-between">
+        <div className="m-4">
+          <p className="font-semibold text-3xl text-center">
+            Pandas Query Generator 🐼
+          </p>
+          <p className="text-xl italic">An interactive web demonstration</p>
+        </div>
+        <a
+          href="https://github.com/DISLMcGill/pandas-query-generator"
+          target="_blank"
+        >
+          <Github />
+        </a>
+      </div>
 
       <div className="min-h-[600px] rounded-lg border">
         <ResizablePanelGroup direction="horizontal" className="rounded-lg">

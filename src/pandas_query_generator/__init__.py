@@ -13,9 +13,9 @@ from .merge import Merge
 from .projection import Projection
 from .query import Query
 from .query_pool import QueryPool
+from .query_structure import QueryStructure
 from .schema import Schema
 from .selection import Selection
-from .query_structure import QueryStructure
 
 __all__ = [
   'Entity',
