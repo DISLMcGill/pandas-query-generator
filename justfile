@@ -53,5 +53,8 @@ readme:
 run *args:
   uv run pqg {{args}}
 
+serve:
+  cd www && bun install && bunx --bun vite
+
 test *args:
   uv run pytest --verbose {{args}}

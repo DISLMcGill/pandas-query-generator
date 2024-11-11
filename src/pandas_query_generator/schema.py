@@ -60,6 +60,54 @@ class Schema(Mapping):
     return len(self.entities)
 
   @staticmethod
+  def from_dict(data: dict) -> 'Schema':
+    """
+    Create a Schema instance from a dictionary.
+
+    Similar to from_file but accepts a dictionary directly instead of reading
+    from a file. This is useful for creating schemas programmatically or when
+    the schema definition is already in memory.
+
+    Args:
+      data (dict):
+        Dictionary containing the schema configuration.
+        Expected to have an 'entities' key mapping to entity configs.
+
+    Returns:
+      Schema: A new Schema instance containing the entities defined in the dictionary.
+
+    Raises:
+      ValueError: If the dictionary structure is invalid.
+
+    Example:
+      schema_dict = {
+          "entities": {
+              "customer": {
+                  "primary_key": "id",
+                  "properties": {...},
+                  "foreign_keys": {...}
+              }
+          }
+      }
+      schema = Schema.from_dict(schema_dict)
+    """
+    if 'entities' not in data:
+      return Schema(entities=set())
+
+    if not isinstance(data['entities'], dict):
+      raise ValueError("'entities' must be a dictionary")
+
+    try:
+      return Schema(
+        set(
+          Entity.from_configuration(name, configuration)
+          for name, configuration in data['entities'].items()
+        )
+      )
+    except Exception as e:
+      raise ValueError(f'Invalid schema configuration: {str(e)}') from e
+
+  @staticmethod
   def from_file(path: str) -> 'Schema':
     """
     Create a Schema instance by loading entity configurations from a JSON file.

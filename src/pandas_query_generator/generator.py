@@ -54,33 +54,45 @@ class Generator:
     """
     return QueryBuilder(schema, query_structure, multi_line).build()
 
-  def generate(self, queries: int, multi_line=False) -> QueryPool:
+  def generate(self, queries: int, multi_line=False, multi_processing=True) -> QueryPool:
     """
-    Generate a pool of queries using parallel processing.
+    Generate a pool of queries using either parallel or sequential processing.
 
-    Creates multiple queries concurrently using a process pool. Each query is
+    Creates multiple queries either concurrently using a process pool or
+    sequentially based on the multi_processing parameter. Each query is
     randomly generated according to the schema and query structure parameters.
 
     Args:
       queries: Number of queries to generate
       multi_line: Whether to format queries across multiple lines
+      multi_processing: Whether to use multiprocessing (default: True)
 
     Returns:
       QueryPool: A pool containing the generated queries and their sample data
     """
     f = partial(self._generate_single_query, self.schema, self.query_structure, multi_line)
 
-    with mp.Pool() as pool:
-      generated_queries = pool.imap(f, range(queries))
+    if multi_processing:
+      with mp.Pool() as pool:
+        generated_queries = pool.imap(f, range(queries))
 
+        if self.with_status:
+          generated_queries = tqdm(
+            generated_queries,
+            total=queries,
+            desc='Generating queries',
+            unit='query',
+          )
+
+        queries_list = list(generated_queries)
+    else:
       if self.with_status:
-        generated_queries = tqdm(
-          generated_queries,
-          total=queries,
-          desc='Generating queries',
-          unit='query',
-        )
+        iterator = tqdm(range(queries), desc='Generating queries', unit='query')
+      else:
+        iterator = range(queries)
 
-      return QueryPool(
-        list(generated_queries), self.query_structure, self.sample_data, self.with_status
-      )
+      queries_list = [f(i) for i in iterator]
+
+    return QueryPool(
+      queries_list, self.query_structure, self.sample_data, multi_processing, self.with_status
+    )

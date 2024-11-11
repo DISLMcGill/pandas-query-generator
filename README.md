@@ -4,6 +4,8 @@
 synthetic [pandas](https://pandas.pydata.org/) queries for training machine
 learning models that estimate query execution costs or predict cardinality.
 
+The binary is called **pqg** and has only been tested on a unix-based system.
+
 ## Installation
 
 You can install the query generator using [pip](https://pip.pypa.io/en/stable/installation/), the Python package manager:
@@ -18,12 +20,13 @@ Below is the standard output of `pqg --help`, which elaborates on the various
 command-line arguments the tool accepts:
 
 ```present uv run pqg --help
-usage: pqg [--filter] [--groupby-aggregation-probability] [--max-groupby-columns] [--max-merges] [--max-projection-columns] [--max-selection-conditions] [--multi-line] --num-queries [--output-file] [--projection-probability] --schema [--selection-probability] [--sort] [--verbose]
+usage: pqg [--disable-multi-processing] [--filter] [--groupby-aggregation-probability] [--max-groupby-columns] [--max-merges] [--max-projection-columns] [--max-selection-conditions] [--multi-line] --num-queries [--output-file] [--projection-probability] --schema [--selection-probability] [--sort] [--verbose]
 
 Pandas Query Generator CLI
 
 options:
   -h --help Show this help message and exit
+  --disable-multi-processing Generate and execute queries in a consecutive fashion (default: False)
   --filter Filter generated queries by specific criteria
   --groupby-aggregation-probability Probability of including groupby aggregation operations (default: 0.5)
   --max-groupby-columns Maximum number of columns in group by operations (default: 5)
