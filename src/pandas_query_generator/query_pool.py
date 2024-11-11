@@ -134,7 +134,7 @@ class QueryStatistics:
     lines = [
       f'Query Statistics (n = {self.total_queries})',
       '',
-      'Operation Frequencies (actual vs target):',
+      'Operation Probabilities (actual vs target):',
       self._format_frequency(
         'Selection:', probabilities[0], self.query_structure.selection_probability
       ),
