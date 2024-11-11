@@ -5,7 +5,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
-import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+} from "@/components/ui/select";
 import { Github, Loader2 } from "lucide-react";
 import { useToast } from "./hooks/use-toast";
 import {
@@ -15,6 +21,7 @@ import {
 } from "@/components/ui/resizable";
 import { Input } from "@/components/ui/input";
 import { cn } from "./lib/utils";
+import { ModeToggle } from "./components/mode-toggle";
 
 const exampleSchemas = {
   sports: {
@@ -22,49 +29,60 @@ const exampleSchemas = {
       team: {
         properties: {
           T_TEAMKEY: { type: "string", starting_character: ["t"] },
-          T_GROUP: { type: "enum", values: ["a", "b", "c", "d", "e", "f", "g", "h"] },
-          T_PLAYERCOUNT: { type: "int", min: 18, max: 26 }
+          T_GROUP: {
+            type: "enum",
+            values: ["a", "b", "c", "d", "e", "f", "g", "h"],
+          },
+          T_PLAYERCOUNT: { type: "int", min: 18, max: 26 },
         },
-        primary_key: "T_TEAMKEY"
+        primary_key: "T_TEAMKEY",
       },
       association: {
         properties: {
           A_ASSOCKEY: { type: "string", starting_character: ["f"] },
           A_TEAMKEY: { type: "string", starting_character: ["t"] },
           A_FOUNDEDYEAR: { type: "int", min: 1900, max: 2000 },
-          A_PRESIDENT: { type: "string", starting_character: ["p"] }
+          A_PRESIDENT: { type: "string", starting_character: ["p"] },
         },
         primary_key: "A_ASSOCKEY",
         foreign_keys: {
-          A_TEAMKEY: ["T_TEAMKEY", "team"]
-        }
+          A_TEAMKEY: ["T_TEAMKEY", "team"],
+        },
       },
       coach: {
         properties: {
           C_COACHKEY: { type: "int", min: 1, max: 100 },
           C_ROLE: {
             type: "enum",
-            values: ["head coach", "assistant coach", "goalkeeper coach", "fitness coach"]
+            values: [
+              "head coach",
+              "assistant coach",
+              "goalkeeper coach",
+              "fitness coach",
+            ],
           },
           C_TEAMKEY: { type: "string", starting_character: ["t"] },
           C_NAME: { type: "string", starting_character: ["c"] },
-          C_EXPYEARS: { type: "int", min: 1, max: 40 }
+          C_EXPYEARS: { type: "int", min: 1, max: 40 },
         },
         primary_key: ["C_COACHKEY", "C_TEAMKEY"],
         foreign_keys: {
-          C_TEAMKEY: ["T_TEAMKEY", "team"]
-        }
+          C_TEAMKEY: ["T_TEAMKEY", "team"],
+        },
       },
       stadium: {
         properties: {
           S_STADIUMKEY: { type: "int", min: 1, max: 12 },
           S_NAME: { type: "string", starting_character: ["s"] },
           S_CITY: { type: "string", starting_character: ["d", "a", "l", "r"] },
-          S_LOCATION: { type: "string", starting_character: ["n", "s", "e", "w", "c"] },
+          S_LOCATION: {
+            type: "string",
+            starting_character: ["n", "s", "e", "w", "c"],
+          },
           S_CAPACITY: { type: "int", min: 40000, max: 90000 },
-          S_YEARBUILT: { type: "int", min: 1950, max: 2022 }
+          S_YEARBUILT: { type: "int", min: 1950, max: 2022 },
         },
-        primary_key: "S_STADIUMKEY"
+        primary_key: "S_STADIUMKEY",
       },
       match: {
         properties: {
@@ -77,20 +95,26 @@ const exampleSchemas = {
           M_DURATION: { type: "int", min: 90, max: 150 },
           M_ROUND: {
             type: "enum",
-            values: ["group stage", "round of 16", "quarter-final", "semi-final", "final"]
+            values: [
+              "group stage",
+              "round of 16",
+              "quarter-final",
+              "semi-final",
+              "final",
+            ],
           },
           M_SCORE1: { type: "int", min: 0, max: 7 },
           M_SCORE2: { type: "int", min: 0, max: 7 },
-          M_ATTENDANCE: { type: "int", min: 30000, max: 90000 }
+          M_ATTENDANCE: { type: "int", min: 30000, max: 90000 },
         },
         primary_key: "M_MATCHKEY",
         foreign_keys: {
           M_TEAM1KEY: ["T_TEAMKEY", "team"],
           M_TEAM2KEY: ["T_TEAMKEY", "team"],
-          M_STADIUMKEY: ["S_STADIUMKEY", "stadium"]
-        }
-      }
-    }
+          M_STADIUMKEY: ["S_STADIUMKEY", "stadium"],
+        },
+      },
+    },
   },
   tpch: {
     entities: {
@@ -100,21 +124,56 @@ const exampleSchemas = {
           C_NAME: { type: "string", starting_character: ["C"] },
           C_ADDRESS: {
             type: "string",
-            starting_character: ["I", "H", "X", "s", "9", "n", "z", "K", "T", "u", "Q", "O", "7"]
+            starting_character: [
+              "I",
+              "H",
+              "X",
+              "s",
+              "9",
+              "n",
+              "z",
+              "K",
+              "T",
+              "u",
+              "Q",
+              "O",
+              "7",
+            ],
           },
           C_NATIONKEY: { type: "int", min: 0, max: 23 },
-          C_PHONE: { type: "string", starting_character: ["1", "2", "3", "25-", "13-", "27-", "18-", "22-"] },
+          C_PHONE: {
+            type: "string",
+            starting_character: [
+              "1",
+              "2",
+              "3",
+              "25-",
+              "13-",
+              "27-",
+              "18-",
+              "22-",
+            ],
+          },
           C_ACCTBAL: { type: "float", min: -917.25, max: 9983.38 },
           MKTSEGMENT: {
             type: "enum",
-            values: ["BUILDING", "AUTOMOBILE", "MACHINERY", "HOUSEHOLD", "FURNITURE"]
+            values: [
+              "BUILDING",
+              "AUTOMOBILE",
+              "MACHINERY",
+              "HOUSEHOLD",
+              "FURNITURE",
+            ],
           },
-          C_COMMENT: { type: "string", starting_character: ["i", "s", "l", "r", "c", "t", "e"] }
+          C_COMMENT: {
+            type: "string",
+            starting_character: ["i", "s", "l", "r", "c", "t", "e"],
+          },
         },
         primary_key: "C_CUSTKEY",
         foreign_keys: {
-          C_NATIONKEY: ["N_NATIONKEY", "nation"]
-        }
+          C_NATIONKEY: ["N_NATIONKEY", "nation"],
+        },
       },
       lineitem: {
         properties: {
@@ -133,34 +192,58 @@ const exampleSchemas = {
           RECEIPTDATE: { type: "date", min: "1992-05-02", max: "1998-11-06" },
           SHIPINSTRUCT: {
             type: "enum",
-            values: ["DELIVER IN PERSON", "TAKE BACK RETURN", "NONE", "COLLECT COD"]
+            values: [
+              "DELIVER IN PERSON",
+              "TAKE BACK RETURN",
+              "NONE",
+              "COLLECT COD",
+            ],
           },
           SHIPMODE: {
             type: "enum",
-            values: ["TRUCK", "MAIL", "REG AIR", "AIR", "FOB", "RAIL", "SHIP"]
-          }
+            values: ["TRUCK", "MAIL", "REG AIR", "AIR", "FOB", "RAIL", "SHIP"],
+          },
         },
         primary_key: ["L_ORDERKEY", "L_PARTKEY", "L_SUPPKEY"],
         foreign_keys: {
           L_ORDERKEY: ["O_ORDERKEY", "orders"],
           L_PARTKEY: ["PS_PARTKEY", "partsupp"],
-          L_SUPPKEY: ["PS_SUPPKEY", "partsupp"]
-        }
+          L_SUPPKEY: ["PS_SUPPKEY", "partsupp"],
+        },
       },
       nation: {
         properties: {
           N_NATIONKEY: { type: "int", min: 0, max: 24 },
           N_NAME: {
             type: "string",
-            starting_character: ["I", "A", "C", "E", "J", "M", "R", "U", "B", "F", "G", "K", "P", "S", "V"]
+            starting_character: [
+              "I",
+              "A",
+              "C",
+              "E",
+              "J",
+              "M",
+              "R",
+              "U",
+              "B",
+              "F",
+              "G",
+              "K",
+              "P",
+              "S",
+              "V",
+            ],
           },
           N_REGIONKEY: { type: "int", min: 0, max: 4 },
-          N_COMMENT: { type: "string", starting_character: [" ", "y", "e", "r", "s", "a", "v", "l"] }
+          N_COMMENT: {
+            type: "string",
+            starting_character: [" ", "y", "e", "r", "s", "a", "v", "l"],
+          },
         },
         primary_key: "N_NATIONKEY",
         foreign_keys: {
-          N_REGIONKEY: ["R_REGIONKEY", "region"]
-        }
+          N_REGIONKEY: ["R_REGIONKEY", "region"],
+        },
       },
       orders: {
         properties: {
@@ -171,74 +254,119 @@ const exampleSchemas = {
           ORDERDATE: { type: "date", min: "1992-01-13", max: "1998-07-21" },
           ORDERPRIORITY: {
             type: "enum",
-            values: ["1-URGENT", "2-HIGH", "3-MEDIUM", "4-NOT SPECIFIED", "5-LOW"]
+            values: [
+              "1-URGENT",
+              "2-HIGH",
+              "3-MEDIUM",
+              "4-NOT SPECIFIED",
+              "5-LOW",
+            ],
           },
           CLERK: { type: "string", starting_character: ["C"] },
-          SHIPPRIORITY: { type: "int", min: 0, max: 0 }
+          SHIPPRIORITY: { type: "int", min: 0, max: 0 },
         },
         primary_key: "O_ORDERKEY",
         foreign_keys: {
-          O_CUSTKEY: ["C_CUSTKEY", "customer"]
-        }
+          O_CUSTKEY: ["C_CUSTKEY", "customer"],
+        },
       },
       part: {
         properties: {
           P_PARTKEY: { type: "int", min: 1, max: 200 },
-          P_NAME: { type: "string", starting_character: ["b", "s", "l", "c", "m", "p", "g", "t"] },
+          P_NAME: {
+            type: "string",
+            starting_character: ["b", "s", "l", "c", "m", "p", "g", "t"],
+          },
           MFGR: {
             type: "enum",
-            values: ["Manufacturer#1", "Manufacturer#2", "Manufacturer#3", "Manufacturer#4", "Manufacturer#5"]
+            values: [
+              "Manufacturer#1",
+              "Manufacturer#2",
+              "Manufacturer#3",
+              "Manufacturer#4",
+              "Manufacturer#5",
+            ],
           },
           BRAND: {
             type: "enum",
-            values: ["Brand#13", "Brand#42", "Brand#34", "Brand#32", "Brand#24"]
+            values: [
+              "Brand#13",
+              "Brand#42",
+              "Brand#34",
+              "Brand#32",
+              "Brand#24",
+            ],
           },
-          TYPE: { type: "string", starting_character: ["S", "M", "E", "P", "L", "STA", "SMA"] },
+          TYPE: {
+            type: "string",
+            starting_character: ["S", "M", "E", "P", "L", "STA", "SMA"],
+          },
           SIZE: { type: "int", min: 1, max: 49 },
-          CONTAINER: { type: "string", starting_character: ["JUMBO", "LG", "WRAP", "MED", "SM"] },
-          RETAILPRICE: { type: "float", min: 901.0, max: 1100.2 }
+          CONTAINER: {
+            type: "string",
+            starting_character: ["JUMBO", "LG", "WRAP", "MED", "SM"],
+          },
+          RETAILPRICE: { type: "float", min: 901.0, max: 1100.2 },
         },
-        primary_key: "P_PARTKEY"
+        primary_key: "P_PARTKEY",
       },
       partsupp: {
         properties: {
           PS_PARTKEY: { type: "int", min: 1, max: 50 },
           PS_SUPPKEY: { type: "int", min: 2, max: 7551 },
           AVAILQTY: { type: "int", min: 43, max: 9988 },
-          SUPPLYCOST: { type: "float", min: 14.78, max: 996.12 }
+          SUPPLYCOST: { type: "float", min: 14.78, max: 996.12 },
         },
         primary_key: ["PS_PARTKEY", "PS_SUPPKEY"],
         foreign_keys: {
           PS_PARTKEY: ["P_PARTKEY", "part"],
-          PS_SUPPKEY: ["S_SUPPKEY", "supplier"]
-        }
+          PS_SUPPKEY: ["S_SUPPKEY", "supplier"],
+        },
       },
       region: {
         properties: {
           R_REGIONKEY: { type: "int", min: 0, max: 4 },
           R_NAME: {
             type: "string",
-            starting_character: ["A", "E", "M", "AFR", "AME", "ASI"]
+            starting_character: ["A", "E", "M", "AFR", "AME", "ASI"],
           },
-          R_COMMENT: { type: "string", starting_character: ["l", "h", "g", "u"] }
+          R_COMMENT: {
+            type: "string",
+            starting_character: ["l", "h", "g", "u"],
+          },
         },
-        primary_key: "R_REGIONKEY"
+        primary_key: "R_REGIONKEY",
       },
       supplier: {
         properties: {
           S_SUPPKEY: { type: "int", min: 1, max: 200 },
           S_NAME: { type: "string", starting_character: ["S"] },
-          S_ADDRESS: { type: "string", starting_character: ["N", "e", "f", "J", "o", "c", "b", "u"] },
+          S_ADDRESS: {
+            type: "string",
+            starting_character: ["N", "e", "f", "J", "o", "c", "b", "u"],
+          },
           S_NATIONKEY: { type: "int", min: 0, max: 24 },
-          S_PHONE: { type: "string", starting_character: ["1", "2", "3", "28-", "32-", "26-", "14-", "17-"] },
-          S_ACCTBAL: { type: "float", min: -966.2, max: 9915.24 }
+          S_PHONE: {
+            type: "string",
+            starting_character: [
+              "1",
+              "2",
+              "3",
+              "28-",
+              "32-",
+              "26-",
+              "14-",
+              "17-",
+            ],
+          },
+          S_ACCTBAL: { type: "float", min: -966.2, max: 9915.24 },
         },
         primary_key: "S_SUPPKEY",
         foreign_keys: {
-          S_NATIONKEY: ["N_NATIONKEY", "nation"]
-        }
-      }
-    }
+          S_NATIONKEY: ["N_NATIONKEY", "nation"],
+        },
+      },
+    },
   },
   customer: {
     entities: {
@@ -247,9 +375,9 @@ const exampleSchemas = {
         properties: {
           C_CUSTKEY: { type: "int", min: 1, max: 1000 },
           C_NAME: { type: "string", starting_character: ["A", "B", "C"] },
-          C_STATUS: { type: "enum", values: ["active", "inactive"] }
+          C_STATUS: { type: "enum", values: ["active", "inactive"] },
         },
-        foreign_keys: {}
+        foreign_keys: {},
       },
       order: {
         primary_key: "O_ORDERKEY",
@@ -257,17 +385,26 @@ const exampleSchemas = {
           O_ORDERKEY: { type: "int", min: 1, max: 5000 },
           O_CUSTKEY: { type: "int", min: 1, max: 1000 },
           O_TOTALPRICE: { type: "float", min: 10.0, max: 1000.0 },
-          O_ORDERSTATUS: { type: "enum", values: ["pending", "completed", "cancelled"] }
+          O_ORDERSTATUS: {
+            type: "enum",
+            values: ["pending", "completed", "cancelled"],
+          },
         },
         foreign_keys: {
-          O_CUSTKEY: ["C_CUSTKEY", "customer"]
-        }
-      }
-    }
-  }
+          O_CUSTKEY: ["C_CUSTKEY", "customer"],
+        },
+      },
+    },
+  },
 };
 
-const SchemaSelector = ({ onSchemaSelect, className }: { onSchemaSelect: (value: string) => void, className?: string }) => {
+const SchemaSelector = ({
+  onSchemaSelect,
+  className,
+}: {
+  onSchemaSelect: (value: string) => void;
+  className?: string;
+}) => {
   const handleSchemaChange = (value: string) => {
     const selectedSchema = (exampleSchemas as any)[value];
     onSchemaSelect(JSON.stringify(selectedSchema, null, 2));
@@ -293,7 +430,9 @@ const App = () => {
   const [client, setClient] = useState<PyodideInterface | undefined>(undefined);
   const [loading, setLoading] = useState(false);
   const [generating, setGenerating] = useState(false);
-  const [schema, setSchema] = useState<string>(JSON.stringify(exampleSchemas.customer, null, 2));
+  const [schema, setSchema] = useState<string>(
+    JSON.stringify(exampleSchemas.customer, null, 2),
+  );
   const [queries, setQueries] = useState<string[]>([]);
   const [statistics, setStatistics] = useState<string>("");
 
@@ -429,12 +568,15 @@ query_pool.sort()
           </p>
           <p className="text-xl italic">An interactive web demonstration</p>
         </div>
-        <a
-          href="https://github.com/DISLMcGill/pandas-query-generator"
-          target="_blank"
-        >
-          <Github />
-        </a>
+        <div className="flex items-center space-x-2">
+          <a
+            href="https://github.com/DISLMcGill/pandas-query-generator"
+            target="_blank"
+          >
+            <Github />
+          </a>
+          <ModeToggle />
+        </div>
       </div>
 
       <div className="min-h-[600px] rounded-lg border">
@@ -446,14 +588,17 @@ query_pool.sort()
                   <CardTitle>Schema</CardTitle>
                 </CardHeader>
                 <CardContent>
-                <div className='flex flex-col'>
-                <SchemaSelector className="ml-auto" onSchemaSelect={(value) => setSchema(value)}/>
-                  <Textarea
-                    value={schema}
-                    onChange={(e) => setSchema(e.target.value)}
-                    className="font-mono min-h-[600px]"
-                    placeholder="Enter your schema JSON here..."
-                  />
+                  <div className="flex flex-col">
+                    <SchemaSelector
+                      className="ml-auto"
+                      onSchemaSelect={(value) => setSchema(value)}
+                    />
+                    <Textarea
+                      value={schema}
+                      onChange={(e) => setSchema(e.target.value)}
+                      className="font-mono min-h-[600px]"
+                      placeholder="Enter your schema JSON here..."
+                    />
                   </div>
                 </CardContent>
               </Card>
