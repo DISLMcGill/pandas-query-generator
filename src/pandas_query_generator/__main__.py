@@ -31,7 +31,11 @@ def main() -> None:
   )
 
   with timer(message):
-    query_pool = generator.generate(arguments.num_queries, arguments.multi_line)
+    query_pool = generator.generate(
+      arguments.num_queries,
+      arguments.multi_line,
+      multi_processing=not arguments.disable_multi_processing,
+    )
 
     if arguments.filter is not None:
       query_pool.filter(arguments.filter)

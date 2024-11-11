@@ -114,6 +114,9 @@ const App = () => {
 
     try {
       const generator = client.runPython(`
+import sys
+sys.modules['_multiprocessing'] = object
+
 import json
 
 from pandas_query_generator import Generator

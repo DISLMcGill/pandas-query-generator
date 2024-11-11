@@ -189,12 +189,14 @@ class QueryPool:
     queries: t.List[Query],
     query_structure: QueryStructure,
     sample_data: t.Dict[str, pd.DataFrame],
+    multi_processing: bool = True,
     with_status: bool = False,
   ):
     self._queries = queries
     self._query_structure = query_structure
     self._sample_data = sample_data
     self._results: t.List[QueryResult] = []
+    self._multi_processing = multi_processing
     self._with_status = with_status
 
   def __len__(self) -> int:
@@ -240,14 +242,17 @@ class QueryPool:
     num_processes: t.Optional[int] = None,
   ) -> t.List[QueryResult]:
     """
-    Execute all queries in parallel against the sample data.
+    Execute all queries against the sample data, either in parallel or sequentially.
 
-    Uses multiprocessing to evaluate queries concurrently. Results are cached
-    to avoid re-execution unless explicitly requested.
+    Evaluates queries using either multiprocessing for parallel execution or
+    sequential processing. Results are cached to avoid re-execution unless
+    explicitly requested.
 
     Args:
       force_execute: If True, re-execute all queries even if results exist
-      num_processes: Number of parallel processes to use. Defaults to CPU count.
+      num_processes:
+        Number of parallel processes to use. Defaults to CPU count.
+        Only used when multi_processing is True.
 
     Returns:
       List of tuples containing (result, error) for each query
@@ -258,17 +263,27 @@ class QueryPool:
     if len(self._results) > 0 and not force_execute:
       return self._results
 
-    ctx = mp.get_context('fork')
+    f = partial(self._execute_single_query, sample_data=self._sample_data)
 
-    with ctx.Pool(num_processes) as pool:
-      f = partial(self._execute_single_query, sample_data=self._sample_data)
+    if self._multi_processing:
+      ctx = mp.get_context('fork')
 
-      iterator = pool.imap(f, self._queries)
+      with ctx.Pool(num_processes) as pool:
+        iterator = pool.imap(f, self._queries)
 
+        if self._with_status:
+          iterator = tqdm(
+            iterator, total=len(self._queries), desc='Executing queries', unit='query'
+          )
+
+        self._results = list(iterator)
+    else:
       if self._with_status:
-        iterator = tqdm(iterator, total=len(self._queries), desc='Executing queries', unit='query')
+        iterator = tqdm(self._queries, desc='Executing queries', unit='query')
+      else:
+        iterator = self._queries
 
-      self._results = list(iterator)
+      self._results = [f(query) for query in iterator]
 
     return self._results
 
