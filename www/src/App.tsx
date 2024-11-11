@@ -116,6 +116,7 @@ const App = () => {
       client.runPython(`
 import json
 from pandas_query_generator import Schema
+
 schema_dict = json.loads('''${schema}''')
 Schema.from_dict(schema_dict)
 `);
@@ -136,8 +137,10 @@ QueryStructure(
 
       const generator = client.runPython(`
 from pandas_query_generator import Generator
+
 generator = Generator(schema, query_structure)
 query_pool = generator.generate(10)
+
 [str(query) for query in query_pool]
 `);
 
@@ -188,8 +191,12 @@ query_pool = generator.generate(10)
 
   return (
     <div className="container mx-auto p-4 space-y-4">
-      <p className='font-semibold text-3xl text-center'>Pandas Query Generator 🐼</p>
-      <p className='italic text-xl text-center'>An interactive web demonstration</p>
+      <p className="font-semibold text-3xl text-center">
+        Pandas Query Generator 🐼
+      </p>
+      <p className="italic text-xl text-center">
+        An interactive web demonstration
+      </p>
 
       <div className="min-h-[600px] rounded-lg border">
         <ResizablePanelGroup direction="horizontal" className="rounded-lg">
@@ -290,21 +297,21 @@ query_pool = generator.generate(10)
           )}
         </Button>
 
-{queries.length > 0 && (
-      <Card>
-        <CardHeader>
-          <CardTitle>Generated Queries</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Textarea
-            value={queries.join("\n\n")}
-            readOnly
-            className="font-mono h-[200px]"
-            placeholder="Generated queries will appear here..."
-          />
-        </CardContent>
-      </Card>
-    )}
+        {queries.length > 0 && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Generated Queries</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Textarea
+                value={queries.join("\n\n")}
+                readOnly
+                className="font-mono h-[200px]"
+                placeholder="Generated queries will appear here..."
+              />
+            </CardContent>
+          </Card>
+        )}
       </div>
     </div>
   );
