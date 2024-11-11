@@ -135,9 +135,9 @@ query_structure = QueryStructure(
   selection_probability=${settings.selectionProbability}
 )
 
-generator = Generator(schema, query_structure, multi_processing=False)
+generator = Generator(schema, query_structure)
 
-[str(query) for query in generator.generate(10)]
+[str(query) for query in generator.generate(10, multi_processing=False)]
 `);
 
       setQueries(generator.toJs());
