@@ -113,35 +113,28 @@ const App = () => {
     setGenerating(true);
 
     try {
-      client.runPython(`
+      const generator = client.runPython(`
 import json
+
+from pandas_query_generator import Generator
+from pandas_query_generator import QueryStructure
 from pandas_query_generator import Schema
 
-schema_dict = json.loads('''${schema}''')
-Schema.from_dict(schema_dict)
-`);
+schema = Schema.from_dict(json.loads('''${schema}'''))
 
-      client.runPython(`
-from pandas_query_generator import QueryStructure
-
-QueryStructure(
-    groupby_aggregation_probability=${settings.groupbyProbability},
-    max_groupby_columns=${settings.maxGroupbyColumns},
-    max_merges=${settings.maxMerges},
-    max_projection_columns=${settings.maxProjectionColumns},
-    max_selection_conditions=${settings.maxSelectionConditions},
-    projection_probability=${settings.projectionProbability},
-    selection_probability=${settings.selectionProbability}
+query_structure = QueryStructure(
+  groupby_aggregation_probability=${settings.groupbyProbability},
+  max_groupby_columns=${settings.maxGroupbyColumns},
+  max_merges=${settings.maxMerges},
+  max_projection_columns=${settings.maxProjectionColumns},
+  max_selection_conditions=${settings.maxSelectionConditions},
+  projection_probability=${settings.projectionProbability},
+  selection_probability=${settings.selectionProbability}
 )
-`);
-
-      const generator = client.runPython(`
-from pandas_query_generator import Generator
 
 generator = Generator(schema, query_structure)
-query_pool = generator.generate(10)
 
-[str(query) for query in query_pool]
+[str(query) for query in generator.generate(10)]
 `);
 
       setQueries(generator.toJs());

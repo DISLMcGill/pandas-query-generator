@@ -15,6 +15,7 @@ from .query import Query
 from .query_pool import QueryPool
 from .schema import Schema
 from .selection import Selection
+from .query_structure import QueryStructure
 
 __all__ = [
   'Entity',
@@ -30,6 +31,7 @@ __all__ = [
   'PropertyString',
   'Query',
   'QueryPool',
+  'QueryStructure',
   'Schema',
   'Selection',
 ]
