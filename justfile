@@ -54,7 +54,7 @@ run *args:
   uv run pqg {{args}}
 
 serve:
-  python3 -m http.server 8000 --directory ./www
+  cd www && bun install && bunx --bun vite
 
 test *args:
   uv run pytest --verbose {{args}}
