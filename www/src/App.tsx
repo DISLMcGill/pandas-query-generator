@@ -300,14 +300,14 @@ const App = () => {
   const { toast } = useToast();
 
   const [settings, setSettings] = useState({
-    selectionProbability: 0.7,
-    projectionProbability: 0.7,
-    groupbyProbability: 0.3,
-    maxGroupbyColumns: 3,
-    maxMerges: 10,
+    selectionProbability: 0.5,
+    projectionProbability: 0.5,
+    groupbyProbability: 0.5,
+    maxGroupbyColumns: 5,
+    maxMerges: 2,
     maxProjectionColumns: 5,
-    maxSelectionConditions: 10,
-    numQueries: 10,
+    maxSelectionConditions: 5,
+    numQueries: 100,
   });
 
   useEffect(() => {
