@@ -4,6 +4,8 @@
 synthetic [pandas](https://pandas.pydata.org/) queries for training machine
 learning models that estimate query execution costs or predict cardinality.
 
+The binary is called **pqg** and has only been tested on a unix-based system.
+
 ## Installation
 
 You can install the query generator using [pip](https://pip.pypa.io/en/stable/installation/), the Python package manager:
