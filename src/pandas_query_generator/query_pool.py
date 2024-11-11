@@ -101,62 +101,67 @@ class QueryStatistics:
   merge_count: t.List[int] = field(default_factory=list)
   execution_results: ExecutionStatistics = field(default_factory=ExecutionStatistics)
 
+  @staticmethod
+  def _safe_stats(values: t.List[int]) -> tuple[float, float, int]:
+    """Calculate mean, standard deviation, and max for a list of values."""
+    if not values:
+      return 0.0, 0.0, 0
+    return (stats.mean(values), stats.stdev(values) if len(values) > 1 else 0.0, max(values))
+
+  @staticmethod
+  def _format_frequency(label: str, actual: float, target: t.Optional[float] = None) -> str:
+    """Format a frequency line."""
+    if target is None:
+      return f'  {label} {actual:.1f}%'
+    return f'  {label} {actual:.1f}% vs {target*100:.1f}%'
+
+  @staticmethod
+  def _format_count(label: str, mean: float, std: float, max_val: int, limit: int) -> str:
+    """Format a count line."""
+    return f'  {label} {mean:.1f} ± {std:.1f} | {max_val} vs {limit}'
+
   def __str__(self) -> str:
     if self.total_queries == 0:
       return ''
 
-    selection_probability, projection_probability, merge_probability, groupby_probability = (
+    probabilities = (
       self.queries_with_selection / self.total_queries * 100,
       self.queries_with_projection / self.total_queries * 100,
       self.queries_with_merge / self.total_queries * 100,
       self.queries_with_groupby / self.total_queries * 100,
     )
 
-    def safe_stats(values: t.List[int]) -> tuple[float, float, int]:
-      if not values:
-        return 0.0, 0.0, 0
-      return (stats.mean(values), stats.stdev(values) if len(values) > 1 else 0.0, max(values))
-
-    selection_mean, selection_std, selection_max = safe_stats(self.selection_conditions)
-    projection_mean, projection_std, projection_max = safe_stats(self.projection_columns)
-    merge_mean, merge_std, merge_max = safe_stats(self.merge_count)
-    groupby_mean, groupby_std, groupby_max = safe_stats(self.groupby_columns)
-
     lines = [
       f'Query Statistics (n = {self.total_queries})',
       '',
       'Operation Frequencies (actual vs target):',
-      f'  Selection:  {selection_probability:5.1f}% vs{self.query_structure.selection_probability*100:5.1f}%',
-      f'  Projection: {projection_probability:5.1f}% vs{self.query_structure.projection_probability*100:5.1f}%',
-      f'  GroupBy:    {groupby_probability:5.1f}% vs{self.query_structure.groupby_aggregation_probability*100:5.1f}%',
-      f'  Merge:      {merge_probability:5.1f}%',
+      self._format_frequency(
+        'Selection:', probabilities[0], self.query_structure.selection_probability
+      ),
+      self._format_frequency(
+        'Projection:', probabilities[1], self.query_structure.projection_probability
+      ),
+      self._format_frequency(
+        'GroupBy:', probabilities[3], self.query_structure.groupby_aggregation_probability
+      ),
+      self._format_frequency('Merge:', probabilities[2]),
       '',
       'Operation Counts (avg ± std | max vs limit):',
     ]
 
-    if self.selection_conditions:
-      lines.append(
-        f'  Selection conditions: {selection_mean:.1f} ± {selection_std:.1f} | '
-        f'{selection_max} vs {self.query_structure.max_selection_conditions}'
-      )
-
-    if self.projection_columns:
-      lines.append(
-        f'  Projection columns:   {projection_mean:.1f} ± {projection_std:.1f} | '
-        f'{projection_max} vs {self.query_structure.max_projection_columns}'
-      )
-
-    if self.groupby_columns:
-      lines.append(
-        f'  GroupBy columns:      {groupby_mean:.1f} ± {groupby_std:.1f} | '
-        f'{groupby_max} vs {self.query_structure.max_groupby_columns}'
-      )
-
-    if self.merge_count:
-      lines.append(
-        f'  Merges per query:     {merge_mean:.1f} ± {merge_std:.1f} | '
-        f'{merge_max} vs {self.query_structure.max_merges}'
-      )
+    for data, label, limit in [
+      (
+        self.selection_conditions,
+        'Selection conditions:',
+        self.query_structure.max_selection_conditions,
+      ),
+      (self.projection_columns, 'Projection columns:', self.query_structure.max_projection_columns),
+      (self.groupby_columns, 'GroupBy columns:', self.query_structure.max_groupby_columns),
+      (self.merge_count, 'Merges per query:', self.query_structure.max_merges),
+    ]:
+      if data:
+        mean, std, max_val = self._safe_stats(data)
+        lines.append(self._format_count(label, mean, std, max_val, limit))
 
     lines.extend(['', str(self.execution_results)])
 

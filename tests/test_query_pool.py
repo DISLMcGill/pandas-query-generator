@@ -245,3 +245,150 @@ class TestQueryPoolSort:
 
     assert len(pool._queries) == 2
     assert str(pool._queries[0]) != str(pool._queries[1])
+
+
+class TestQueryPoolStatistics:
+  def test_empty_pool_statistics(self, sample_dataframes, query_structure):
+    pool = QueryPool([], query_structure, sample_dataframes)
+    stats = pool.statistics()
+
+    assert stats.total_queries == 0
+    assert stats.queries_with_selection == 0
+    assert stats.queries_with_projection == 0
+    assert stats.queries_with_groupby == 0
+    assert stats.queries_with_merge == 0
+    assert len(stats.selection_conditions) == 0
+    assert len(stats.projection_columns) == 0
+    assert len(stats.groupby_columns) == 0
+    assert len(stats.merge_count) == 0
+
+  def test_basic_operation_frequencies(
+    self,
+    sample_dataframes,
+    query_structure,
+    simple_selection,
+    simple_projection,
+    simple_groupby,
+    simple_merge,
+  ):
+    pool = QueryPool(
+      [simple_selection, simple_projection, simple_groupby, simple_merge],
+      query_structure,
+      sample_dataframes,
+    )
+    stats = pool.statistics()
+
+    assert stats.total_queries == 4
+    assert stats.queries_with_selection == 1
+    assert stats.queries_with_projection == 1
+    assert stats.queries_with_groupby == 1
+    assert stats.queries_with_merge == 1
+
+    assert stats.selection_conditions == [1]
+    assert stats.projection_columns == [2]
+    assert stats.groupby_columns == [1]
+    assert stats.merge_count == [1]
+
+  def test_execution_statistics(
+    self,
+    sample_dataframes,
+    query_structure,
+    simple_selection,
+    simple_projection,
+  ):
+    bad_query = Query(
+      'customers',
+      [Selection([("'nonexistent'", '>=', 30, '&')])],
+      False,
+      {'nonexistent'},
+    )
+
+    empty_query = Query(
+      'customers',
+      [Selection([("'age'", '>', 100, '&')])],
+      False,
+      {'age'},
+    )
+
+    pool = QueryPool(
+      [simple_selection, simple_projection, bad_query, empty_query],
+      query_structure,
+      sample_dataframes,
+    )
+
+    stats = pool.statistics()
+
+    assert stats.execution_results.successful == 3
+    assert stats.execution_results.failed == 1
+    assert stats.execution_results.non_empty == 2
+    assert stats.execution_results.empty == 1
+
+    assert len(stats.execution_results.errors) == 1
+    assert "KeyError: 'nonexistent'" in stats.execution_results.errors
+
+  def test_complex_query_statistics(self, sample_dataframes, query_structure):
+    complex_query = Query(
+      'customers',
+      [
+        Selection(
+          [
+            ("'age'", '>=', 30, '&'),
+            ("'country'", '==', "'US'", '&'),
+          ]
+        ),
+        Projection(['name', 'age', 'country']),
+      ],
+      False,
+      {'age', 'country', 'name'},
+    )
+
+    pool = QueryPool([complex_query], query_structure, sample_dataframes)
+    stats = pool.statistics()
+
+    assert stats.queries_with_selection == 1
+    assert stats.queries_with_projection == 1
+    assert stats.selection_conditions == [2]
+    assert stats.projection_columns == [3]
+
+  def test_nested_merge_statistics(self, sample_dataframes, query_structure):
+    inner_query = Query('orders', [], False, set())
+
+    outer_query = Query(
+      'customers',
+      [
+        Merge(inner_query, "'id'", "'customer_id'"),
+        Merge(inner_query, "'id'", "'customer_id'"),
+      ],
+      False,
+      {'id', 'customer_id'},
+    )
+
+    pool = QueryPool([outer_query], query_structure, sample_dataframes)
+    stats = pool.statistics()
+
+    assert stats.queries_with_merge == 1
+    assert stats.merge_count == [2]
+
+  def test_statistics_match_structure(self, sample_dataframes, query_structure):
+    complex_query = Query(
+      'customers',
+      [
+        Selection(
+          [
+            ("'age'", '>=', 30, '&'),
+            ("'country'", '==', "'US'", '&'),
+          ]
+        ),
+        Projection(['name', 'age', 'country']),
+        GroupByAggregation(['country'], 'mean'),
+      ],
+      False,
+      {'age', 'country', 'name'},
+    )
+
+    pool = QueryPool([complex_query], query_structure, sample_dataframes)
+    stats = pool.statistics()
+
+    assert max(stats.selection_conditions) <= query_structure.max_selection_conditions
+    assert max(stats.projection_columns) <= query_structure.max_projection_columns
+    assert max(stats.groupby_columns) <= query_structure.max_groupby_columns
