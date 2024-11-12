@@ -146,6 +146,7 @@ Moreover, we accept a few parameters that describe the structure of individually
   \item Probability of generating a projection ($P_{\pi}$).
   \item Maximum number of merge operations ($N_{\bowtie}$).
   \item Maximum number of group-by columns ($C_{\gamma}$).
+  \item Maximum number of aggregation columns ($C_{\Sigma}$).
   \item Probability of generating a group-by ($P_{\gamma}$).
 \end{itemize}
 
@@ -226,7 +227,7 @@ Assume the data types and the data ranges for each column on all tables are give
 \begin{lstlisting}
 set $COND$ to be an empty list
 
-set $X$ to be random(1, min($C_{\sigma}$, |C|))
+set $X$ to be rand(1, min($C_{\sigma}$, |C|))
 
 from 1 to $X$
   pick a random column $C_{i}$ $\in$ $C$
@@ -266,7 +267,7 @@ set $P$ to $C$ - $R$
 if $P$ is empty
   project $C$
 
-set $X$ to random(1, min($C_{\pi}$, len($P$)))
+set $X$ to rand(1, min($C_{\pi}$ - |R|, len($P$)))
 
 select a subset $P_{S} \subseteq P$, $|P_{S}| = X$
 
@@ -429,20 +430,34 @@ We're able sustain such complex recursion trees that maintain query validity sim
 
 \subsubsection*{Groupby $(\gamma)$}
 
-For simplicity, we \textit{always} generate the group-by with an aggregation. Since this is always appended at the end of the outer-most query, we need not worry about required columns, so we pick a random subset from our available columns with a random aggregation function:
+For simplicity, we \textit{always} generate the group-by with an aggregation. Since this is always appended at the end of the outer-most query, we need not worry about required columns, so we pick a random subset from our available columns with a mapping of columns to aggregation functions.
 
 \spacing
 \begin{lstlisting}
-set X to random(1, min($C_{\gamma}$, |$C$|))
+set X to rand(1, min($C_{\gamma}$, |$C$|))
 
 select a subset $G_{S} \subseteq C$, |$G_{S}$| = X
 
-define $F_{C} = \{mean, sum, min, max, count\}$
+set $A$ to be C - $G_{S}$
 
-select a function $F \in F_{C}$
+if A is empty
+  group by on $G_S$, without aggregation
 
-group by on $G_S$, aggregate with $F$c
+set Y to be rand(1, min($C_{\Sigma}$, |A|))
+
+select a subset $A_{S} \subseteq A$, |$A_{S}|$ = Y
+
+set $F$ to be an empty mapping
+
+for each column $\in$ $A_{S}$
+  map column -> a function, in $F$
+
+group by on $G_S$, aggregate with $F$
 \end{lstlisting}
+
+\spacing
+\noindent
+The mapping of columns to a function should be done knowing the columns type. For instance, a column whose type is string should not get mapped with $mean$. This mapping can be defined statically in code, associating column types with appropriate functions.
 
 \subsection*{Output}
 
