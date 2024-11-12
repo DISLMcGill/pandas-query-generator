@@ -47,6 +47,7 @@ class QueryBuilder:
     self.columns: t.Set[str] = set(self.entity.properties.keys())
     self.required_columns: t.Set[str] = set()
     self.merge_entities: t.Set[str] = {self.entity.name}
+    self.max_merges = self.query_structure.max_merges
     self.operations: t.List[Operation] = []
 
   def build(self) -> Query:
@@ -79,7 +80,7 @@ class QueryBuilder:
     ):
       self.operations.append(self._generate_projection())
 
-    num_merges = random.randint(0, self.query_structure.max_merges)
+    num_merges = random.randint(0, self.max_merges)
 
     for _ in range(num_merges):
       try:
@@ -220,7 +221,7 @@ class QueryBuilder:
     right_query_structure = QueryStructure(
       groupby_aggregation_probability=0,
       max_groupby_columns=0,
-      max_merges=self.query_structure.max_merges - num_merges,
+      max_merges=self.max_merges - num_merges,
       max_projection_columns=self.query_structure.max_projection_columns,
       max_selection_conditions=self.query_structure.max_selection_conditions,
       projection_probability=self.query_structure.projection_probability,
@@ -236,7 +237,7 @@ class QueryBuilder:
 
     self.columns = self.columns.union(right_query.columns)
     self.merge_entities = self.merge_entities.union(right_query.merge_entities)
-    self.query_structure.max_merges = self.query_structure.max_merges - right_query.merge_count
+    self.max_merges = self.max_merges - right_query.merge_count
 
     def format_join_columns(columns: str | t.List[str]) -> str:
       return (

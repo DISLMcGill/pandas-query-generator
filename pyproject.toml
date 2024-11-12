@@ -1,10 +1,10 @@
 [project]
 name = "pqg"
-version = "0.1.0"
+version = "0.2.5"
 description = "A synthetic pandas query generation tool"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = ["pandas>=2.2.3", "ruff>=0.6.7", "sortedcontainers>=2.4.0", "tdqm>=0.0.1"]
+dependencies = ["pandas>=2.2.0", "tqdm>=4.66.2"]
 
 [build-system]
 requires = ["hatchling"]
@@ -38,4 +38,4 @@ indent-style = "space"
 quote-style = "single"
 
 [tool.uv]
-dev-dependencies = ["genson>=1.3.0", "pytest-mock>=3.14.0", "pytest>=8.3.3"]
+dev-dependencies = ["genson>=1.3.0", "pytest-mock>=3.14.0", "pytest>=8.3.3", "ruff>=0.7.3"]

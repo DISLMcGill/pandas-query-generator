@@ -6,7 +6,6 @@ import pytest
 from pandas_query_generator.generator import Generator
 from pandas_query_generator.query_structure import QueryStructure
 from pandas_query_generator.schema import Schema
-from pandas_query_generator.utils import execute_query
 
 EXAMPLES_DIR = pathlib.Path(__file__).parent.parent / 'examples'
 
@@ -47,17 +46,13 @@ def test_schema_query_generation_and_execution(
 ):
   example_name, schema = schema_fixture
 
-  sample_data = {entity.name: entity.generate_dataframe() for entity in schema.entities}
+  generator = Generator(schema, query_structure)
 
-  generator = Generator(schema, query_structure, multi_line=False)
-
-  queries = generator.generate(100)
+  query_pool = generator.generate(100)
 
   non_empty_results = 0
 
-  for query in queries:
-    result, error = execute_query(query, sample_data)
-
+  for query, (result, error) in query_pool.items():
     assert (
       error is None
     ), f'Single-line query execution failed with error: {error}\nQuery: {str(query)}'
@@ -71,7 +66,7 @@ def test_schema_query_generation_and_execution(
 
   min_non_empty_ratio = 0.3
 
-  actual_ratio = non_empty_results / len(queries)
+  actual_ratio = non_empty_results / len(query_pool)
 
   assert actual_ratio >= min_non_empty_ratio, (
     f'Too few non-empty results in {example_name} schema. '

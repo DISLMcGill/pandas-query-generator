@@ -81,6 +81,7 @@ class Arguments:
   A wrapper class providing concrete types for parsed command-line arguments.
   """
 
+  disable_multi_processing: bool
   filter: QueryFilter
   groupby_aggregation_probability: float
   max_groupby_columns: int
@@ -101,6 +102,12 @@ class Arguments:
     parser = argparse.ArgumentParser(
       description='Pandas Query Generator CLI',
       formatter_class=HelpFormatter,
+    )
+
+    parser.add_argument(
+      '--disable-multi-processing',
+      action='store_true',
+      help='Generate and execute queries in a consecutive fashion',
     )
 
     parser.add_argument(
