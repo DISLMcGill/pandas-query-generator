@@ -84,6 +84,7 @@ class Arguments:
   disable_multi_processing: bool
   filter: QueryFilter
   groupby_aggregation_probability: float
+  max_aggregation_columns: int
   max_groupby_columns: int
   max_merges: int
   max_projection_columns: int
@@ -125,6 +126,14 @@ class Arguments:
       required=False,
       default=0.5,
       help='Probability of including groupby aggregation operations',
+    )
+
+    parser.add_argument(
+      '--max-aggregation-columns',
+      type=int,
+      required=False,
+      default=3,
+      help='Maximum number of columns to aggregate in GROUP BY operations',
     )
 
     parser.add_argument(

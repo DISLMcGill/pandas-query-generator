@@ -11,6 +11,7 @@ class QueryStructure:
   """
 
   groupby_aggregation_probability: float
+  max_aggregation_columns: int
   max_groupby_columns: int
   max_merges: int
   max_projection_columns: int
@@ -31,6 +32,7 @@ class QueryStructure:
     """
     return QueryStructure(
       groupby_aggregation_probability=arguments.groupby_aggregation_probability,
+      max_aggregation_columns=arguments.max_aggregation_columns,  # Add this line
       max_groupby_columns=arguments.max_groupby_columns,
       max_merges=arguments.max_merges,
       max_projection_columns=arguments.max_projection_columns,

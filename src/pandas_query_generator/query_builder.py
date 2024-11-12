@@ -220,6 +220,7 @@ class QueryBuilder:
 
     right_query_structure = QueryStructure(
       groupby_aggregation_probability=0,
+      max_aggregation_columns=0,
       max_groupby_columns=0,
       max_merges=self.max_merges - num_merges,
       max_projection_columns=self.query_structure.max_projection_columns,
@@ -270,7 +271,6 @@ class QueryBuilder:
     )
 
     group_columns = random.sample(list(self.columns), num_group_cols)
-
     agg_candidates = list(self.columns - set(group_columns))
 
     if not agg_candidates:
@@ -279,26 +279,26 @@ class QueryBuilder:
       )
 
     num_agg_columns = random.randint(
-      1, min(self.query_structure.max_groupby_columns, len(agg_candidates))
+      1, min(self.query_structure.max_aggregation_columns, len(agg_candidates))
     )
 
     agg_columns = random.sample(agg_candidates, num_agg_columns)
-
     aggregations = {}
 
-    def find_property(prop_name: str) -> Property | None:
-      entities = list(map(lambda e: self.schema[e], self.merge_entities))
+    def property_for_column(column: str) -> Property | None:
+      return next(
+        (
+          entity.properties[column]
+          for entity in (self.schema[e] for e in self.merge_entities)
+          if column in entity.properties
+        ),
+        None,
+      )
 
-      for entity in entities:
-        if prop_name in entity.properties:
-          return entity.properties[prop_name]
-
-      return None
-
-    for col in agg_columns:
-      prop = find_property(col)
+    for column in agg_columns:
+      prop = property_for_column(column)
       assert prop is not None
       compatible_aggs = AggregationType.compatible_aggregations(prop)
-      aggregations[col] = random.choice(compatible_aggs)
+      aggregations[column] = random.choice(compatible_aggs)
 
     return GroupByAggregation(group_by_columns=group_columns, agg_columns=aggregations)
