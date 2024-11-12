@@ -1,6 +1,7 @@
-import { loadPyodide, PyodideInterface } from "pyodide";
-import { useEffect, useState } from "react";
-import { useToast } from "./use-toast";
+import { PyodideInterface, loadPyodide } from 'pyodide';
+import { useEffect, useState } from 'react';
+
+import { useToast } from './use-toast';
 
 export const usePyodideClient = () => {
   const [client, setClient] = useState<PyodideInterface>();
@@ -11,19 +12,19 @@ export const usePyodideClient = () => {
   useEffect(() => {
     setLoading(true);
     loadPyodide({
-      indexURL: "https://cdn.jsdelivr.net/pyodide/v0.26.3/full",
+      indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.26.3/full',
     }).then(async (pyodide: PyodideInterface) => {
       try {
-        await pyodide.loadPackage("micropip");
-        const micropip = pyodide.pyimport("micropip");
-        await micropip.install("pqg");
+        await pyodide.loadPackage('micropip');
+        const micropip = pyodide.pyimport('micropip');
+        await micropip.install('pqg');
         setClient(pyodide);
       } catch (err) {
         toast({
-          variant: "destructive",
-          title: "Error",
+          variant: 'destructive',
+          title: 'Error',
           description:
-            err instanceof Error ? err.message : "Failed to load Python client",
+            err instanceof Error ? err.message : 'Failed to load Python client',
         });
       } finally {
         setLoading(false);

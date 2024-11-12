@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 export const usePersistedState = <T>(
   key: string,
-  defaultValue: T,
+  defaultValue: T
 ): [T, (value: T | ((prev: T) => T)) => void] => {
   const [state, setState] = useState<T>(() => {
     try {
