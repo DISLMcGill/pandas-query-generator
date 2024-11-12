@@ -3,7 +3,6 @@
 **Pandas Query Generator (pqg)** is a tool designed to help users generate
 synthetic [pandas](https://pandas.pydata.org/) queries for training machine
 learning models that estimate query execution costs or predict cardinality.
-
 The binary is called **pqg** and has only been tested on a unix-based system.
 
 ## Installation
@@ -13,6 +12,17 @@ You can install the query generator using [pip](https://pip.pypa.io/en/stable/in
 ```bash
 pip install pqg
 ```
+
+Alternatively, you can use the local web playground:
+
+```
+cd www && bun install && bunx --bun vite
+```
+
+*n.b.* This command will require you to have [bun](https://bun.sh/) installed on your machine.
+
+This will spin up a development server at `localhost:5173` where you can interact with the playground.
+You can upload your schemas, tweak query parameters and generate queries.
 
 ## Usage
 
