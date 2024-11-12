@@ -1,6 +1,7 @@
-import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
-import { Settings } from "./types";
+import { type ClassValue, clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+
+import { Settings } from './types';
 
 export const calculateMeanStd = (values: number[]) => {
   if (values.length === 0) return { mean: 0, std: 0, max: 0 };
