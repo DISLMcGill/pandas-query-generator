@@ -59,18 +59,17 @@ class GroupByAggregation(Operation):
   Represents a group by aggregation operation in a query.
 
   Attributes:
-      group_by_columns: List of columns to group by
-      agg_columns: Dictionary mapping column names to their aggregation functions
+    group_by_columns: List of columns to group by
+    agg_columns: Dictionary mapping column names to their aggregation functions
   """
 
   group_by_columns: t.List[str]
-  agg_columns: t.Dict[str, str]
+  aggregation_columns: t.Dict[str, str]
 
   def apply(self, entity: str) -> str:
     """Generate the pandas groupby operation string."""
-    group_cols = ', '.join(f"'{col}'" for col in self.group_by_columns)
+    group_by_columns = ', '.join(f"'{col}'" for col in self.group_by_columns)
 
-    aggs = [f'{col!r}: {func!r}' for col, func in self.agg_columns.items()]
-    aggs_dict = '{' + ', '.join(aggs) + '}'
+    aggregations = [f'{col!r}: {func!r}' for col, func in self.aggregation_columns.items()]
 
-    return f'.groupby(by=[{group_cols}]).agg({aggs_dict})'
+    return f'.groupby(by=[{group_by_columns}]).agg({'{' + ', '.join(aggregations) + '}'})'

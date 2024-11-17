@@ -266,39 +266,40 @@ class QueryBuilder:
     Returns:
       Operation: A GroupByAggregation operation with type-appropriate aggregations
     """
-    num_group_cols = random.randint(
+    num_group_by_columns = random.randint(
       1, min(self.query_structure.max_groupby_columns, len(self.columns))
     )
 
-    group_columns = random.sample(list(self.columns), num_group_cols)
-    agg_candidates = list(self.columns - set(group_columns))
+    group_by_columns = random.sample(list(self.columns), num_group_by_columns)
+    aggregation_candidates = list(self.columns - set(group_by_columns))
 
-    if not agg_candidates:
+    if not aggregation_candidates:
       return GroupByAggregation(
-        group_by_columns=group_columns, agg_columns={group_columns[0]: 'count'}
+        group_by_columns=group_by_columns, aggregation_columns={group_by_columns[0]: 'count'}
       )
 
-    num_agg_columns = random.randint(
-      1, min(self.query_structure.max_aggregation_columns, len(agg_candidates))
+    num_aggregation_columns = random.randint(
+      1, min(self.query_structure.max_aggregation_columns, len(aggregation_candidates))
     )
 
-    agg_columns = random.sample(agg_candidates, num_agg_columns)
-    aggregations = {}
+    aggregations, aggregation_columns = (
+      {},
+      random.sample(aggregation_candidates, num_aggregation_columns),
+    )
 
-    def property_for_column(column: str) -> Property | None:
-      return next(
-        (
-          entity.properties[column]
-          for entity in (self.schema[e] for e in self.merge_entities)
-          if column in entity.properties
-        ),
-        None,
-      )
+    property_for_column = lambda column: next(
+      (
+        entity.properties[column]
+        for entity in (self.schema[e] for e in self.merge_entities)
+        if column in entity.properties
+      ),
+      None,
+    )
 
-    for column in agg_columns:
+    for column in aggregation_columns:
       prop = property_for_column(column)
       assert prop is not None
       compatible_aggs = AggregationType.compatible_aggregations(prop)
       aggregations[column] = random.choice(compatible_aggs)
 
-    return GroupByAggregation(group_by_columns=group_columns, agg_columns=aggregations)
+    return GroupByAggregation(group_by_columns=group_by_columns, aggregation_columns=aggregations)
