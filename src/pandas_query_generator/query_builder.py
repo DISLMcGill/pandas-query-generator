@@ -1,8 +1,16 @@
 import random
 import typing as t
 
-from .entity import Entity, PropertyDate, PropertyEnum, PropertyFloat, PropertyInt, PropertyString
-from .group_by_aggregation import GroupByAggregation
+from .entity import (
+  Entity,
+  Property,
+  PropertyDate,
+  PropertyEnum,
+  PropertyFloat,
+  PropertyInt,
+  PropertyString,
+)
+from .group_by_aggregation import AggregationType, GroupByAggregation
 from .merge import Merge
 from .operation import Operation
 from .projection import Projection
@@ -212,6 +220,7 @@ class QueryBuilder:
 
     right_query_structure = QueryStructure(
       groupby_aggregation_probability=0,
+      max_aggregation_columns=0,
       max_groupby_columns=0,
       max_merges=self.max_merges - num_merges,
       max_projection_columns=self.query_structure.max_projection_columns,
@@ -246,25 +255,51 @@ class QueryBuilder:
 
   def _generate_group_by_aggregation(self) -> Operation:
     """
-    Generate a GROUP BY clause with aggregation.
+    Generate a type-aware GROUP BY clause for aggregating data.
 
-    Creates a grouping operation that:
+    This method:
     1. Randomly selects columns to group by
-    2. Chooses an aggregation function (mean, sum, min, max, count)
-    3. Ensures numeric_only parameter is set appropriately
-
-    The number of grouping columns is bounded by max_groupby_columns
-    configuration and available columns.
+    2. From remaining columns, selects columns to aggregate
+    3. For each aggregation column, chooses an appropriate aggregation
+       function based on the column's data type
 
     Returns:
-      Operation: A GroupByAggregation operation with the grouping
-      configuration.
+      Operation: A GroupByAggregation operation with type-appropriate aggregations
     """
-    group_columns = random.sample(
-      list(self.columns),
-      random.randint(1, min(self.query_structure.max_groupby_columns, len(self.columns))),
+    num_group_by_columns = random.randint(
+      1, min(self.query_structure.max_groupby_columns, len(self.columns))
     )
 
-    agg_function = random.choice(['mean', 'sum', 'min', 'max', 'count'])
+    group_by_columns = random.sample(list(self.columns), num_group_by_columns)
+    aggregation_candidates = list(self.columns - set(group_by_columns))
 
-    return GroupByAggregation(group_columns, agg_function)
+    if not aggregation_candidates:
+      return GroupByAggregation(
+        group_by_columns=group_by_columns, aggregation_columns={group_by_columns[0]: 'count'}
+      )
+
+    num_aggregation_columns = random.randint(
+      1, min(self.query_structure.max_aggregation_columns, len(aggregation_candidates))
+    )
+
+    aggregations, aggregation_columns = (
+      {},
+      random.sample(aggregation_candidates, num_aggregation_columns),
+    )
+
+    property_for_column = lambda column: next(
+      (
+        entity.properties[column]
+        for entity in (self.schema[e] for e in self.merge_entities)
+        if column in entity.properties
+      ),
+      None,
+    )
+
+    for column in aggregation_columns:
+      property = property_for_column(column)
+      assert property is not None
+      compatible_aggregations = AggregationType.compatible_aggregations(property)
+      aggregations[column] = random.choice(compatible_aggregations)
+
+    return GroupByAggregation(group_by_columns=group_by_columns, aggregation_columns=aggregations)

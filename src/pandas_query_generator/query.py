@@ -19,8 +19,7 @@ class Query:
     entity (str): The name of the target entity.
     operations (List[Operation]): List of operations to apply.
     multi_line (bool): Whether to format output across multiple lines.
-    available_columns (Set[str]): Columns available for operations.
-    complexity (int): Measure of query complexity based on merge operations.
+    columns (Set[str]): Columns available for operations.
   """
 
   def __init__(
@@ -73,7 +72,7 @@ class Query:
     5. GroupBy complexity: Number of grouping columns plus weight of aggregation
 
     Returns:
-        int: Complexity score for the query
+      int: Complexity score for the query
     """
 
     def get_merge_complexity(op: Operation) -> int:

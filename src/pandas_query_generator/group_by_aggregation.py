@@ -1,16 +1,75 @@
 import typing as t
 from dataclasses import dataclass
+from enum import Enum
 
+from .entity import Property, PropertyDate, PropertyEnum, PropertyFloat, PropertyInt, PropertyString
 from .operation import Operation
+
+
+class AggregationType(str, Enum):
+  """Defines supported aggregation types and their compatibility."""
+
+  MEAN = 'mean'
+  SUM = 'sum'
+  MIN = 'min'
+  MAX = 'max'
+  COUNT = 'count'
+  MODE = 'mode'
+  NUNIQUE = 'nunique'
+  FIRST = 'first'
+  LAST = 'last'
+
+  @staticmethod
+  def compatible_aggregations(property: Property) -> t.List[str]:
+    """Get compatible aggregation types for a given property type."""
+    match property:
+      case PropertyInt() | PropertyFloat():
+        return [
+          AggregationType.MEAN.value,
+          AggregationType.SUM.value,
+          AggregationType.MIN.value,
+          AggregationType.MAX.value,
+          AggregationType.COUNT.value,
+          AggregationType.NUNIQUE.value,
+          AggregationType.FIRST.value,
+          AggregationType.LAST.value,
+        ]
+      case PropertyString() | PropertyEnum():
+        return [
+          AggregationType.COUNT.value,
+          AggregationType.MODE.value,
+          AggregationType.NUNIQUE.value,
+          AggregationType.FIRST.value,
+          AggregationType.LAST.value,
+        ]
+      case PropertyDate():
+        return [
+          AggregationType.MIN.value,
+          AggregationType.MAX.value,
+          AggregationType.COUNT.value,
+          AggregationType.NUNIQUE.value,
+          AggregationType.FIRST.value,
+          AggregationType.LAST.value,
+        ]
 
 
 @dataclass
 class GroupByAggregation(Operation):
+  """
+  Represents a group by aggregation operation in a query.
+
+  Attributes:
+    group_by_columns: List of columns to group by
+    agg_columns: Dictionary mapping column names to their aggregation functions
+  """
+
   group_by_columns: t.List[str]
-  agg_function: str
+  aggregation_columns: t.Dict[str, str]
 
   def apply(self, entity: str) -> str:
-    group_cols = ', '.join(f"'{col}'" for col in self.group_by_columns)
-    numeric_only = 'numeric_only=True' if self.agg_function != 'count' else ''
-    formatted_option = f', {numeric_only}' if numeric_only else ''
-    return f".groupby(by=[{group_cols}]).agg('{self.agg_function}'{formatted_option})"
+    """Generate the pandas groupby operation string."""
+    group_by_columns = ', '.join(f"'{col}'" for col in self.group_by_columns)
+
+    aggregations = [f'{col!r}: {func!r}' for col, func in self.aggregation_columns.items()]
+
+    return f'.groupby(by=[{group_by_columns}]).agg({'{' + ', '.join(aggregations) + '}'})'
