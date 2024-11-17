@@ -297,9 +297,9 @@ class QueryBuilder:
     )
 
     for column in aggregation_columns:
-      prop = property_for_column(column)
-      assert prop is not None
-      compatible_aggs = AggregationType.compatible_aggregations(prop)
-      aggregations[column] = random.choice(compatible_aggs)
+      property = property_for_column(column)
+      assert property is not None
+      compatible_aggregations = AggregationType.compatible_aggregations(property)
+      aggregations[column] = random.choice(compatible_aggregations)
 
     return GroupByAggregation(group_by_columns=group_by_columns, aggregation_columns=aggregations)
