@@ -1,3 +1,4 @@
+from .arguments import QueryFilter
 from .entity import (
   Entity,
   Property,
@@ -34,4 +35,5 @@ __all__ = [
   'QueryStructure',
   'Schema',
   'Selection',
+  'QueryFilter',
 ]

@@ -41,6 +41,9 @@ count:
 fmt:
   ruff check --select I --fix && ruff format
 
+generate-docs:
+  cd docs && just build
+
 generate-example-output:
   ./bin/generate-example-output
 
@@ -53,7 +56,10 @@ readme:
 run *args:
   uv run pqg {{args}}
 
-serve:
+serve-docs: generate-docs
+  python3 -m http.server 8000 --directory docs/build/html
+
+serve-web:
   cd www && bun install && bunx --bun vite
 
 test *args:

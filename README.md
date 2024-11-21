@@ -3,6 +3,7 @@
 **Pandas Query Generator (pqg)** is a tool designed to help users generate
 synthetic [pandas](https://pandas.pydata.org/) queries for training machine
 learning models that estimate query execution costs or predict cardinality.
+
 The binary is called **pqg** and has only been tested on a unix-based system.
 
 ## Installation
@@ -25,6 +26,10 @@ This will spin up a development server at `localhost:5173` where you can interac
 You can upload your schemas, tweak query parameters and generate queries.
 
 ## Usage
+
+The query generator exposes both a command-line tool and library interface.
+
+### CLI
 
 Below is the standard output of `pqg --help`, which elaborates on the various
 command-line arguments the tool accepts:
@@ -95,6 +100,62 @@ queries from this schema with `pqg --num-queries 100 --schema examples/customer/
 
 Schemas for these files can be found in their respective directories within
 `/examples`.
+
+### Library
+
+We expose various structures that make it easy to generate queries fast:
+
+```python
+import json
+
+from pandas_query_generator import Generator, Schema, QueryStructure, QueryPool,
+QueryFilter
+
+# Assumes `schema.json` exists and conforms to the schema format
+schema = Schema.from_file('schema.json')
+
+query_structure = QueryStructure(
+  groupby_aggregation_probability=0.5,
+  max_groupby_columns=4,
+  max_merges=10,
+  max_projection_columns=5,
+  max_selection_conditions=10,
+  projection_probability=0.5,
+  selection_probability=0.5
+)
+
+generator = Generator(schema, query_structure)
+
+# Generate 1000 queries
+query_pool = generator.generate(1000)
+
+# Filter out queries with non-empty result sets
+query_pool.filter(QueryFilter.NON_EMPTY)
+
+# Sort queries by complexity
+query_pool.sort()
+
+for query in query_pool:
+  print(query)
+```
+
+Comprehensive API documentation is generated using the `sphinx` Python package.
+
+You can generate the documentation using the following command in the project
+root:
+
+```bash
+cd docs && uv run sphinx-build -M html source build
+```
+
+...then serve it with:
+
+```bash
+python3 -m http.server 8000 --directory docs/build/html
+```
+
+This will serve the documentation files at `http://localhost:8000`. Open it up
+in your preferred browser see the generated site.
 
 ## How does it work?
 

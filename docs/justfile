@@ -1,0 +1,5 @@
+build method='html':
+  uv run sphinx-build -M {{ method }} source build
+
+fmt:
+  prettier --write .
