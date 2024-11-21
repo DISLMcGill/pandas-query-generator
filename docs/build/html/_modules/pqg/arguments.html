@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pandas_query_generator.arguments &#8212; pqg documentation</title>
+    <title>pqg.arguments &#8212; pqg documentation</title>
     <link
       rel="stylesheet"
       type="text/css"
@@ -33,7 +33,7 @@
       <div class="documentwrapper">
         <div class="bodywrapper">
           <div class="body" role="main">
-            <h1>Source code for pandas_query_generator.arguments</h1>
+            <h1>Source code for pqg.arguments</h1>
             <div class="highlight">
               <pre>
 <span></span><span class="kn">import</span> <span class="nn">argparse</span>
@@ -43,7 +43,7 @@
 
 
 <div class="viewcode-block" id="HelpFormatter">
-<a class="viewcode-back" href="../../pandas_query_generator.html#pandas_query_generator.arguments.HelpFormatter">[docs]</a>
+<a class="viewcode-back" href="../../pqg.html#pqg.arguments.HelpFormatter">[docs]</a>
 <span class="k">class</span> <span class="nc">HelpFormatter</span><span class="p">(</span><span class="n">argparse</span><span class="o">.</span><span class="n">HelpFormatter</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">  Custom help formatter that aligns option strings and help text with multi-line usage.</span>
@@ -108,7 +108,7 @@
 
 
 <div class="viewcode-block" id="QueryFilter">
-<a class="viewcode-back" href="../../pandas_query_generator.html#pandas_query_generator.arguments.QueryFilter">[docs]</a>
+<a class="viewcode-back" href="../../pqg.html#pqg.arguments.QueryFilter">[docs]</a>
 <span class="k">class</span> <span class="nc">QueryFilter</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;Enum for query filter options&quot;&quot;&quot;</span>
 
@@ -120,7 +120,7 @@
 
 
 <div class="viewcode-block" id="Arguments">
-<a class="viewcode-back" href="../../pandas_query_generator.html#pandas_query_generator.arguments.Arguments">[docs]</a>
+<a class="viewcode-back" href="../../pqg.html#pqg.arguments.Arguments">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">Arguments</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;</span>
@@ -144,7 +144,7 @@
   <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span>
 
 <div class="viewcode-block" id="Arguments.from_args">
-<a class="viewcode-back" href="../../pandas_query_generator.html#pandas_query_generator.arguments.Arguments.from_args">[docs]</a>
+<a class="viewcode-back" href="../../pqg.html#pqg.arguments.Arguments.from_args">[docs]</a>
   <span class="nd">@staticmethod</span>
   <span class="k">def</span> <span class="nf">from_args</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="s1">&#39;Arguments&#39;</span><span class="p">:</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span>
@@ -296,6 +296,16 @@
             document.getElementById("searchbox").style.display = "block";
           </script>
           <h3>Navigation</h3>
+          <p class="caption" role="heading">
+            <span class="caption-text">Contents:</span>
+          </p>
+          <ul>
+            <li class="toctree-l1">
+              <a class="reference internal" href="../../pqg.html"
+                >pqg package</a
+              >
+            </li>
+          </ul>
 
           <div class="relations">
             <h3>Related Topics</h3>

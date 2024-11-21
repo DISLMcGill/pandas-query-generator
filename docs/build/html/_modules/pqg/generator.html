@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pandas_query_generator.generator &#8212; pqg documentation</title>
+    <title>pqg.generator &#8212; pqg documentation</title>
     <link
       rel="stylesheet"
       type="text/css"
@@ -33,7 +33,7 @@
       <div class="documentwrapper">
         <div class="bodywrapper">
           <div class="body" role="main">
-            <h1>Source code for pandas_query_generator.generator</h1>
+            <h1>Source code for pqg.generator</h1>
             <div class="highlight">
               <pre>
 <span></span><span class="kn">import</span> <span class="nn">multiprocessing</span> <span class="k">as</span> <span class="nn">mp</span>
@@ -41,15 +41,14 @@
 
 <span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
 
-<span class="kn">from</span> <span class="nn">pandas_query_generator.query_pool</span> <span class="kn">import</span> <span class="n">QueryPool</span>
-
 <span class="kn">from</span> <span class="nn">.query_builder</span> <span class="kn">import</span> <span class="n">QueryBuilder</span>
+<span class="kn">from</span> <span class="nn">.query_pool</span> <span class="kn">import</span> <span class="n">QueryPool</span>
 <span class="kn">from</span> <span class="nn">.query_structure</span> <span class="kn">import</span> <span class="n">QueryStructure</span>
 <span class="kn">from</span> <span class="nn">.schema</span> <span class="kn">import</span> <span class="n">Schema</span>
 
 
 <div class="viewcode-block" id="Generator">
-<a class="viewcode-back" href="../../pandas_query_generator.html#pandas_query_generator.generator.Generator">[docs]</a>
+<a class="viewcode-back" href="../../pqg.html#pqg.generator.Generator">[docs]</a>
 <span class="k">class</span> <span class="nc">Generator</span><span class="p">:</span>
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">schema</span><span class="p">:</span> <span class="n">Schema</span><span class="p">,</span> <span class="n">query_structure</span><span class="p">:</span> <span class="n">QueryStructure</span><span class="p">,</span> <span class="n">with_status</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -95,7 +94,7 @@
     <span class="k">return</span> <span class="n">QueryBuilder</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">query_structure</span><span class="p">,</span> <span class="n">multi_line</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
 
 <div class="viewcode-block" id="Generator.generate">
-<a class="viewcode-back" href="../../pandas_query_generator.html#pandas_query_generator.generator.Generator.generate">[docs]</a>
+<a class="viewcode-back" href="../../pqg.html#pqg.generator.Generator.generate">[docs]</a>
   <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queries</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">multi_line</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">multi_processing</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QueryPool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Generate a pool of queries using either parallel or sequential processing.</span>
@@ -170,6 +169,16 @@
             document.getElementById("searchbox").style.display = "block";
           </script>
           <h3>Navigation</h3>
+          <p class="caption" role="heading">
+            <span class="caption-text">Contents:</span>
+          </p>
+          <ul>
+            <li class="toctree-l1">
+              <a class="reference internal" href="../../pqg.html"
+                >pqg package</a
+              >
+            </li>
+          </ul>
 
           <div class="relations">
             <h3>Related Topics</h3>

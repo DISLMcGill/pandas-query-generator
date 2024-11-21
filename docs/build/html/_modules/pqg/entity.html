@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pandas_query_generator.entity &#8212; pqg documentation</title>
+    <title>pqg.entity &#8212; pqg documentation</title>
     <link
       rel="stylesheet"
       type="text/css"
@@ -33,7 +33,7 @@
       <div class="documentwrapper">
         <div class="bodywrapper">
           <div class="body" role="main">
-            <h1>Source code for pandas_query_generator.entity</h1>
+            <h1>Source code for pqg.entity</h1>
             <div class="highlight">
               <pre>
 <span></span><span class="kn">import</span> <span class="nn">random</span>
@@ -47,7 +47,7 @@
 
 
 <div class="viewcode-block" id="PropertyInt">
-<a class="viewcode-back" href="../../pandas_query_generator.html#pandas_query_generator.entity.PropertyInt">[docs]</a>
+<a class="viewcode-back" href="../../pqg.html#pqg.entity.PropertyInt">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">PropertyInt</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;Represents an integer property with a defined range.&quot;&quot;&quot;</span>
@@ -59,7 +59,7 @@
 
 
 <div class="viewcode-block" id="PropertyFloat">
-<a class="viewcode-back" href="../../pandas_query_generator.html#pandas_query_generator.entity.PropertyFloat">[docs]</a>
+<a class="viewcode-back" href="../../pqg.html#pqg.entity.PropertyFloat">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">PropertyFloat</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;Represents a float property with a defined range.&quot;&quot;&quot;</span>
@@ -71,7 +71,7 @@
 
 
 <div class="viewcode-block" id="PropertyEnum">
-<a class="viewcode-back" href="../../pandas_query_generator.html#pandas_query_generator.entity.PropertyEnum">[docs]</a>
+<a class="viewcode-back" href="../../pqg.html#pqg.entity.PropertyEnum">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">PropertyEnum</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;Represents an enumeration property with a list of possible values.&quot;&quot;&quot;</span>
@@ -82,7 +82,7 @@
 
 
 <div class="viewcode-block" id="PropertyString">
-<a class="viewcode-back" href="../../pandas_query_generator.html#pandas_query_generator.entity.PropertyString">[docs]</a>
+<a class="viewcode-back" href="../../pqg.html#pqg.entity.PropertyString">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">PropertyString</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;Represents a string property with specified starting characters.&quot;&quot;&quot;</span>
@@ -93,7 +93,7 @@
 
 
 <div class="viewcode-block" id="PropertyDate">
-<a class="viewcode-back" href="../../pandas_query_generator.html#pandas_query_generator.entity.PropertyDate">[docs]</a>
+<a class="viewcode-back" href="../../pqg.html#pqg.entity.PropertyDate">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">PropertyDate</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;Represents a date property with a defined range.&quot;&quot;&quot;</span>
@@ -108,7 +108,7 @@
 
 
 <div class="viewcode-block" id="Entity">
-<a class="viewcode-back" href="../../pandas_query_generator.html#pandas_query_generator.entity.Entity">[docs]</a>
+<a class="viewcode-back" href="../../pqg.html#pqg.entity.Entity">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">Entity</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;</span>
@@ -160,7 +160,7 @@
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">name</span>
 
 <div class="viewcode-block" id="Entity.from_configuration">
-<a class="viewcode-back" href="../../pandas_query_generator.html#pandas_query_generator.entity.Entity.from_configuration">[docs]</a>
+<a class="viewcode-back" href="../../pqg.html#pqg.entity.Entity.from_configuration">[docs]</a>
   <span class="nd">@staticmethod</span>
   <span class="k">def</span> <span class="nf">from_configuration</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Entity&#39;</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -241,7 +241,7 @@
     <span class="k">return</span> <span class="n">ranges</span>
 
 <div class="viewcode-block" id="Entity.generate_dataframe">
-<a class="viewcode-back" href="../../pandas_query_generator.html#pandas_query_generator.entity.Entity.generate_dataframe">[docs]</a>
+<a class="viewcode-back" href="../../pqg.html#pqg.entity.Entity.generate_dataframe">[docs]</a>
   <span class="k">def</span> <span class="nf">generate_dataframe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_rows</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Generate a Pandas dataframe using this entity&#39;s information.</span>
@@ -336,6 +336,16 @@
             document.getElementById("searchbox").style.display = "block";
           </script>
           <h3>Navigation</h3>
+          <p class="caption" role="heading">
+            <span class="caption-text">Contents:</span>
+          </p>
+          <ul>
+            <li class="toctree-l1">
+              <a class="reference internal" href="../../pqg.html"
+                >pqg package</a
+              >
+            </li>
+          </ul>
 
           <div class="relations">
             <h3>Related Topics</h3>
