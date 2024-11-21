@@ -1,10 +1,10 @@
 import multiprocessing as mp
 from functools import partial
 
-from pandas_query_generator.query_pool import QueryPool
 from tqdm import tqdm
 
 from .query_builder import QueryBuilder
+from .query_pool import QueryPool
 from .query_structure import QueryStructure
 from .schema import Schema
 

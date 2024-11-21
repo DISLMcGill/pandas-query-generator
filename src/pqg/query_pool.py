@@ -7,14 +7,14 @@ from dataclasses import dataclass, field
 from functools import partial
 
 import pandas as pd
-from pandas_query_generator.arguments import QueryFilter
-from pandas_query_generator.query_structure import QueryStructure
 from tqdm import tqdm
 
+from .arguments import QueryFilter
 from .group_by_aggregation import GroupByAggregation
 from .merge import Merge
 from .projection import Projection
 from .query import Query
+from .query_structure import QueryStructure
 from .selection import Selection
 
 QueryResult = t.Tuple[t.Optional[t.Union[pd.DataFrame, pd.Series]], t.Optional[str]]
