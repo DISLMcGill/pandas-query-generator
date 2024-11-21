@@ -1,4 +1,4 @@
-from pandas_query_generator.selection import Selection
+from pqg.selection import Selection
 
 
 class TestSelection:
