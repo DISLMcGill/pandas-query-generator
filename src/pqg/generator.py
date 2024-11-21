@@ -3,9 +3,8 @@ from functools import partial
 
 from tqdm import tqdm
 
-from pandas_query_generator.query_pool import QueryPool
-
 from .query_builder import QueryBuilder
+from .query_pool import QueryPool
 from .query_structure import QueryStructure
 from .schema import Schema
 

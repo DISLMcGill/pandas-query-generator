@@ -1,4 +1,4 @@
-from pandas_query_generator.projection import Projection
+from pqg.projection import Projection
 
 
 class TestProjection:

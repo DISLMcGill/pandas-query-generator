@@ -1,6 +1,6 @@
-## Pandas Query Generator 🐼
+## pqg 🐼
 
-**Pandas Query Generator (pqg)** is a tool designed to help users generate
+**pqg** (short for pandas query generator) is a tool designed to help users generate
 synthetic [pandas](https://pandas.pydata.org/) queries for training machine
 learning models that estimate query execution costs or predict cardinality.
 
@@ -108,8 +108,7 @@ We expose various structures that make it easy to generate queries fast:
 ```python
 import json
 
-from pandas_query_generator import Generator, Schema, QueryStructure, QueryPool,
-QueryFilter
+from pqg import Generator, Schema, QueryStructure, QueryPool, QueryFilter
 
 # Assumes `schema.json` exists and conforms to the schema format
 schema = Schema.from_file('schema.json')

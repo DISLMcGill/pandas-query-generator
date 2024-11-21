@@ -1,9 +1,9 @@
 import pytest
 
-from pandas_query_generator.merge import Merge
-from pandas_query_generator.projection import Projection
-from pandas_query_generator.query import Query
-from pandas_query_generator.selection import Selection
+from pqg.merge import Merge
+from pqg.projection import Projection
+from pqg.query import Query
+from pqg.selection import Selection
 
 
 @pytest.fixture

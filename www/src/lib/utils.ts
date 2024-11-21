@@ -23,10 +23,10 @@ sys.modules['_multiprocessing'] = object
 
 import json
 
-from pandas_query_generator import Generator
-from pandas_query_generator import QueryStructure
-from pandas_query_generator import Schema
-from pandas_query_generator import QueryPool
+from pqg import Generator
+from pqg import QueryStructure
+from pqg import Schema
+from pqg import QueryPool
 
 schema = Schema.from_dict(json.loads('''${schema}'''))
 

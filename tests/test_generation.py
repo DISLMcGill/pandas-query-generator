@@ -3,9 +3,9 @@ from typing import List, Tuple
 
 import pytest
 
-from pandas_query_generator.generator import Generator
-from pandas_query_generator.query_structure import QueryStructure
-from pandas_query_generator.schema import Schema
+from pqg.generator import Generator
+from pqg.query_structure import QueryStructure
+from pqg.schema import Schema
 
 EXAMPLES_DIR = pathlib.Path(__file__).parent.parent / 'examples'
 
