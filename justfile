@@ -42,7 +42,7 @@ fmt:
   ruff check --select I --fix && ruff format
 
 generate-docs:
-  cd docs && make html
+  cd docs && just build
 
 generate-example-output:
   ./bin/generate-example-output
