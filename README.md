@@ -108,7 +108,7 @@ We expose various structures that make it easy to generate queries fast:
 ```python
 import json
 
-from pandas_query_generator import Generator, Schema, QueryStructure, QueryPool,
+from pqg import Generator, Schema, QueryStructure, QueryPool,
 QueryFilter
 
 # Assumes `schema.json` exists and conforms to the schema format

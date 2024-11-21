@@ -1,6 +1,6 @@
 [project]
 name = "pqg"
-version = "0.2.5"
+version = "0.3.0"
 description = "A synthetic pandas query generation tool"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -11,14 +11,14 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project.scripts]
-pqg = "pandas_query_generator.__main__:main"
+pqg = "pqg.__main__:main"
 
 [project.urls]
 Homepage = "https://github.com/DISLMcGill/pandas-query-generator"
 Issues = "https://github.com/DISLMcGill/pandas-query-generator/issues"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/pandas_query_generator"]
+packages = ["src/pqg"]
 
 [tool.hatch.build.targets.sdist]
 include = ["/src", "/tests"]

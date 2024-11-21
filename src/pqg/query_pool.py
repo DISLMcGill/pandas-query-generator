@@ -7,10 +7,9 @@ from dataclasses import dataclass, field
 from functools import partial
 
 import pandas as pd
-from tqdm import tqdm
-
 from pandas_query_generator.arguments import QueryFilter
 from pandas_query_generator.query_structure import QueryStructure
+from tqdm import tqdm
 
 from .group_by_aggregation import GroupByAggregation
 from .merge import Merge
