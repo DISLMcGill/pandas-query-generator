@@ -107,36 +107,35 @@ Schemas for these files can be found in their respective directories within
 We expose various structures that make it easy to generate queries fast:
 
 ```python
-import json
-
 from pqg import Generator, Schema, QueryStructure, QueryPool, QueryFilter
 
-# Assumes `schema.json` exists and conforms to the schema format
-schema = Schema.from_file('schema.json')
+if __name__ == '__main__':
+  # Assumes `schema.json` exists and conforms to the schema format
+  schema = Schema.from_file('schema.json')
 
-query_structure = QueryStructure(
-  groupby_aggregation_probability=0.5,
-  max_groupby_columns=4,
-  max_merges=10,
-  max_projection_columns=5,
-  max_selection_conditions=10,
-  projection_probability=0.5,
-  selection_probability=0.5
-)
+  query_structure = QueryStructure(
+    groupby_aggregation_probability=0.5,
+    max_groupby_columns=4,
+    max_merges=10,
+    max_projection_columns=5,
+    max_selection_conditions=10,
+    projection_probability=0.5,
+    selection_probability=0.5
+  )
 
-generator = Generator(schema, query_structure)
+  generator = Generator(schema, query_structure)
 
-# Generate 1000 queries
-query_pool = generator.generate(1000)
+  # Generate 1000 queries
+  query_pool: QueryPool = generator.generate(100)
 
-# Filter out queries with non-empty result sets
-query_pool.filter(QueryFilter.NON_EMPTY)
+  # Filter out queries with non-empty result sets
+  query_pool.filter(QueryFilter.NON_EMPTY)
 
-# Sort queries by complexity
-query_pool.sort()
+  # Sort queries by complexity
+  query_pool.sort()
 
-for query in query_pool:
-  print(query)
+  for query in query_pool:
+    print(query)
 ```
 
 Comprehensive API documentation is generated using the `sphinx` Python package.
