@@ -7,6 +7,27 @@ learning models that estimate query execution costs or predict cardinality.
 The distributed Python package is called **pqg**, and has only been tested on a
 unix-based system.
 
+<table>
+  <tr align="center">
+    <td width="50%">
+      <img
+        width="100%"
+        alt="web-view"
+        src="https://github.com/user-attachments/assets/80a00b47-95ea-4af4-b40f-361ef21ae8b6"
+      />
+      <em>Web interface showing query statistics after generation</em>
+    </td>
+    <td width="50%">
+      <img
+        width="100%"
+        alt="cli-view"
+        src="https://github.com/user-attachments/assets/54792615-d7fb-46fa-8aa7-045eae4bf348"
+      />
+      <em>Generated query output and execution results with the CLI</em>
+    </td>
+  </tr>
+</table>
+
 ## Installation
 
 You can install the query generator using [pip](https://pip.pypa.io/en/stable/installation/), the Python package manager:
@@ -23,7 +44,7 @@ cd www && bun install && bunx --bun vite
 
 *n.b.* This command will require you to have [bun](https://bun.sh/) installed on your machine.
 
-This will spin up a development server at `localhost:5173` where you can interact with the playground.
+This will spin up a development server at `http://localhost:5173` where you can interact with the playground.
 You can upload your schemas, tweak query parameters and generate queries.
 
 ## Usage
@@ -134,11 +155,11 @@ if __name__ == '__main__':
   # Sort queries by complexity
   query_pool.sort()
 
-  for query in query_pool:
-    print(query)
+  # Output each query
+  print(*query_pool, sep='\n\n')
 ```
 
-Comprehensive API documentation is generated using the `sphinx` Python package.
+Comprehensive API documentation is generated using the [sphinx](https://www.sphinx-doc.org/en/master/index.html#) Python package.
 
 You can generate the documentation using the following command in the project
 root:
