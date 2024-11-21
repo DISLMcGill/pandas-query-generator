@@ -145,7 +145,7 @@ You can generate the documentation using the following command in the project
 root:
 
 ```bash
-cd docs && make html
+cd docs && uv run sphinx-build -M html source build
 ```
 
 ...then serve it with:
