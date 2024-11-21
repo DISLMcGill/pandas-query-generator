@@ -154,8 +154,8 @@ cd docs && uv run sphinx-build -M html source build
 python3 -m http.server 8000 --directory docs/build/html
 ```
 
-This will spin up a server at `http://localhost:8000`, open it up in your
-preferred browser to view the documentation.
+This will serve the documentation files at `http://localhost:8000`. Open it up
+in your preferred browser see the generated site.
 
 ## How does it work?
 
