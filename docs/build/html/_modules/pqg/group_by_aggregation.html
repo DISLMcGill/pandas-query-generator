@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pandas_query_generator.projection &#8212; pqg documentation</title>
+    <title>pqg.group_by_aggregation &#8212; pqg documentation</title>
     <link
       rel="stylesheet"
       type="text/css"
@@ -33,32 +33,29 @@
       <div class="documentwrapper">
         <div class="bodywrapper">
           <div class="body" role="main">
-            <h1>Source code for pandas_query_generator.projection</h1>
+            <h1>Source code for pqg.group_by_aggregation</h1>
             <div class="highlight">
               <pre>
 <span></span><span class="kn">import</span> <span class="nn">typing</span> <span class="k">as</span> <span class="nn">t</span>
-<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 
 <span class="kn">from</span> <span class="nn">.operation</span> <span class="kn">import</span> <span class="n">Operation</span>
 
 
-<div class="viewcode-block" id="Projection">
-<a class="viewcode-back" href="../../pandas_query_generator.html#pandas_query_generator.projection.Projection">[docs]</a>
+<div class="viewcode-block" id="GroupByAggregation">
+<a class="viewcode-back" href="../../pqg.html#pqg.group_by_aggregation.GroupByAggregation">[docs]</a>
 <span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">Projection</span><span class="p">(</span><span class="n">Operation</span><span class="p">):</span>
-<span class="w">  </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">  Represents a projection operation in a query.</span>
+<span class="k">class</span> <span class="nc">GroupByAggregation</span><span class="p">(</span><span class="n">Operation</span><span class="p">):</span>
+  <span class="n">group_by_columns</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+  <span class="n">agg_function</span><span class="p">:</span> <span class="nb">str</span>
 
-<span class="sd">  Attributes:</span>
-<span class="sd">    columns (Set[str]): A set of column names to project.</span>
-<span class="sd">  &quot;&quot;&quot;</span>
-
-  <span class="n">columns</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
-
-<div class="viewcode-block" id="Projection.apply">
-<a class="viewcode-back" href="../../pandas_query_generator.html#pandas_query_generator.projection.Projection.apply">[docs]</a>
+<div class="viewcode-block" id="GroupByAggregation.apply">
+<a class="viewcode-back" href="../../pqg.html#pqg.group_by_aggregation.GroupByAggregation.apply">[docs]</a>
   <span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;[[</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">col</span><span class="p">)</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">col</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="si">}</span><span class="s2">]]&quot;</span></div>
+    <span class="n">group_cols</span> <span class="o">=</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s2">&#39;&quot;</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">group_by_columns</span><span class="p">)</span>
+    <span class="n">numeric_only</span> <span class="o">=</span> <span class="s1">&#39;numeric_only=True&#39;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">agg_function</span> <span class="o">!=</span> <span class="s1">&#39;count&#39;</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+    <span class="n">formatted_option</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;, </span><span class="si">{</span><span class="n">numeric_only</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">if</span> <span class="n">numeric_only</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;.groupby(by=[</span><span class="si">{</span><span class="n">group_cols</span><span class="si">}</span><span class="s2">]).agg(&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">agg_function</span><span class="si">}</span><span class="s2">&#39;</span><span class="si">{</span><span class="n">formatted_option</span><span class="si">}</span><span class="s2">)&quot;</span></div>
 </div>
 
 </pre>
@@ -91,6 +88,16 @@
             document.getElementById("searchbox").style.display = "block";
           </script>
           <h3>Navigation</h3>
+          <p class="caption" role="heading">
+            <span class="caption-text">Contents:</span>
+          </p>
+          <ul>
+            <li class="toctree-l1">
+              <a class="reference internal" href="../../pqg.html"
+                >pqg package</a
+              >
+            </li>
+          </ul>
 
           <div class="relations">
             <h3>Related Topics</h3>

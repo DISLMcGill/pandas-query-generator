@@ -1,10 +1,11 @@
-## pqg 🐼
+## Pandas Query Generator 🐼
 
-**pqg** (short for pandas query generator) is a tool designed to help users generate
+Pandas Query Generator (**pqg**) is a tool designed to help users generate
 synthetic [pandas](https://pandas.pydata.org/) queries for training machine
 learning models that estimate query execution costs or predict cardinality.
 
-The binary is called **pqg** and has only been tested on a unix-based system.
+The distributed Python package is called **pqg**, and has only been tested on a
+unix-based system.
 
 ## Installation
 

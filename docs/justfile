@@ -1,5 +1,9 @@
-build method='html':
-  uv run sphinx-build -M {{ method }} source build
+build:
+  uv run sphinx-build -M html source build
 
 fmt:
   prettier --write .
+
+generate-api-docs:
+  uv run sphinx-apidoc -o source ../src
+
