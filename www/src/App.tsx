@@ -11,10 +11,9 @@ import { usePyodideClient } from './hooks/use-pyodide-client';
 import { useToast } from './hooks/use-toast';
 import { EXAMPLE_SCHEMAS } from './lib/constants';
 import { QueryStatistics, Settings } from './lib/types';
-import { generatePyodideCode } from './lib/utils';
 
 const App = () => {
-  const { client, loading } = usePyodideClient();
+  const { runPython, loading } = usePyodideClient();
 
   const [generating, setGenerating] = useState(false);
 
@@ -59,21 +58,40 @@ const App = () => {
     setSelectedSchemaType(type);
   };
 
-  const generateQueries = async () => {
-    if (!client) return;
+  const pythonCode = `
+import json, sys
 
+from pqg import Generator, QueryStructure, Schema, QueryPool
+
+schema = Schema.from_dict(json.loads('''${schema}'''))
+
+query_structure = QueryStructure(
+  groupby_aggregation_probability=${settings.groupbyProbability},
+  max_groupby_columns=${settings.maxGroupbyColumns},
+  max_merges=${settings.maxMerges},
+  max_projection_columns=${settings.maxProjectionColumns},
+  max_selection_conditions=${settings.maxSelectionConditions},
+  projection_probability=${settings.projectionProbability},
+  selection_probability=${settings.selectionProbability}
+)
+
+generator = Generator(schema, query_structure)
+query_pool = generator.generate(${settings.numQueries}, multi_line=${settings.multiLine ? 'True' : 'False'}, multi_processing=False)
+query_pool.sort()
+
+{ 'queries': [str(query) for query in query_pool], 'stats': query_pool.statistics() }
+  `;
+
+  const generateQueries = async () => {
     setGenerating(true);
 
     try {
-      // This is a hack to get the loading indicator to show
-      await new Promise((resolve) => setTimeout(resolve, 0));
-
-      // TODO: Run this in a web worker
-      const result = client.runPython(generatePyodideCode(schema, settings));
-
-      const { queries, stats } = result.toJs();
-      setQueries(queries);
-      setStatistics(stats);
+      const result = await runPython<{
+        queries: string[];
+        stats: QueryStatistics;
+      }>(pythonCode);
+      setQueries(result.queries);
+      setStatistics(result.stats);
     } catch (err) {
       toast({
         variant: 'destructive',
@@ -103,7 +121,7 @@ const App = () => {
       <Button
         className='w-full'
         size='lg'
-        disabled={loading || generating || !client}
+        disabled={loading || generating}
         onClick={generateQueries}
       >
         {generating ? (

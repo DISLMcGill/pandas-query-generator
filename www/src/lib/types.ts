@@ -1,3 +1,11 @@
+export type ExecutionStatistics = {
+  successful: number;
+  failed: number;
+  non_empty: number;
+  empty: number;
+  errors: Record<string, number>;
+};
+
 export type Settings = {
   selectionProbability: number;
   projectionProbability: number;
@@ -8,14 +16,6 @@ export type Settings = {
   maxSelectionConditions: number;
   numQueries: number;
   multiLine: boolean;
-};
-
-export type ExecutionStatistics = {
-  successful: number;
-  failed: number;
-  non_empty: number;
-  empty: number;
-  errors: Record<string, number>;
 };
 
 export type QueryStatistics = {
