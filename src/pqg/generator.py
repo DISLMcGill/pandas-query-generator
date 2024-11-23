@@ -6,8 +6,7 @@ from functools import partial
 import pandas as pd
 from tqdm import tqdm
 
-from pqg.arguments import Arguments
-
+from .arguments import Arguments
 from .query_builder import QueryBuilder
 from .query_pool import QueryPool, QueryResult
 from .query_structure import QueryStructure
