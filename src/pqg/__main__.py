@@ -37,6 +37,9 @@ def main() -> None:
       multi_processing=not arguments.disable_multi_processing,
     )
 
+    if arguments.deduplicate:
+      query_pool.deduplicate()
+
     if arguments.filter is not None:
       query_pool.filter(arguments.filter)
 

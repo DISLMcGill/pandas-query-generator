@@ -206,6 +206,52 @@ class QueryPool:
     """Iterate over the queries in the pool."""
     return iter(self._queries)
 
+  def deduplicate(self) -> None:
+    """
+    Remove duplicate queries from the pool while preserving results.
+
+    This method eliminates duplicate queries based on their string representation
+    and complexity, considering multi-line and single-line formats as distinct.
+    When duplicates are found, only the first occurrence is kept while maintaining
+    the correct association between queries and their results.
+
+    The method:
+    1. Creates a set to track seen queries while preserving order
+    2. Maintains the association between queries and their execution results
+    3. Treats multi-line and single-line versions of the same query as distinct
+    4. Preserves the original sorting by complexity if present
+
+    Note:
+      - Queries are considered equal if they have the same string representation
+        and complexity score
+      - The query's multi_line property is considered in equality comparison
+      - If execution results exist, they are properly maintained for the
+        deduplicated queries
+    """
+    seen = {}
+
+    deduplicated_queries = []
+    deduplicated_results = []
+
+    if not self._results:
+      for idx, query in enumerate(self._queries):
+        query_key = (str(query), query.multi_line)
+        if query_key not in seen:
+          seen[query_key] = idx
+          deduplicated_queries.append(query)
+    else:
+      for idx, (query, result) in enumerate(zip(self._queries, self._results)):
+        query_key = (str(query), query.multi_line)
+        if query_key not in seen:
+          seen[query_key] = idx
+          deduplicated_queries.append(query)
+          deduplicated_results.append(result)
+
+    self._queries = deduplicated_queries
+
+    if self._results:
+      self._results = deduplicated_results
+
   @staticmethod
   def _execute_multi_line_query(
     query: Query, sample_data: t.Dict[str, pd.DataFrame]

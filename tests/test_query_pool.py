@@ -392,3 +392,126 @@ class TestQueryPoolStatistics:
     assert max(stats.selection_conditions) <= query_structure.max_selection_conditions
     assert max(stats.projection_columns) <= query_structure.max_projection_columns
     assert max(stats.groupby_columns) <= query_structure.max_groupby_columns
+
+
+class TestQueryPoolDeduplicate:
+  def test_deduplicate_without_results(self, sample_dataframes, query_structure):
+    # Create duplicate queries with same operations
+    selection = Selection([("'age'", '>=', 30, '&')])
+    query1 = Query('customers', [selection], False, {'age'})
+    query2 = Query('customers', [selection], False, {'age'})
+    query3 = Query('customers', [selection], True, {'age'})  # Multi-line version
+
+    pool = QueryPool([query1, query2, query3], query_structure, sample_dataframes)
+    initial_length = len(pool)
+
+    pool.deduplicate()
+
+    assert len(pool) == 2  # Should keep one single-line and one multi-line
+    assert pool._queries[0].multi_line != pool._queries[1].multi_line
+    assert len(pool._results) == 0  # No results yet
+    assert initial_length == 3
+
+  def test_deduplicate_with_results(self, sample_dataframes, query_structure):
+    # Create duplicate queries
+    selection = Selection([("'age'", '>=', 30, '&')])
+    query1 = Query('customers', [selection], False, {'age'})
+    query2 = Query('customers', [selection], False, {'age'})
+    query3 = Query('customers', [Selection([("'age'", '>=', 25, '&')])], False, {'age'})
+
+    pool = QueryPool([query1, query2, query3], query_structure, sample_dataframes)
+    pool.execute()  # Generate results
+    initial_results = len(pool._results)
+
+    pool.deduplicate()
+
+    assert len(pool) == 2  # Should keep unique queries only
+    assert len(pool._results) == 2  # Results should match queries
+    assert initial_results == 3
+
+    for _, (result, error) in pool.items():
+      assert result is not None or error is not None
+
+  def test_deduplicate_with_different_complexity(self, sample_dataframes, query_structure):
+    simple_selection = Selection([("'age'", '>=', 30, '&')])
+
+    complex_selection = Selection([("'age'", '>=', 30, '&'), ("'country'", '==', "'US'", '&')])
+
+    query1 = Query('customers', [simple_selection], False, {'age'})
+    query2 = Query('customers', [simple_selection], False, {'age'})
+    query3 = Query('customers', [complex_selection], False, {'age', 'country'})
+
+    pool = QueryPool([query1, query2, query3], query_structure, sample_dataframes)
+    pool.execute()
+
+    pool.deduplicate()
+
+    assert len(pool) == 2  # Should keep one simple and one complex query
+    assert pool._queries[0].complexity < pool._queries[1].complexity
+
+  def test_deduplicate_empty_pool(self, sample_dataframes, query_structure):
+    pool = QueryPool([], query_structure, sample_dataframes)
+    pool.deduplicate()
+
+    assert len(pool) == 0
+    assert len(pool._results) == 0
+
+  def test_deduplicate_all_unique(self, sample_dataframes, query_structure):
+    queries = [
+      Query('customers', [Selection([("'age'", '>=', i, '&')])], False, {'age'}) for i in range(3)
+    ]
+
+    pool = QueryPool(queries, query_structure, sample_dataframes)
+    pool.execute()
+
+    initial_length = len(pool)
+
+    pool.deduplicate()
+
+    assert len(pool) == initial_length
+    assert len(pool._results) == initial_length
+    assert all(q.columns == {'age'} for q in pool._queries)
+
+  def test_deduplicate_maintains_query_result_pairs(self, sample_dataframes, query_structure):
+    selection1 = Selection([("'age'", '>=', 30, '&')])
+    selection2 = Selection([("'age'", '<', 25, '&')])
+
+    queries = [
+      Query('customers', [selection1], False, {'age'}),
+      Query('customers', [selection1], False, {'age'}),
+      Query('customers', [selection2], False, {'age'}),
+    ]
+
+    pool = QueryPool(queries, query_structure, sample_dataframes)
+
+    results = pool.execute()
+    assert len(results) == 3
+
+    gte_30_result = next(
+      result for query, result in zip(queries, results) if "'age' >= 30" in str(query)
+    )
+
+    lt_25_result = next(
+      result for query, result in zip(queries, results) if "'age' < 25" in str(query)
+    )
+
+    pool.deduplicate()
+
+    assert len(pool._queries) == 2
+    assert len(pool._results) == 2
+
+    remaining_queries = set()
+
+    for query, result in pool.items():
+      if "'age' >= 30" in str(query):
+        remaining_queries.add('gte_30')
+        pd.testing.assert_frame_equal(result[0], gte_30_result[0])
+        assert result[0] is not None
+        assert all(result[0]['age'] >= 30)
+      elif "'age' < 25" in str(query):
+        remaining_queries.add('lt_25')
+        pd.testing.assert_frame_equal(result[0], lt_25_result[0])
+        assert result[0] is not None
+        assert all(result[0]['age'] < 25)
+
+    assert remaining_queries == {'gte_30', 'lt_25'}, f'Found queries: {remaining_queries}'
