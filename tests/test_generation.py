@@ -3,7 +3,7 @@ from typing import List, Tuple
 
 import pytest
 
-from pqg.generator import Generator
+from pqg.generator import GenerateOptions, Generator
 from pqg.query_structure import QueryStructure
 from pqg.schema import Schema
 
@@ -48,7 +48,7 @@ def test_schema_query_generation_and_execution(
 
   generator = Generator(schema, query_structure)
 
-  query_pool = generator.generate(100)
+  query_pool = generator.generate(GenerateOptions(num_queries=100))
 
   non_empty_results = 0
 
