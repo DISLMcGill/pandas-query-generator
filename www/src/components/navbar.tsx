@@ -8,7 +8,11 @@ export const Navbar = () => (
     <div>
       <p className='text-3xl font-semibold'>Pandas Query Generator 🐼</p>
       <p className='text-md text-muted-foreground'>
-        An interactive web demonstration
+        A web interface for the{' '}
+        <a href='https://pypi.org/project/pqg/' target='blank'>
+          <p className='inline font-bold'>pqg</p>
+        </a>{' '}
+        Python pacakge
       </p>
     </div>
     <div className='flex items-center space-x-4'>
