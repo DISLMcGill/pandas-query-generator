@@ -33,7 +33,8 @@ class GenerateOptions:
 
   @staticmethod
   def from_args(arguments: Arguments) -> 'GenerateOptions':
-    """Create GenerateOptions from command-line arguments.
+    """
+    Create GenerateOptions from command-line arguments.
 
     Args:
       arguments: Parsed command-line arguments
