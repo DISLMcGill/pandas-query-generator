@@ -13,7 +13,7 @@ unix-based system.
       <img
         width="100%"
         alt="web-view"
-        src="https://github.com/user-attachments/assets/80a00b47-95ea-4af4-b40f-361ef21ae8b6"
+        src="assets/web-view.png"
       />
       <em>Web interface showing query statistics after generation</em>
     </td>
@@ -21,7 +21,7 @@ unix-based system.
       <img
         width="100%"
         alt="cli-view"
-        src="https://github.com/user-attachments/assets/54792615-d7fb-46fa-8aa7-045eae4bf348"
+        src="assets/cli-view.png"
       />
       <em>Generated query output and execution results with the CLI</em>
     </td>
