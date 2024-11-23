@@ -83,6 +83,7 @@ class Arguments:
 
   deduplicate: bool
   disable_multi_processing: bool
+  ensure_non_empty: bool
   filter: QueryFilter
   groupby_aggregation_probability: float
   max_groupby_columns: int
@@ -115,6 +116,12 @@ class Arguments:
       '--disable-multi-processing',
       action='store_true',
       help='Generate and execute queries in a consecutive fashion',
+    )
+
+    parser.add_argument(
+      '--ensure-non-empty',
+      action='store_true',
+      help='Ensure generated queries return a non-empty result set when executed on sample data',
     )
 
     parser.add_argument(

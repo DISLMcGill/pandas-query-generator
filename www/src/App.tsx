@@ -44,9 +44,10 @@ const App = () => {
     maxProjectionColumns: 5,
     maxSelectionConditions: 5,
     numQueries: 100,
+    multiLine: false,
   });
 
-  const handleSettingChange = (setting: string, value: number) => {
+  const handleSettingChange = (setting: string, value: number | boolean) => {
     setSettings((prev) => ({
       ...prev,
       [setting]: value,

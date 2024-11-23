@@ -2,7 +2,7 @@ import time
 from contextlib import contextmanager
 
 from .arguments import Arguments
-from .generator import Generator
+from .generator import GenerateOptions, Generator
 from .query_structure import QueryStructure
 from .schema import Schema
 
@@ -31,11 +31,7 @@ def main() -> None:
   )
 
   with timer(message):
-    query_pool = generator.generate(
-      arguments.num_queries,
-      arguments.multi_line,
-      multi_processing=not arguments.disable_multi_processing,
-    )
+    query_pool = generator.generate(GenerateOptions.from_args(arguments))
 
     if arguments.deduplicate:
       query_pool.deduplicate()

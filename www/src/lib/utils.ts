@@ -40,7 +40,7 @@ query_structure = QueryStructure(
 )
 
 generator = Generator(schema, query_structure)
-query_pool = generator.generate(${settings.numQueries}, multi_processing=False)
+query_pool = generator.generate(${settings.numQueries}, multi_line=${settings.multiLine ? 'True' : 'False'}, multi_processing=False)
 query_pool.sort()
 
 { 'queries': [str(query) for query in query_pool], 'stats': query_pool.statistics() }
