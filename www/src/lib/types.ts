@@ -7,6 +7,7 @@ export type Settings = {
   maxProjectionColumns: number;
   maxSelectionConditions: number;
   numQueries: number;
+  multiLine: boolean;
 };
 
 export type ExecutionStatistics = {
