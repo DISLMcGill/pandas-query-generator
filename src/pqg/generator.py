@@ -16,7 +16,8 @@ from .schema import Schema
 
 @dataclass
 class GenerateOptions:
-  """Configuration options for query generation.
+  """
+  Configuration options for query generation.
 
   Attributes:
     ensure_non_empty: If True, retry generation until queries produce non-empty results
