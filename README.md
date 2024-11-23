@@ -124,8 +124,7 @@ A sample schema looks like this:
 This file can be found in `/examples/customer/schema.json`, generate a few
 queries from this schema with `pqg --num-queries 100 --schema examples/customer/schema.json --verbose`.
 
-Schemas for these files can be found in their respective directories within
-`/examples`.
+Other example schema files can be found under the `/examples` directory.
 
 ### Library
 
