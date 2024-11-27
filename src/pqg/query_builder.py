@@ -114,16 +114,16 @@ class QueryBuilder:
     for i in range(num_conditions):
       column = random.choice(available_columns)
 
-      prop, next_op = (
+      property, next_op = (
         self.entity.properties[column],
-        random.choice(['&', '|']) if i < num_conditions - 1 else '&',
+        random.choice(['&', '|']) if i < num_conditions - 1 else None,
       )
 
-      match prop:
+      match property:
         case PropertyInt(minimum, maximum) | PropertyFloat(minimum, maximum):
           op = random.choice(['==', '!=', '<', '<=', '>', '>='])
           value = random.uniform(minimum, maximum)
-          if isinstance(prop, PropertyInt):
+          if isinstance(property, PropertyInt):
             value = int(value)
           conditions.append((f"'{column}'", op, value, next_op))
         case PropertyString(starting_character):

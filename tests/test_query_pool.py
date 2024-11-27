@@ -45,7 +45,7 @@ def query_structure():
 
 @pytest.fixture
 def simple_selection():
-  return Query('customers', [Selection([("'age'", '>=', 30, '&')])], False, {'age'})
+  return Query('customers', [Selection([("'age'", '>=', 30, None)])], False, {'age'})
 
 
 @pytest.fixture
@@ -133,7 +133,7 @@ class TestQueryPoolExecution:
   def test_invalid_query(self, sample_dataframes, query_structure):
     bad_query = Query(
       'customers',
-      [Selection([("'nonexistent_column'", '>=', 30, '&')])],
+      [Selection([("'nonexistent_column'", '>=', 30, None)])],
       False,
       {'nonexistent_column'},
     )
@@ -149,7 +149,7 @@ class TestQueryPoolExecution:
     assert 'KeyError' in error
 
   def test_empty_result(self, sample_dataframes, query_structure):
-    query = Query('customers', [Selection([("'age'", '>', 100, '&')])], False, {'age'})
+    query = Query('customers', [Selection([("'age'", '>', 100, None)])], False, {'age'})
 
     pool = QueryPool([query], query_structure, sample_dataframes)
     results = pool.execute()
@@ -166,7 +166,7 @@ class TestQueryPoolFilter:
   def test_non_empty_filter(
     self, sample_dataframes, query_structure, simple_selection, simple_projection
   ):
-    empty_query = Query('customers', [Selection([("'age'", '>', 100, '&')])], False, {'age'})
+    empty_query = Query('customers', [Selection([("'age'", '>', 100, None)])], False, {'age'})
 
     pool = QueryPool(
       [simple_selection, empty_query, simple_projection], query_structure, sample_dataframes
@@ -178,7 +178,7 @@ class TestQueryPoolFilter:
     assert pool._queries == [simple_selection, simple_projection]
 
   def test_empty_filter(self, sample_dataframes, query_structure, simple_selection):
-    empty_query = Query('customers', [Selection([("'age'", '>', 100, '&')])], False, {'age'})
+    empty_query = Query('customers', [Selection([("'age'", '>', 100, None)])], False, {'age'})
 
     pool = QueryPool([simple_selection, empty_query], query_structure, sample_dataframes)
     pool.filter(QueryFilter.EMPTY)
@@ -188,7 +188,7 @@ class TestQueryPoolFilter:
 
   def test_error_filter(self, sample_dataframes, query_structure, simple_selection):
     bad_query = Query(
-      'customers', [Selection([("'nonexistent'", '>=', 30, '&')])], False, {'nonexistent'}
+      'customers', [Selection([("'nonexistent'", '>=', 30, None)])], False, {'nonexistent'}
     )
 
     pool = QueryPool([simple_selection, bad_query], query_structure, sample_dataframes)
@@ -237,8 +237,8 @@ class TestQueryPoolSort:
       assert original_result[1] == current_result[1]
 
   def test_multiline_distinction(self, sample_dataframes, query_structure):
-    single_line = Query('customers', [Selection([("'age'", '>=', 30, '&')])], False, {'age'})
-    multi_line = Query('customers', [Selection([("'age'", '>=', 30, '&')])], True, {'age'})
+    single_line = Query('customers', [Selection([("'age'", '>=', 30, None)])], False, {'age'})
+    multi_line = Query('customers', [Selection([("'age'", '>=', 30, None)])], True, {'age'})
 
     pool = QueryPool([single_line, multi_line], query_structure, sample_dataframes)
     pool.sort()
@@ -298,14 +298,14 @@ class TestQueryPoolStatistics:
   ):
     bad_query = Query(
       'customers',
-      [Selection([("'nonexistent'", '>=', 30, '&')])],
+      [Selection([("'nonexistent'", '>=', 30, None)])],
       False,
       {'nonexistent'},
     )
 
     empty_query = Query(
       'customers',
-      [Selection([("'age'", '>', 100, '&')])],
+      [Selection([("'age'", '>', 100, None)])],
       False,
       {'age'},
     )
@@ -333,7 +333,7 @@ class TestQueryPoolStatistics:
         Selection(
           [
             ("'age'", '>=', 30, '&'),
-            ("'country'", '==', "'US'", '&'),
+            ("'country'", '==', "'US'", None),
           ]
         ),
         Projection(['name', 'age', 'country']),
@@ -376,7 +376,7 @@ class TestQueryPoolStatistics:
         Selection(
           [
             ("'age'", '>=', 30, '&'),
-            ("'country'", '==', "'US'", '&'),
+            ("'country'", '==', "'US'", None),
           ]
         ),
         Projection(['name', 'age', 'country']),

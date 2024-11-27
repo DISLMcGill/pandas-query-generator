@@ -14,7 +14,7 @@ def sample_entity():
 
 @pytest.fixture
 def simple_selection():
-  return Selection([("'age'", '>=', 25, '&'), ("'status'", '==', "'active'", '|')])
+  return Selection([("'age'", '>=', 25, '&'), ("'status'", '==', "'active'", None)])
 
 
 @pytest.fixture
@@ -84,7 +84,7 @@ class TestQuery:
     assert str(query) == expected
 
   def test_multiline_query_basic(self, sample_entity):
-    query = Query(sample_entity, [Selection([("'age'", '>=', 25, '&')])], True, {'age'})
+    query = Query(sample_entity, [Selection([("'age'", '>=', 25, None)])], True, {'age'})
     result, counter = query.format_multi_line()
     expected = "df1 = customer[(customer['age'] >= 25)]"
     assert result == expected
@@ -94,7 +94,7 @@ class TestQuery:
     query = Query(
       sample_entity,
       [
-        Selection([("'age'", '>=', 25, '&')]),
+        Selection([("'age'", '>=', 25, None)]),
         Projection(['name', 'email']),
         GroupByAggregation(['country'], 'mean'),
       ],
@@ -115,12 +115,15 @@ class TestQuery:
 
   def test_multiline_query_with_merge(self, sample_entity):
     right_query = Query(
-      'orders', [Selection([("'status'", '==', "'active'", '&')])], False, {'status'}
+      'orders', [Selection([("'status'", '==', "'active'", None)])], False, {'status'}
     )
 
     query = Query(
       sample_entity,
-      [Selection([("'age'", '>=', 25, '&')]), Merge(right_query, "'customer_id'", "'customer_id'")],
+      [
+        Selection([("'age'", '>=', 25, None)]),
+        Merge(right_query, "'customer_id'", "'customer_id'"),
+      ],
       True,
       {'age', 'customer_id'},
     )
@@ -138,7 +141,7 @@ class TestQuery:
 
   def test_multiline_nested_merges(self, sample_entity):
     inner_query = Query(
-      'orders', [Selection([("'status'", '==', "'pending'", '&')])], False, {'status'}
+      'orders', [Selection([("'status'", '==', "'pending'", None)])], False, {'status'}
     )
 
     middle_query = Query(
@@ -148,7 +151,7 @@ class TestQuery:
     query = Query(
       sample_entity,
       [
-        Selection([("'active'", '==', 'True', '&')]),
+        Selection([("'active'", '==', 'True', None)]),
         Merge(middle_query, "'product_id'", "'product_id'"),
       ],
       True,
