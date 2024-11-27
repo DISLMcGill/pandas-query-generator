@@ -73,7 +73,7 @@ options:
   --max-selection-conditions Maximum number of conditions in selection operations (default: 5)
   --multi-line Format queries on multiple lines (default: False)
   --num-queries num_queries The number of queries to generate
-  --output-file The name of the file to write the results to (default: queries.txt)
+  --output-file The name of the file to write the results to
   --projection-probability Probability of including projection operations (default: 0.5)
   --schema schema Path to the relational schema JSON file
   --selection-probability Probability of including selection operations (default: 0.5)
@@ -133,34 +133,33 @@ We expose various structures that make it easy to generate queries fast:
 ```python
 from pqg import Generator, GenerateOptions, Schema, QueryStructure, QueryPool, QueryFilter
 
-if __name__ == '__main__':
-  # Assumes `schema.json` exists and conforms to the schema format
-  schema = Schema.from_file('schema.json')
+# Assumes `schema.json` exists and conforms to the schema format
+schema = Schema.from_file('schema.json')
 
-  query_structure = QueryStructure(
-    groupby_aggregation_probability=0.5,
-    max_groupby_columns=4,
-    max_merges=10,
-    max_projection_columns=5,
-    max_selection_conditions=10,
-    projection_probability=0.5,
-    selection_probability=0.5
-  )
+query_structure = QueryStructure(
+  groupby_aggregation_probability=0.5,
+  max_groupby_columns=4,
+  max_merges=10,
+  max_projection_columns=5,
+  max_selection_conditions=10,
+  projection_probability=0.5,
+  selection_probability=0.5
+)
 
-  generator = Generator(schema, query_structure)
+generator = Generator(schema, query_structure)
 
-  # Generate 1000 queries
-  generate_options = GenerateOptions(num_queries=1000)
-  query_pool: QueryPool = generator.generate(generate_options)
+# Generate 1000 queries
+generate_options = GenerateOptions(num_queries=1000)
+query_pool: QueryPool = generator.generate(generate_options)
 
-  # Filter out queries with non-empty result sets
-  query_pool.filter(QueryFilter.NON_EMPTY)
+# Filter out queries with non-empty result sets
+query_pool.filter(QueryFilter.NON_EMPTY)
 
-  # Sort queries by complexity
-  query_pool.sort()
+# Sort queries by complexity
+query_pool.sort()
 
-  # Output each query
-  print(*query_pool, sep='\n\n')
+# Output each query
+print(*query_pool, sep='\n\n')
 ```
 
 Comprehensive internal documentation is generated using the

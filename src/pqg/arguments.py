@@ -91,7 +91,7 @@ class Arguments:
   max_selection_conditions: int
   multi_line: bool
   num_queries: int
-  output_file: str
+  output_file: t.Optional[str]
   projection_probability: float
   schema: str
   selection_probability: float
@@ -183,7 +183,6 @@ class Arguments:
       '--output-file',
       type=str,
       required=False,
-      default='queries.txt',
       help='The name of the file to write the results to',
     )
 
