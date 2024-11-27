@@ -81,14 +81,15 @@ class Schema(Mapping):
 
     Example:
       schema_dict = {
-          "entities": {
-              "customer": {
-                  "primary_key": "id",
-                  "properties": {...},
-                  "foreign_keys": {...}
-              }
+        "entities": {
+          "customer": {
+            "primary_key": "id",
+            "properties": {...},
+            "foreign_keys": {...}
           }
+        }
       }
+
       schema = Schema.from_dict(schema_dict)
     """
     if 'entities' not in data:
