@@ -9,13 +9,12 @@ from functools import partial
 import pandas as pd
 from tqdm import tqdm
 
-from pandas_query_generator.arguments import QueryFilter
-from pandas_query_generator.query_structure import QueryStructure
-
+from .arguments import QueryFilter
 from .group_by_aggregation import GroupByAggregation
 from .merge import Merge
 from .projection import Projection
 from .query import Query
+from .query_structure import QueryStructure
 from .selection import Selection
 
 QueryResult = t.Tuple[t.Optional[t.Union[pd.DataFrame, pd.Series]], t.Optional[str]]
@@ -134,7 +133,7 @@ class QueryStatistics:
     lines = [
       f'Query Statistics (n = {self.total_queries})',
       '',
-      'Operation Frequencies (actual vs target):',
+      'Operation Probabilities (actual vs target):',
       self._format_frequency(
         'Selection:', probabilities[0], self.query_structure.selection_probability
       ),

@@ -1,4 +1,4 @@
-from pandas_query_generator.selection import Selection
+from pqg.selection import Selection
 
 
 class TestSelection:
@@ -7,11 +7,11 @@ class TestSelection:
     assert selection.apply('customer') == ''
 
   def test_single_condition(self):
-    selection = Selection([("'age'", '>=', 25, '&')])
+    selection = Selection([("'age'", '>=', 25, None)])
     assert selection.apply('customer') == "[(customer['age'] >= 25)]"
 
   def test_multiple_conditions_with_and(self):
-    selection = Selection([("'age'", '>=', 25, '&'), ("'status'", '==', "'active'", '&')])
+    selection = Selection([("'age'", '>=', 25, '&'), ("'status'", '==', "'active'", None)])
 
     assert (
       selection.apply('customer') == "[(customer['age'] >= 25) & (customer['status'] == 'active')]"
@@ -19,7 +19,7 @@ class TestSelection:
 
   def test_string_operations(self):
     selection = Selection(
-      [("'name'", '.str.startswith', "'A'", '&'), ("'email'", '.str.startswith', "'test'", '|')]
+      [("'name'", '.str.startswith', "'A'", '&'), ("'email'", '.str.startswith', "'test'", None)]
     )
 
     assert (
@@ -28,5 +28,5 @@ class TestSelection:
     )
 
   def test_isin_operation(self):
-    selection = Selection([("'status'", '.isin', ['active', 'pending'], '&')])
+    selection = Selection([("'status'", '.isin', ['active', 'pending'], None)])
     assert selection.apply('customer') == "[(customer['status'].isin(['active', 'pending']))]"

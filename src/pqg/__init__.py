@@ -1,3 +1,4 @@
+from .arguments import QueryFilter
 from .entity import (
   Entity,
   Property,
@@ -7,7 +8,7 @@ from .entity import (
   PropertyInt,
   PropertyString,
 )
-from .generator import Generator
+from .generator import GenerateOptions, Generator
 from .group_by_aggregation import GroupByAggregation
 from .merge import Merge
 from .projection import Projection
@@ -19,6 +20,7 @@ from .selection import Selection
 
 __all__ = [
   'Entity',
+  'GenerateOptions',
   'Generator',
   'GroupByAggregation',
   'Merge',
@@ -30,6 +32,7 @@ __all__ = [
   'PropertyInt',
   'PropertyString',
   'Query',
+  'QueryFilter',
   'QueryPool',
   'QueryStructure',
   'Schema',

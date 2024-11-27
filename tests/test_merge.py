@@ -1,14 +1,14 @@
 import pytest
 
-from pandas_query_generator.merge import Merge
-from pandas_query_generator.projection import Projection
-from pandas_query_generator.query import Query
-from pandas_query_generator.selection import Selection
+from pqg.merge import Merge
+from pqg.projection import Projection
+from pqg.query import Query
+from pqg.selection import Selection
 
 
 @pytest.fixture
 def simple_selection():
-  return Selection([("'age'", '>=', 25, '&'), ("'status'", '==', "'active'", '|')])
+  return Selection([("'age'", '>=', 25, '&'), ("'status'", '==', "'active'", None)])
 
 
 @pytest.fixture
@@ -136,7 +136,7 @@ class TestMerge:
     conditions = [
       ("'age'", '>=', 25, '&'),
       ("'status'", '.isin', "['active', 'pending']", '&'),
-      ("'name'", '.str.startswith', "'A'", '|'),
+      ("'name'", '.str.startswith', "'A'", None),
     ]
 
     right_query = Query('orders', [Selection(conditions)], False, {'age', 'status', 'name'})
@@ -173,7 +173,7 @@ class TestMerge:
     assert simple_merge.entities == {'orders'}
 
     nested_ops_query = Query(
-      'orders', [Selection([("'status'", '==', "'active'", '&')])], False, {'status'}
+      'orders', [Selection([("'status'", '==', "'active'", None)])], False, {'status'}
     )
     nested_ops_merge = Merge(nested_ops_query, "'customer_id'", "'order_id'")
 

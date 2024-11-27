@@ -82,6 +82,7 @@ class Arguments:
   """
 
   disable_multi_processing: bool
+  ensure_non_empty: bool
   filter: QueryFilter
   groupby_aggregation_probability: float
   max_groupby_columns: int
@@ -90,7 +91,7 @@ class Arguments:
   max_selection_conditions: int
   multi_line: bool
   num_queries: int
-  output_file: str
+  output_file: t.Optional[str]
   projection_probability: float
   schema: str
   selection_probability: float
@@ -108,6 +109,12 @@ class Arguments:
       '--disable-multi-processing',
       action='store_true',
       help='Generate and execute queries in a consecutive fashion',
+    )
+
+    parser.add_argument(
+      '--ensure-non-empty',
+      action='store_true',
+      help='Ensure generated queries return a non-empty result set when executed on sample data',
     )
 
     parser.add_argument(
@@ -176,7 +183,6 @@ class Arguments:
       '--output-file',
       type=str,
       required=False,
-      default='queries.txt',
       help='The name of the file to write the results to',
     )
 

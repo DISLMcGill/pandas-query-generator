@@ -2,7 +2,7 @@ import time
 from contextlib import contextmanager
 
 from .arguments import Arguments
-from .generator import Generator
+from .generator import GenerateOptions, Generator
 from .query_structure import QueryStructure
 from .schema import Schema
 
@@ -31,11 +31,7 @@ def main() -> None:
   )
 
   with timer(message):
-    query_pool = generator.generate(
-      arguments.num_queries,
-      arguments.multi_line,
-      multi_processing=not arguments.disable_multi_processing,
-    )
+    query_pool = generator.generate(GenerateOptions.from_args(arguments))
 
     if arguments.filter is not None:
       query_pool.filter(arguments.filter)
@@ -57,8 +53,8 @@ def main() -> None:
 
         print()
 
-      print(query_pool.statistics())
+  print(query_pool.statistics())
 
+  if arguments.output_file:
     query_pool.save(arguments.output_file)
-
     print(f'\nQueries written to {arguments.output_file}')

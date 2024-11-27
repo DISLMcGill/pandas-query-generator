@@ -3,9 +3,9 @@ from typing import List, Tuple
 
 import pytest
 
-from pandas_query_generator.generator import Generator
-from pandas_query_generator.query_structure import QueryStructure
-from pandas_query_generator.schema import Schema
+from pqg.generator import GenerateOptions, Generator
+from pqg.query_structure import QueryStructure
+from pqg.schema import Schema
 
 EXAMPLES_DIR = pathlib.Path(__file__).parent.parent / 'examples'
 
@@ -48,7 +48,7 @@ def test_schema_query_generation_and_execution(
 
   generator = Generator(schema, query_structure)
 
-  query_pool = generator.generate(100)
+  query_pool = generator.generate(GenerateOptions(num_queries=100))
 
   non_empty_results = 0
 
