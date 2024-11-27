@@ -15,7 +15,7 @@ class Selection(Operation):
     The last tuple's next_condition_operator is ignored.
   """
 
-  conditions: t.List[t.Tuple[str, str, t.Any, str]] = field(default_factory=list)
+  conditions: t.List[t.Tuple[str, str, t.Any, t.Optional[str]]] = field(default_factory=list)
 
   def apply(self, entity: str) -> str:
     if not self.conditions:
@@ -23,13 +23,13 @@ class Selection(Operation):
 
     formatted_conditions = []
 
-    for i, (col, op, val, next_op) in enumerate(self.conditions):
+    for col, op, val, next_op in self.conditions:
       if op in ['.str.startswith', '.isin']:
         condition = f'({entity}[{col}]{op}({val}))'
       else:
         condition = f'({entity}[{col}] {op} {val})'
 
-      if i < len(self.conditions) - 1:
+      if next_op:
         condition += f' {next_op} '
 
       formatted_conditions.append(f'{condition}')
