@@ -6,6 +6,7 @@ for directory in ./examples/*; do
   uv run genson examples/"$base"/schema.json > examples/"$base"/schema.schema.json
 
   uv run pqg  \
+    --ensure-non-empty \
     --groupby-aggregation-probability 0.5 \
     --max-groupby-columns 5 \
     --max-merges 10 \
@@ -19,6 +20,7 @@ for directory in ./examples/*; do
     --sort
 
   uv run pqg  \
+    --ensure-non-empty \
     --groupby-aggregation-probability 0.5 \
     --max-groupby-columns 5 \
     --max-merges 10 \
