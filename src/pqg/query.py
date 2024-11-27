@@ -74,6 +74,7 @@ class Query:
     Returns:
       int: Complexity score for the query
     """
+
     def get_merge_complexity(op: Operation) -> int:
       return (
         3 + sum(get_operation_complexity(nested_op) for nested_op in op.right.operations)
