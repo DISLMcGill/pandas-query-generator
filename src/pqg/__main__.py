@@ -53,7 +53,7 @@ def main() -> None:
 
         print()
 
-  print(query_pool.statistics())
+      print(query_pool.statistics())
 
   if arguments.output_file:
     query_pool.save(arguments.output_file)
