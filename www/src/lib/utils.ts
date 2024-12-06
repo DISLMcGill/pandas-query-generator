@@ -25,7 +25,7 @@ export function cn(...inputs: ClassValue[]) {
 export const generatePyodideCode = (schema: string, settings: Settings) => `
 import json, sys
 
-from pqg import Generator, QueryStructure, Schema, QueryPool
+from pqg import Generator, QueryStructure, Schema, QueryPool, GenerateOptions
 
 schema = Schema.from_dict(json.loads('''${schema}'''))
 
@@ -40,7 +40,15 @@ query_structure = QueryStructure(
 )
 
 generator = Generator(schema, query_structure)
-query_pool = generator.generate(${settings.numQueries}, multi_line=${settings.multiLine ? 'True' : 'False'}, multi_processing=False)
+
+generate_options = GenerateOptions(
+  multi_line=${settings.multiLine ? 'True' : 'False'},
+  multi_processing=False,
+  num_queries=${settings.numQueries}
+)
+
+query_pool = generator.generate(generate_options)
+
 query_pool.sort()
 
 { 'queries': [str(query) for query in query_pool], 'stats': query_pool.statistics() }
