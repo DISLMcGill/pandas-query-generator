@@ -42,6 +42,7 @@ query_structure = QueryStructure(
 generator = Generator(schema, query_structure)
 
 generate_options = GenerateOptions(
+  ensure_non_empty=${settings.enforceNonEmptyResults ? 'True' : 'False'},
   multi_line=${settings.multiLine ? 'True' : 'False'},
   multi_processing=False,
   num_queries=${settings.numQueries}

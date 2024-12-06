@@ -16,15 +16,16 @@ import { Settings } from '@/lib/types';
 import { RotateCcw, Settings2 } from 'lucide-react';
 
 const DEFAULT_SETTINGS: Settings = {
-  selectionProbability: 0.5,
-  projectionProbability: 0.5,
+  enforceNonEmptyResults: false,
   groupbyProbability: 0.5,
   maxGroupbyColumns: 5,
   maxMerges: 2,
   maxProjectionColumns: 5,
   maxSelectionConditions: 5,
-  numQueries: 100,
   multiLine: false,
+  numQueries: 100,
+  projectionProbability: 0.5,
+  selectionProbability: 0.5,
 };
 
 const SettingsGroup = ({
@@ -117,6 +118,18 @@ export const SettingsDialog = ({
                   }
                 }}
                 className='w-24'
+              />
+            </div>
+<div className='flex items-center'>
+              <Label className='w-[200px]' htmlFor='enforceNonEmptyResults'>
+                Ensure Non-Empty Results
+              </Label>
+              <Switch
+                id='enforceNonEmptyResults'
+                checked={settings.enforceNonEmptyResults}
+                onCheckedChange={(checked) =>
+                  onSettingChange('enforceNonEmptyResults', checked)
+                }
               />
             </div>
           </SettingsGroup>

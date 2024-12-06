@@ -1,13 +1,14 @@
 export type Settings = {
-  selectionProbability: number;
-  projectionProbability: number;
+  enforceNonEmptyResults: boolean;
   groupbyProbability: number;
   maxGroupbyColumns: number;
   maxMerges: number;
   maxProjectionColumns: number;
   maxSelectionConditions: number;
-  numQueries: number;
   multiLine: boolean;
+  numQueries: number;
+  projectionProbability: number;
+  selectionProbability: number;
 };
 
 export type ExecutionStatistics = {
