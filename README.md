@@ -189,5 +189,5 @@ Check out the paper in the `/docs` folder for more information!
 This version of the Pandas Query Generator is based off of the thorough research
 work of previous students of
 [COMP 400](https://www.mcgill.ca/study/2023-2024/courses/comp-400) at
-[McGill University](https://www.mcgill.ca/), namely Edge Satir, Hongxin Huo and
+[McGill University](https://www.mcgill.ca/), namely Ege Satir, Hongxin Huo and
 Dailun Li.
