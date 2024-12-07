@@ -306,7 +306,7 @@ export const QueryStatisticsDisplay = ({
             <div className='flex flex-col items-center justify-center rounded-lg border bg-background p-4'>
               <div className='text-2xl font-bold text-green-500'>
                 {(
-                  (statistics.execution_results.successful /
+                  (statistics.execution_statistics.successful /
                     statistics.total_queries) *
                   100
                 ).toFixed(1)}
@@ -319,7 +319,7 @@ export const QueryStatisticsDisplay = ({
             <div className='flex flex-col items-center justify-center rounded-lg border bg-background p-4'>
               <div className='text-2xl font-bold text-yellow-500'>
                 {(
-                  (statistics.execution_results.empty /
+                  (statistics.execution_statistics.empty /
                     statistics.total_queries) *
                   100
                 ).toFixed(1)}
@@ -330,11 +330,11 @@ export const QueryStatisticsDisplay = ({
               </div>
             </div>
           </div>
-          {Object.keys(statistics.execution_results.errors).length > 0 && (
+          {Object.keys(statistics.execution_statistics.errors).length > 0 && (
             <div className='mt-4'>
               <h4 className='mb-2 font-semibold'>Errors</h4>
               <div className='space-y-1'>
-                {Object.entries(statistics.execution_results.errors).map(
+                {Object.entries(statistics.execution_statistics.errors).map(
                   ([error, count]) => (
                     <div key={error} className='flex justify-between text-sm'>
                       <span className='text-muted-foreground'>{error}</span>

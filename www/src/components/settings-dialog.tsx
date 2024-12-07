@@ -120,7 +120,7 @@ export const SettingsDialog = ({
                 className='w-24'
               />
             </div>
-<div className='flex items-center'>
+            <div className='flex items-center'>
               <Label className='w-[200px]' htmlFor='enforceNonEmptyResults'>
                 Ensure Non-Empty Results
               </Label>
