@@ -11,7 +11,6 @@ import { usePyodideWorker } from './hooks/use-pyodide-worker';
 import { useToast } from './hooks/use-toast';
 import { EXAMPLE_SCHEMAS } from './lib/constants';
 import { QueryStatistics, Settings } from './lib/types';
-import { generatePyodideCode } from './lib/utils';
 
 export const generateQueryGenerationCode = (
   schema: string,
@@ -135,7 +134,7 @@ const App = () => {
       const response = await runPython<{
         queries: string[];
         statistics: QueryStatistics;
-      }>(generatePyodideCode(schema, settings));
+      }>(generateQueryGenerationCode(schema, settings));
       setQueries(response.queries);
       setStatistics(response.statistics);
     } catch (err) {
