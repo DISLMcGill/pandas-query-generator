@@ -86,7 +86,9 @@ jobs:
       - uses: oven-sh/setup-bun@v2
 
       - name: Install dependencies
+        working-directory: ./www
         run: bun install
 
       - name: Build
+        working-directory: ./www
         run: bun run build
