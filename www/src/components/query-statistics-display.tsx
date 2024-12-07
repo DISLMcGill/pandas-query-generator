@@ -140,7 +140,10 @@ const QueryStatisticsChart = ({
                   <XAxis dataKey='name' />
                   <YAxis unit='%' />
                   <RechartsTooltip
-                    formatter={(value) => `${value.toFixed(1)}`}
+                    formatter={(value) => {
+                      // @ts-ignore
+                      return `${value.toFixed(1)}`;
+                    }}
                     labelStyle={{ color: 'black' }}
                   />
                   <Legend />
