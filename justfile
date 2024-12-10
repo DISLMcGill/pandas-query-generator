@@ -29,6 +29,9 @@ demo:
     --sort \
     --verbose
 
+deploy:
+  cd www && bun run build && bunx gh-pages -d dist
+
 dev-deps:
   cargo install present tokei typos
 
