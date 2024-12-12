@@ -24,4 +24,3 @@ Check out the :ref:`quickstart` guide or dive into the :ref:`api_reference`.
 
    quickstart
    api_reference
-   pqg
