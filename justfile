@@ -15,7 +15,7 @@ all: fmt check readme
 build:
   uv build
 
-deploy-web:
+deploy-web: generate-docs
   cd www && bun run build && bunx gh-pages -d dist
 
 dev-deps:
@@ -37,6 +37,7 @@ generate-docs:
   cd docs && uv run sphinx-build -M html config build
   rm -rf www/public/docs
   uv run ./bin/convert-docs.py --source docs/build/html --output www/public/docs
+  just fmt-web
 
 generate-example-output:
   ./bin/generate-example-output
