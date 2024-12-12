@@ -44,7 +44,10 @@
 <span class="nd">@t</span><span class="o">.</span><span class="n">runtime_checkable</span>
 <span class="k">class</span> <span class="nc">Operation</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">Protocol</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">"""</span>
-<span class="sd">  Abstract base class for query operations.</span>
+<span class="sd">  Protocol defining the interface for query operations.</span>
+
+<span class="sd">  All query operations (Selection, Projection, GroupBy, etc.) must implement</span>
+<span class="sd">  this protocol to be compatible with the query builder and execution system.</span>
 <span class="sd">  """</span>
 
 <div class="viewcode-block" id="Operation.apply">
@@ -52,13 +55,14 @@
   <span class="nd">@abstractmethod</span>
   <span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Apply the operation to the given entity.</span>
+<span class="sd">    Apply the operation to the given entity name.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">      entity (str): The name of the entity to apply the operation to.</span>
+<span class="sd">      entity: Name of the entity (table) to apply the operation to.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">      str: The string representation of the applied operation.</span>
+<span class="sd">      A pandas query string fragment representing this operation.</span>
+<span class="sd">      For example: ".groupby(['col'])" or "[['col1', 'col2']]"</span>
 <span class="sd">    """</span>
     <span class="o">...</span></div>
 </div>

@@ -25,14 +25,22 @@ class ExecutionStatistics:
   """
   Statistics about query execution results.
 
-  Tracks the success/failure rates of query executions and categorizes results.
+  This class tracks success/failure rates and categorizes execution outcomes
+  to provide insights into query generation quality.
 
   Attributes:
-    successful: Number of queries that executed without error
-    failed: Number of queries that raised an error during execution
-    non_empty: Number of queries that returned non-empty result sets
-    empty: Number of queries that returned empty result sets
-    errors: Counter mapping error types to their occurrence count
+    successful (int): Number of queries that executed without error
+    failed (int): Number of queries that raised an error
+    non_empty (int): Number of queries returning data (rows/values)
+    empty (int): Number of queries returning empty results
+    errors (Counter[str]): Count of each error type encountered
+
+  Example:
+    stats = ExecutionStatistics()
+    stats.successful = 95
+    stats.failed = 5
+    stats.errors["KeyError"] = 3
+    print(stats)  # Shows execution summary with percentages
   """
 
   successful: int = 0

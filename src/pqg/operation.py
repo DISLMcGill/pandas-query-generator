@@ -5,18 +5,22 @@ from abc import abstractmethod
 @t.runtime_checkable
 class Operation(t.Protocol):
   """
-  Abstract base class for query operations.
+  Protocol defining the interface for query operations.
+
+  All query operations (Selection, Projection, GroupBy, etc.) must implement
+  this protocol to be compatible with the query builder and execution system.
   """
 
   @abstractmethod
   def apply(self, entity: str) -> str:
     """
-    Apply the operation to the given entity.
+    Apply the operation to the given entity name.
 
     Args:
-      entity (str): The name of the entity to apply the operation to.
+      entity: Name of the entity (table) to apply the operation to.
 
     Returns:
-      str: The string representation of the applied operation.
+      A pandas query string fragment representing this operation.
+      For example: ".groupby(['col'])" or "[['col1', 'col2']]"
     """
     ...

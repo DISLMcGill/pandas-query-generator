@@ -64,14 +64,22 @@
 <span class="w">  </span><span class="sd">"""</span>
 <span class="sd">  Statistics about query execution results.</span>
 
-<span class="sd">  Tracks the success/failure rates of query executions and categorizes results.</span>
+<span class="sd">  This class tracks success/failure rates and categorizes execution outcomes</span>
+<span class="sd">  to provide insights into query generation quality.</span>
 
 <span class="sd">  Attributes:</span>
-<span class="sd">    successful: Number of queries that executed without error</span>
-<span class="sd">    failed: Number of queries that raised an error during execution</span>
-<span class="sd">    non_empty: Number of queries that returned non-empty result sets</span>
-<span class="sd">    empty: Number of queries that returned empty result sets</span>
-<span class="sd">    errors: Counter mapping error types to their occurrence count</span>
+<span class="sd">    successful (int): Number of queries that executed without error</span>
+<span class="sd">    failed (int): Number of queries that raised an error</span>
+<span class="sd">    non_empty (int): Number of queries returning data (rows/values)</span>
+<span class="sd">    empty (int): Number of queries returning empty results</span>
+<span class="sd">    errors (Counter[str]): Count of each error type encountered</span>
+
+<span class="sd">  Example:</span>
+<span class="sd">    stats = ExecutionStatistics()</span>
+<span class="sd">    stats.successful = 95</span>
+<span class="sd">    stats.failed = 5</span>
+<span class="sd">    stats.errors["KeyError"] = 3</span>
+<span class="sd">    print(stats)  # Shows execution summary with percentages</span>
 <span class="sd">  """</span>
 
   <span class="n">successful</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>

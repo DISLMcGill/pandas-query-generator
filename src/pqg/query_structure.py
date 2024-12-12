@@ -6,8 +6,20 @@ from .arguments import Arguments
 @dataclass
 class QueryStructure:
   """
-  A dataclass that encapsulates the configuration parameters controlling query generation.
-  Contains settings for various query features like aggregation, projection, and merging.
+  Configuration parameters controlling query generation behavior.
+
+  This class encapsulates the probability and limit settings that determine
+  what kinds of queries are generated. It controls aspects like how likely
+  different operations are to appear and how complex they can be.
+
+  Attributes:
+    groupby_aggregation_probability: Probability (0-1) of including a GROUP BY operation
+    max_groupby_columns: Maximum number of columns that can be grouped on
+    max_merges: Maximum number of table joins allowed in a query
+    max_projection_columns: Maximum number of columns that can be selected
+    max_selection_conditions: Maximum number of WHERE clause conditions
+    projection_probability: Probability (0-1) of including a SELECT operation
+    selection_probability: Probability (0-1) of including a WHERE operation
   """
 
   groupby_aggregation_probability: float

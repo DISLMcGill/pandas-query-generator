@@ -14,7 +14,7 @@
     <script src="sphinx_highlight.js?v=dc90522c"></script>
     <link href="genindex.html" rel="index" title="Index" />
     <link href="search.html" rel="search" title="Search" />
-    <link href="index.html" rel="prev" title="pqg documentation" />
+    <link href="index.html" rel="prev" title="Welcome to pqg documentation" />
     <link href="custom.css" rel="stylesheet" type="text/css" />
   </head>
   <body>
@@ -1512,12 +1512,94 @@
                         ><span class="pre">object</span></code
                       >
                     </p>
-                    <p>Represents a date property with a defined range.</p>
+                    <p>Date property definition with range constraints.</p>
+                    <p>
+                      Used to define date columns in entity schemas, providing
+                      valid date ranges for query generation. Generates dates
+                      between the min and max values inclusive.
+                    </p>
+                    <dl class="py attribute">
+                      <dt
+                        class="sig sig-object py"
+                        id="pqg.entity.PropertyDate.min"
+                      >
+                        <span class="sig-name descname"
+                          ><span class="pre">min</span></span
+                        ><a
+                          class="headerlink"
+                          href="#pqg.entity.PropertyDate.min"
+                          title="Link to this definition"
+                          >¶</a
+                        >
+                      </dt>
+                      <dd>
+                        <p>Earliest allowed date</p>
+                        <dl class="field-list simple">
+                          <dt class="field-odd">
+                            Type<span class="colon">:</span>
+                          </dt>
+                          <dd class="field-odd"><p>datetime.date</p></dd>
+                        </dl>
+                      </dd>
+                    </dl>
                     <dl class="py attribute">
                       <dt
                         class="sig sig-object py"
                         id="pqg.entity.PropertyDate.max"
                       >
+                        <span class="sig-name descname"
+                          ><span class="pre">max</span></span
+                        ><a
+                          class="headerlink"
+                          href="#pqg.entity.PropertyDate.max"
+                          title="Link to this definition"
+                          >¶</a
+                        >
+                      </dt>
+                      <dd>
+                        <p>Latest allowed date</p>
+                        <dl class="field-list simple">
+                          <dt class="field-odd">
+                            Type<span class="colon">:</span>
+                          </dt>
+                          <dd class="field-odd"><p>datetime.date</p></dd>
+                        </dl>
+                      </dd>
+                    </dl>
+                    <dl class="py attribute">
+                      <dt
+                        class="sig sig-object py"
+                        id="pqg.entity.PropertyDate.type"
+                      >
+                        <span class="sig-name descname"
+                          ><span class="pre">type</span></span
+                        ><a
+                          class="headerlink"
+                          href="#pqg.entity.PropertyDate.type"
+                          title="Link to this definition"
+                          >¶</a
+                        >
+                      </dt>
+                      <dd>
+                        <p>Always “date”, used for schema parsing</p>
+                        <dl class="field-list simple">
+                          <dt class="field-odd">
+                            Type<span class="colon">:</span>
+                          </dt>
+                          <dd class="field-odd"><p>str</p></dd>
+                        </dl>
+                      </dd>
+                    </dl>
+                    <p class="rubric">Example</p>
+                    <p># Dates in the year 2023 created_at = PropertyDate(</p>
+                    <blockquote>
+                      <div>
+                        <p>min=date(2023, 1, 1), max=date(2023, 12, 31)</p>
+                      </div>
+                    </blockquote>
+                    <p>)</p>
+                    <dl class="py attribute">
+                      <dt class="sig sig-object py" id="id4">
                         <span class="sig-name descname"
                           ><span class="pre">max</span></span
                         ><em class="property"
@@ -1526,7 +1608,7 @@
                           ><span class="pre">date</span></em
                         ><a
                           class="headerlink"
-                          href="#pqg.entity.PropertyDate.max"
+                          href="#id4"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -1534,10 +1616,7 @@
                       <dd></dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt
-                        class="sig sig-object py"
-                        id="pqg.entity.PropertyDate.min"
-                      >
+                      <dt class="sig sig-object py" id="id5">
                         <span class="sig-name descname"
                           ><span class="pre">min</span></span
                         ><em class="property"
@@ -1546,7 +1625,7 @@
                           ><span class="pre">date</span></em
                         ><a
                           class="headerlink"
-                          href="#pqg.entity.PropertyDate.min"
+                          href="#id5"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -1554,10 +1633,7 @@
                       <dd></dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt
-                        class="sig sig-object py"
-                        id="pqg.entity.PropertyDate.type"
-                      >
+                      <dt class="sig sig-object py" id="id6">
                         <span class="sig-name descname"
                           ><span class="pre">type</span></span
                         ><em class="property"
@@ -1571,7 +1647,7 @@
                           ><span class="pre">'date'</span></em
                         ><a
                           class="headerlink"
-                          href="#pqg.entity.PropertyDate.type"
+                          href="#id6"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -1634,15 +1710,66 @@
                         ><span class="pre">object</span></code
                       >
                     </p>
+                    <p>Enumeration property definition with allowed values.</p>
                     <p>
-                      Represents an enumeration property with a list of possible
-                      values.
+                      Used to define columns with a fixed set of possible values
+                      in entity schemas, such as status fields or categories.
                     </p>
+                    <dl class="py attribute">
+                      <dt
+                        class="sig sig-object py"
+                        id="pqg.entity.PropertyEnum.values"
+                      >
+                        <span class="sig-name descname"
+                          ><span class="pre">values</span></span
+                        ><a
+                          class="headerlink"
+                          href="#pqg.entity.PropertyEnum.values"
+                          title="Link to this definition"
+                          >¶</a
+                        >
+                      </dt>
+                      <dd>
+                        <p>List of valid string values for this property</p>
+                        <dl class="field-list simple">
+                          <dt class="field-odd">
+                            Type<span class="colon">:</span>
+                          </dt>
+                          <dd class="field-odd"><p>List[str]</p></dd>
+                        </dl>
+                      </dd>
+                    </dl>
                     <dl class="py attribute">
                       <dt
                         class="sig sig-object py"
                         id="pqg.entity.PropertyEnum.type"
                       >
+                        <span class="sig-name descname"
+                          ><span class="pre">type</span></span
+                        ><a
+                          class="headerlink"
+                          href="#pqg.entity.PropertyEnum.type"
+                          title="Link to this definition"
+                          >¶</a
+                        >
+                      </dt>
+                      <dd>
+                        <p>Always “enum”, used for schema parsing</p>
+                        <dl class="field-list simple">
+                          <dt class="field-odd">
+                            Type<span class="colon">:</span>
+                          </dt>
+                          <dd class="field-odd"><p>str</p></dd>
+                        </dl>
+                      </dd>
+                    </dl>
+                    <p class="rubric">Example</p>
+                    <p>
+                      status = PropertyEnum(values=[“active”, “inactive”,
+                      “pending”])
+                    </p>
+                    <dl class="py attribute">
+                      <dt class="sig sig-object py" id="id7">
                         <span class="sig-name descname"
                           ><span class="pre">type</span></span
                         ><em class="property"
@@ -1656,7 +1783,7 @@
                           ><span class="pre">'enum'</span></em
                         ><a
                           class="headerlink"
-                          href="#pqg.entity.PropertyEnum.type"
+                          href="#id7"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -1664,10 +1791,7 @@
                       <dd></dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt
-                        class="sig sig-object py"
-                        id="pqg.entity.PropertyEnum.values"
-                      >
+                      <dt class="sig sig-object py" id="id8">
                         <span class="sig-name descname"
                           ><span class="pre">values</span></span
                         ><em class="property"
@@ -1678,7 +1802,7 @@
                           ><span class="p"><span class="pre">]</span></span></em
                         ><a
                           class="headerlink"
-                          href="#pqg.entity.PropertyEnum.values"
+                          href="#id8"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -1742,12 +1866,87 @@
                         ><span class="pre">object</span></code
                       >
                     </p>
-                    <p>Represents a float property with a defined range.</p>
+                    <p>
+                      Floating point property definition with range constraints.
+                    </p>
+                    <p>
+                      Used to define decimal/float columns in entity schemas,
+                      providing valid value ranges for query generation.
+                    </p>
+                    <dl class="py attribute">
+                      <dt
+                        class="sig sig-object py"
+                        id="pqg.entity.PropertyFloat.min"
+                      >
+                        <span class="sig-name descname"
+                          ><span class="pre">min</span></span
+                        ><a
+                          class="headerlink"
+                          href="#pqg.entity.PropertyFloat.min"
+                          title="Link to this definition"
+                          >¶</a
+                        >
+                      </dt>
+                      <dd>
+                        <p>Minimum allowed value (inclusive)</p>
+                        <dl class="field-list simple">
+                          <dt class="field-odd">
+                            Type<span class="colon">:</span>
+                          </dt>
+                          <dd class="field-odd"><p>float</p></dd>
+                        </dl>
+                      </dd>
+                    </dl>
                     <dl class="py attribute">
                       <dt
                         class="sig sig-object py"
                         id="pqg.entity.PropertyFloat.max"
                       >
+                        <span class="sig-name descname"
+                          ><span class="pre">max</span></span
+                        ><a
+                          class="headerlink"
+                          href="#pqg.entity.PropertyFloat.max"
+                          title="Link to this definition"
+                          >¶</a
+                        >
+                      </dt>
+                      <dd>
+                        <p>Maximum allowed value (inclusive)</p>
+                        <dl class="field-list simple">
+                          <dt class="field-odd">
+                            Type<span class="colon">:</span>
+                          </dt>
+                          <dd class="field-odd"><p>float</p></dd>
+                        </dl>
+                      </dd>
+                    </dl>
+                    <dl class="py attribute">
+                      <dt
+                        class="sig sig-object py"
+                        id="pqg.entity.PropertyFloat.type"
+                      >
+                        <span class="sig-name descname"
+                          ><span class="pre">type</span></span
+                        ><a
+                          class="headerlink"
+                          href="#pqg.entity.PropertyFloat.type"
+                          title="Link to this definition"
+                          >¶</a
+                        >
+                      </dt>
+                      <dd>
+                        <p>Always “float”, used for schema parsing</p>
+                        <dl class="field-list simple">
+                          <dt class="field-odd">
+                            Type<span class="colon">:</span>
+                          </dt>
+                          <dd class="field-odd"><p>str</p></dd>
+                        </dl>
+                      </dd>
+                    </dl>
+                    <dl class="py attribute">
+                      <dt class="sig sig-object py" id="id9">
                         <span class="sig-name descname"
                           ><span class="pre">max</span></span
                         ><em class="property"
@@ -1756,7 +1955,7 @@
                           ><span class="pre">float</span></em
                         ><a
                           class="headerlink"
-                          href="#pqg.entity.PropertyFloat.max"
+                          href="#id9"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -1764,10 +1963,7 @@
                       <dd></dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt
-                        class="sig sig-object py"
-                        id="pqg.entity.PropertyFloat.min"
-                      >
+                      <dt class="sig sig-object py" id="id10">
                         <span class="sig-name descname"
                           ><span class="pre">min</span></span
                         ><em class="property"
@@ -1776,7 +1972,7 @@
                           ><span class="pre">float</span></em
                         ><a
                           class="headerlink"
-                          href="#pqg.entity.PropertyFloat.min"
+                          href="#id10"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -1784,10 +1980,7 @@
                       <dd></dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt
-                        class="sig sig-object py"
-                        id="pqg.entity.PropertyFloat.type"
-                      >
+                      <dt class="sig sig-object py" id="id11">
                         <span class="sig-name descname"
                           ><span class="pre">type</span></span
                         ><em class="property"
@@ -1801,7 +1994,7 @@
                           ><span class="pre">'float'</span></em
                         ><a
                           class="headerlink"
-                          href="#pqg.entity.PropertyFloat.type"
+                          href="#id11"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -1865,12 +2058,85 @@
                         ><span class="pre">object</span></code
                       >
                     </p>
-                    <p>Represents an integer property with a defined range.</p>
+                    <p>Integer property definition with range constraints.</p>
+                    <p>
+                      Used to define integer columns in entity schemas,
+                      providing valid value ranges for query generation.
+                    </p>
+                    <dl class="py attribute">
+                      <dt
+                        class="sig sig-object py"
+                        id="pqg.entity.PropertyInt.min"
+                      >
+                        <span class="sig-name descname"
+                          ><span class="pre">min</span></span
+                        ><a
+                          class="headerlink"
+                          href="#pqg.entity.PropertyInt.min"
+                          title="Link to this definition"
+                          >¶</a
+                        >
+                      </dt>
+                      <dd>
+                        <p>Minimum allowed value (inclusive)</p>
+                        <dl class="field-list simple">
+                          <dt class="field-odd">
+                            Type<span class="colon">:</span>
+                          </dt>
+                          <dd class="field-odd"><p>int</p></dd>
+                        </dl>
+                      </dd>
+                    </dl>
                     <dl class="py attribute">
                       <dt
                         class="sig sig-object py"
                         id="pqg.entity.PropertyInt.max"
                       >
+                        <span class="sig-name descname"
+                          ><span class="pre">max</span></span
+                        ><a
+                          class="headerlink"
+                          href="#pqg.entity.PropertyInt.max"
+                          title="Link to this definition"
+                          >¶</a
+                        >
+                      </dt>
+                      <dd>
+                        <p>Maximum allowed value (inclusive)</p>
+                        <dl class="field-list simple">
+                          <dt class="field-odd">
+                            Type<span class="colon">:</span>
+                          </dt>
+                          <dd class="field-odd"><p>int</p></dd>
+                        </dl>
+                      </dd>
+                    </dl>
+                    <dl class="py attribute">
+                      <dt
+                        class="sig sig-object py"
+                        id="pqg.entity.PropertyInt.type"
+                      >
+                        <span class="sig-name descname"
+                          ><span class="pre">type</span></span
+                        ><a
+                          class="headerlink"
+                          href="#pqg.entity.PropertyInt.type"
+                          title="Link to this definition"
+                          >¶</a
+                        >
+                      </dt>
+                      <dd>
+                        <p>Always “int”, used for schema parsing</p>
+                        <dl class="field-list simple">
+                          <dt class="field-odd">
+                            Type<span class="colon">:</span>
+                          </dt>
+                          <dd class="field-odd"><p>str</p></dd>
+                        </dl>
+                      </dd>
+                    </dl>
+                    <dl class="py attribute">
+                      <dt class="sig sig-object py" id="id12">
                         <span class="sig-name descname"
                           ><span class="pre">max</span></span
                         ><em class="property"
@@ -1879,7 +2145,7 @@
                           ><span class="pre">int</span></em
                         ><a
                           class="headerlink"
-                          href="#pqg.entity.PropertyInt.max"
+                          href="#id12"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -1887,10 +2153,7 @@
                       <dd></dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt
-                        class="sig sig-object py"
-                        id="pqg.entity.PropertyInt.min"
-                      >
+                      <dt class="sig sig-object py" id="id13">
                         <span class="sig-name descname"
                           ><span class="pre">min</span></span
                         ><em class="property"
@@ -1899,7 +2162,7 @@
                           ><span class="pre">int</span></em
                         ><a
                           class="headerlink"
-                          href="#pqg.entity.PropertyInt.min"
+                          href="#id13"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -1907,10 +2170,7 @@
                       <dd></dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt
-                        class="sig sig-object py"
-                        id="pqg.entity.PropertyInt.type"
-                      >
+                      <dt class="sig sig-object py" id="id14">
                         <span class="sig-name descname"
                           ><span class="pre">type</span></span
                         ><em class="property"
@@ -1924,7 +2184,7 @@
                           ><span class="pre">'int'</span></em
                         ><a
                           class="headerlink"
-                          href="#pqg.entity.PropertyInt.type"
+                          href="#id14"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -1989,14 +2249,70 @@
                       >
                     </p>
                     <p>
-                      Represents a string property with specified starting
-                      characters.
+                      String property definition with character constraints.
+                    </p>
+                    <p>
+                      Used to define text columns in entity schemas, with
+                      optional constraints on what characters strings can start
+                      with. This allows generating realistic looking text data.
                     </p>
                     <dl class="py attribute">
                       <dt
                         class="sig sig-object py"
                         id="pqg.entity.PropertyString.starting_character"
                       >
+                        <span class="sig-name descname"
+                          ><span class="pre">starting_character</span></span
+                        ><a
+                          class="headerlink"
+                          href="#pqg.entity.PropertyString.starting_character"
+                          title="Link to this definition"
+                          >¶</a
+                        >
+                      </dt>
+                      <dd>
+                        <p>
+                          List of valid first characters for generated strings
+                        </p>
+                        <dl class="field-list simple">
+                          <dt class="field-odd">
+                            Type<span class="colon">:</span>
+                          </dt>
+                          <dd class="field-odd"><p>List[str]</p></dd>
+                        </dl>
+                      </dd>
+                    </dl>
+                    <dl class="py attribute">
+                      <dt
+                        class="sig sig-object py"
+                        id="pqg.entity.PropertyString.type"
+                      >
+                        <span class="sig-name descname"
+                          ><span class="pre">type</span></span
+                        ><a
+                          class="headerlink"
+                          href="#pqg.entity.PropertyString.type"
+                          title="Link to this definition"
+                          >¶</a
+                        >
+                      </dt>
+                      <dd>
+                        <p>Always “string”, used for schema parsing</p>
+                        <dl class="field-list simple">
+                          <dt class="field-odd">
+                            Type<span class="colon">:</span>
+                          </dt>
+                          <dd class="field-odd"><p>str</p></dd>
+                        </dl>
+                      </dd>
+                    </dl>
+                    <p class="rubric">Example</p>
+                    <p>
+                      # Names starting with uppercase letters name =
+                      PropertyString(starting_character=list(string.ascii_uppercase))
+                    </p>
+                    <dl class="py attribute">
+                      <dt class="sig sig-object py" id="id15">
                         <span class="sig-name descname"
                           ><span class="pre">starting_character</span></span
                         ><em class="property"
@@ -2007,7 +2323,7 @@
                           ><span class="p"><span class="pre">]</span></span></em
                         ><a
                           class="headerlink"
-                          href="#pqg.entity.PropertyString.starting_character"
+                          href="#id15"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -2015,10 +2331,7 @@
                       <dd></dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt
-                        class="sig sig-object py"
-                        id="pqg.entity.PropertyString.type"
-                      >
+                      <dt class="sig sig-object py" id="id16">
                         <span class="sig-name descname"
                           ><span class="pre">type</span></span
                         ><em class="property"
@@ -2032,7 +2345,7 @@
                           ><span class="pre">'string'</span></em
                         ><a
                           class="headerlink"
-                          href="#pqg.entity.PropertyString.type"
+                          href="#id16"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -2137,7 +2450,15 @@
                         ><span class="pre">object</span></code
                       >
                     </p>
-                    <p>Configuration options for query generation.</p>
+                    <p>
+                      Configuration options for controlling query generation
+                      behavior.
+                    </p>
+                    <p>
+                      This class provides settings that determine how queries
+                      are generated and validated, including performance options
+                      like parallel processing.
+                    </p>
                     <dl class="py attribute">
                       <dt
                         class="sig sig-object py"
@@ -2153,10 +2474,7 @@
                         >
                       </dt>
                       <dd>
-                        <p>
-                          If True, retry generation until queries produce
-                          non-empty results
-                        </p>
+                        <p>If True, only generate queries that return data</p>
                         <dl class="field-list simple">
                           <dt class="field-odd">
                             Type<span class="colon">:</span>
@@ -2181,8 +2499,8 @@
                       </dt>
                       <dd>
                         <p>
-                          If True, format generated queries across multiple
-                          lines
+                          If True, format queries with line breaks for
+                          readability
                         </p>
                         <dl class="field-list simple">
                           <dt class="field-odd">
@@ -2207,9 +2525,7 @@
                         >
                       </dt>
                       <dd>
-                        <p>
-                          If True, use parallel processing for query generation
-                        </p>
+                        <p>If True, generate queries in parallel</p>
                         <dl class="field-list simple">
                           <dt class="field-odd">
                             Type<span class="colon">:</span>
@@ -2233,7 +2549,7 @@
                         >
                       </dt>
                       <dd>
-                        <p>Number of queries to generate</p>
+                        <p>Total number of queries to generate</p>
                         <dl class="field-list simple">
                           <dt class="field-odd">
                             Type<span class="colon">:</span>
@@ -2242,8 +2558,19 @@
                         </dl>
                       </dd>
                     </dl>
+                    <p class="rubric">Example</p>
+                    <dl class="simple">
+                      <dt>options = GenerateOptions(</dt>
+                      <dd>
+                        <p>
+                          ensure_non_empty=True, num_queries=1000,
+                          multi_processing=True
+                        </p>
+                      </dd>
+                    </dl>
+                    <p>) generator.generate(options)</p>
                     <dl class="py attribute">
-                      <dt class="sig sig-object py" id="id4">
+                      <dt class="sig sig-object py" id="id17">
                         <span class="sig-name descname"
                           ><span class="pre">ensure_non_empty</span></span
                         ><em class="property"
@@ -2257,7 +2584,7 @@
                           ><span class="pre">False</span></em
                         ><a
                           class="headerlink"
-                          href="#id4"
+                          href="#id17"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -2339,7 +2666,7 @@
                       </dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt class="sig sig-object py" id="id5">
+                      <dt class="sig sig-object py" id="id18">
                         <span class="sig-name descname"
                           ><span class="pre">multi_line</span></span
                         ><em class="property"
@@ -2353,7 +2680,7 @@
                           ><span class="pre">False</span></em
                         ><a
                           class="headerlink"
-                          href="#id5"
+                          href="#id18"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -2361,7 +2688,7 @@
                       <dd></dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt class="sig sig-object py" id="id6">
+                      <dt class="sig sig-object py" id="id19">
                         <span class="sig-name descname"
                           ><span class="pre">multi_processing</span></span
                         ><em class="property"
@@ -2375,7 +2702,7 @@
                           ><span class="pre">True</span></em
                         ><a
                           class="headerlink"
-                          href="#id6"
+                          href="#id19"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -2383,7 +2710,7 @@
                       <dd></dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt class="sig sig-object py" id="id7">
+                      <dt class="sig sig-object py" id="id20">
                         <span class="sig-name descname"
                           ><span class="pre">num_queries</span></span
                         ><em class="property"
@@ -2397,7 +2724,7 @@
                           ><span class="pre">1000</span></em
                         ><a
                           class="headerlink"
-                          href="#id7"
+                          href="#id20"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -2787,15 +3114,15 @@
                         >
                       </dt>
                       <dd>
-                        <p>Apply the operation to the given entity.</p>
+                        <p>Apply the operation to the given entity name.</p>
                         <dl class="field-list simple">
                           <dt class="field-odd">
                             Parameters<span class="colon">:</span>
                           </dt>
                           <dd class="field-odd">
                             <p>
-                              <strong>entity</strong> (<em>str</em>) – The name
-                              of the entity to apply the operation to.
+                              <strong>entity</strong> – Name of the entity
+                              (table) to apply the operation to.
                             </p>
                           </dd>
                           <dt class="field-even">
@@ -2803,14 +3130,11 @@
                           </dt>
                           <dd class="field-even">
                             <p>
-                              The string representation of the applied
-                              operation.
+                              A pandas query string fragment representing this
+                              operation. For example: “.groupby([‘col’])” or
+                              “[[‘col1’, ‘col2’]]”
                             </p>
                           </dd>
-                          <dt class="field-odd">
-                            Return type<span class="colon">:</span>
-                          </dt>
-                          <dd class="field-odd"><p>str</p></dd>
                         </dl>
                       </dd>
                     </dl>
@@ -2940,15 +3264,15 @@
                         >
                       </dt>
                       <dd>
-                        <p>Apply the operation to the given entity.</p>
+                        <p>Apply the operation to the given entity name.</p>
                         <dl class="field-list simple">
                           <dt class="field-odd">
                             Parameters<span class="colon">:</span>
                           </dt>
                           <dd class="field-odd">
                             <p>
-                              <strong>entity</strong> (<em>str</em>) – The name
-                              of the entity to apply the operation to.
+                              <strong>entity</strong> – Name of the entity
+                              (table) to apply the operation to.
                             </p>
                           </dd>
                           <dt class="field-even">
@@ -2956,14 +3280,11 @@
                           </dt>
                           <dd class="field-even">
                             <p>
-                              The string representation of the applied
-                              operation.
+                              A pandas query string fragment representing this
+                              operation. For example: “.groupby([‘col’])” or
+                              “[[‘col1’, ‘col2’]]”
                             </p>
                           </dd>
-                          <dt class="field-odd">
-                            Return type<span class="colon">:</span>
-                          </dt>
-                          <dd class="field-odd"><p>str</p></dd>
                         </dl>
                       </dd>
                     </dl>
@@ -3300,7 +3621,12 @@
                         ><span class="pre">Protocol</span></code
                       >
                     </p>
-                    <p>Abstract base class for query operations.</p>
+                    <p>Protocol defining the interface for query operations.</p>
+                    <p>
+                      All query operations (Selection, Projection, GroupBy,
+                      etc.) must implement this protocol to be compatible with
+                      the query builder and execution system.
+                    </p>
                     <dl class="py method">
                       <dt
                         class="sig sig-object py"
@@ -3339,15 +3665,15 @@
                         >
                       </dt>
                       <dd>
-                        <p>Apply the operation to the given entity.</p>
+                        <p>Apply the operation to the given entity name.</p>
                         <dl class="field-list simple">
                           <dt class="field-odd">
                             Parameters<span class="colon">:</span>
                           </dt>
                           <dd class="field-odd">
                             <p>
-                              <strong>entity</strong> (<em>str</em>) – The name
-                              of the entity to apply the operation to.
+                              <strong>entity</strong> – Name of the entity
+                              (table) to apply the operation to.
                             </p>
                           </dd>
                           <dt class="field-even">
@@ -3355,14 +3681,11 @@
                           </dt>
                           <dd class="field-even">
                             <p>
-                              The string representation of the applied
-                              operation.
+                              A pandas query string fragment representing this
+                              operation. For example: “.groupby([‘col’])” or
+                              “[[‘col1’, ‘col2’]]”
                             </p>
                           </dd>
-                          <dt class="field-odd">
-                            Return type<span class="colon">:</span>
-                          </dt>
-                          <dd class="field-odd"><p>str</p></dd>
                         </dl>
                       </dd>
                     </dl>
@@ -3483,15 +3806,15 @@
                         >
                       </dt>
                       <dd>
-                        <p>Apply the operation to the given entity.</p>
+                        <p>Apply the operation to the given entity name.</p>
                         <dl class="field-list simple">
                           <dt class="field-odd">
                             Parameters<span class="colon">:</span>
                           </dt>
                           <dd class="field-odd">
                             <p>
-                              <strong>entity</strong> (<em>str</em>) – The name
-                              of the entity to apply the operation to.
+                              <strong>entity</strong> – Name of the entity
+                              (table) to apply the operation to.
                             </p>
                           </dd>
                           <dt class="field-even">
@@ -3499,19 +3822,16 @@
                           </dt>
                           <dd class="field-even">
                             <p>
-                              The string representation of the applied
-                              operation.
+                              A pandas query string fragment representing this
+                              operation. For example: “.groupby([‘col’])” or
+                              “[[‘col1’, ‘col2’]]”
                             </p>
                           </dd>
-                          <dt class="field-odd">
-                            Return type<span class="colon">:</span>
-                          </dt>
-                          <dd class="field-odd"><p>str</p></dd>
                         </dl>
                       </dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt class="sig sig-object py" id="id8">
+                      <dt class="sig sig-object py" id="id21">
                         <span class="sig-name descname"
                           ><span class="pre">columns</span></span
                         ><em class="property"
@@ -3522,7 +3842,7 @@
                           ><span class="p"><span class="pre">]</span></span></em
                         ><a
                           class="headerlink"
-                          href="#id8"
+                          href="#id21"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -4494,8 +4814,9 @@
                     </p>
                     <p>Statistics about query execution results.</p>
                     <p>
-                      Tracks the success/failure rates of query executions and
-                      categorizes results.
+                      This class tracks success/failure rates and categorizes
+                      execution outcomes to provide insights into query
+                      generation quality.
                     </p>
                     <dl class="py attribute">
                       <dt
@@ -4536,10 +4857,7 @@
                         >
                       </dt>
                       <dd>
-                        <p>
-                          Number of queries that raised an error during
-                          execution
-                        </p>
+                        <p>Number of queries that raised an error</p>
                         <dl class="field-list simple">
                           <dt class="field-odd">
                             Type<span class="colon">:</span>
@@ -4563,9 +4881,7 @@
                         >
                       </dt>
                       <dd>
-                        <p>
-                          Number of queries that returned non-empty result sets
-                        </p>
+                        <p>Number of queries returning data (rows/values)</p>
                         <dl class="field-list simple">
                           <dt class="field-odd">
                             Type<span class="colon">:</span>
@@ -4589,7 +4905,7 @@
                         >
                       </dt>
                       <dd>
-                        <p>Number of queries that returned empty result sets</p>
+                        <p>Number of queries returning empty results</p>
                         <dl class="field-list simple">
                           <dt class="field-odd">
                             Type<span class="colon">:</span>
@@ -4613,21 +4929,23 @@
                         >
                       </dt>
                       <dd>
-                        <p>
-                          Counter mapping error types to their occurrence count
-                        </p>
+                        <p>Count of each error type encountered</p>
                         <dl class="field-list simple">
                           <dt class="field-odd">
                             Type<span class="colon">:</span>
                           </dt>
-                          <dd class="field-odd">
-                            <p>collections.Counter[str]</p>
-                          </dd>
+                          <dd class="field-odd"><p>Counter[str]</p></dd>
                         </dl>
                       </dd>
                     </dl>
+                    <p class="rubric">Example</p>
+                    <p>
+                      stats = ExecutionStatistics() stats.successful = 95
+                      stats.failed = 5 stats.errors[“KeyError”] = 3 print(stats)
+                      # Shows execution summary with percentages
+                    </p>
                     <dl class="py attribute">
-                      <dt class="sig sig-object py" id="id9">
+                      <dt class="sig sig-object py" id="id22">
                         <span class="sig-name descname"
                           ><span class="pre">empty</span></span
                         ><em class="property"
@@ -4641,7 +4959,7 @@
                           ><span class="pre">0</span></em
                         ><a
                           class="headerlink"
-                          href="#id9"
+                          href="#id22"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -4649,7 +4967,7 @@
                       <dd></dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt class="sig sig-object py" id="id10">
+                      <dt class="sig sig-object py" id="id23">
                         <span class="sig-name descname"
                           ><span class="pre">errors</span></span
                         ><em class="property"
@@ -4661,7 +4979,7 @@
                           ><span class="p"><span class="pre">]</span></span></em
                         ><a
                           class="headerlink"
-                          href="#id10"
+                          href="#id23"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -4669,7 +4987,7 @@
                       <dd></dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt class="sig sig-object py" id="id11">
+                      <dt class="sig sig-object py" id="id24">
                         <span class="sig-name descname"
                           ><span class="pre">failed</span></span
                         ><em class="property"
@@ -4683,7 +5001,7 @@
                           ><span class="pre">0</span></em
                         ><a
                           class="headerlink"
-                          href="#id11"
+                          href="#id24"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -4691,7 +5009,7 @@
                       <dd></dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt class="sig sig-object py" id="id12">
+                      <dt class="sig sig-object py" id="id25">
                         <span class="sig-name descname"
                           ><span class="pre">non_empty</span></span
                         ><em class="property"
@@ -4705,7 +5023,7 @@
                           ><span class="pre">0</span></em
                         ><a
                           class="headerlink"
-                          href="#id12"
+                          href="#id25"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -4713,7 +5031,7 @@
                       <dd></dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt class="sig sig-object py" id="id13">
+                      <dt class="sig sig-object py" id="id26">
                         <span class="sig-name descname"
                           ><span class="pre">successful</span></span
                         ><em class="property"
@@ -4727,7 +5045,7 @@
                           ><span class="pre">0</span></em
                         ><a
                           class="headerlink"
-                          href="#id13"
+                          href="#id26"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -5905,7 +6223,7 @@
                       </dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt class="sig sig-object py" id="id14">
+                      <dt class="sig sig-object py" id="id27">
                         <span class="sig-name descname"
                           ><span class="pre">execution_results</span></span
                         ><em class="property"
@@ -5919,7 +6237,7 @@
                           ></em
                         ><a
                           class="headerlink"
-                          href="#id14"
+                          href="#id27"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -5927,7 +6245,7 @@
                       <dd></dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt class="sig sig-object py" id="id15">
+                      <dt class="sig sig-object py" id="id28">
                         <span class="sig-name descname"
                           ><span class="pre">groupby_columns</span></span
                         ><em class="property"
@@ -5938,7 +6256,7 @@
                           ><span class="p"><span class="pre">]</span></span></em
                         ><a
                           class="headerlink"
-                          href="#id15"
+                          href="#id28"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -5946,7 +6264,7 @@
                       <dd></dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt class="sig sig-object py" id="id16">
+                      <dt class="sig sig-object py" id="id29">
                         <span class="sig-name descname"
                           ><span class="pre">merge_count</span></span
                         ><em class="property"
@@ -5957,7 +6275,7 @@
                           ><span class="p"><span class="pre">]</span></span></em
                         ><a
                           class="headerlink"
-                          href="#id16"
+                          href="#id29"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -5965,7 +6283,7 @@
                       <dd></dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt class="sig sig-object py" id="id17">
+                      <dt class="sig sig-object py" id="id30">
                         <span class="sig-name descname"
                           ><span class="pre">projection_columns</span></span
                         ><em class="property"
@@ -5976,7 +6294,7 @@
                           ><span class="p"><span class="pre">]</span></span></em
                         ><a
                           class="headerlink"
-                          href="#id17"
+                          href="#id30"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -5984,7 +6302,7 @@
                       <dd></dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt class="sig sig-object py" id="id18">
+                      <dt class="sig sig-object py" id="id31">
                         <span class="sig-name descname"
                           ><span class="pre">queries_with_groupby</span></span
                         ><em class="property"
@@ -5998,7 +6316,7 @@
                           ><span class="pre">0</span></em
                         ><a
                           class="headerlink"
-                          href="#id18"
+                          href="#id31"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -6006,7 +6324,7 @@
                       <dd></dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt class="sig sig-object py" id="id19">
+                      <dt class="sig sig-object py" id="id32">
                         <span class="sig-name descname"
                           ><span class="pre">queries_with_merge</span></span
                         ><em class="property"
@@ -6020,7 +6338,7 @@
                           ><span class="pre">0</span></em
                         ><a
                           class="headerlink"
-                          href="#id19"
+                          href="#id32"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -6028,7 +6346,7 @@
                       <dd></dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt class="sig sig-object py" id="id20">
+                      <dt class="sig sig-object py" id="id33">
                         <span class="sig-name descname"
                           ><span class="pre"
                             >queries_with_projection</span
@@ -6044,7 +6362,7 @@
                           ><span class="pre">0</span></em
                         ><a
                           class="headerlink"
-                          href="#id20"
+                          href="#id33"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -6052,7 +6370,7 @@
                       <dd></dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt class="sig sig-object py" id="id21">
+                      <dt class="sig sig-object py" id="id34">
                         <span class="sig-name descname"
                           ><span class="pre">queries_with_selection</span></span
                         ><em class="property"
@@ -6066,7 +6384,7 @@
                           ><span class="pre">0</span></em
                         ><a
                           class="headerlink"
-                          href="#id21"
+                          href="#id34"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -6074,7 +6392,7 @@
                       <dd></dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt class="sig sig-object py" id="id22">
+                      <dt class="sig sig-object py" id="id35">
                         <span class="sig-name descname"
                           ><span class="pre">query_structure</span></span
                         ><em class="property"
@@ -6088,7 +6406,7 @@
                           ></em
                         ><a
                           class="headerlink"
-                          href="#id22"
+                          href="#id35"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -6096,7 +6414,7 @@
                       <dd></dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt class="sig sig-object py" id="id23">
+                      <dt class="sig sig-object py" id="id36">
                         <span class="sig-name descname"
                           ><span class="pre">selection_conditions</span></span
                         ><em class="property"
@@ -6107,7 +6425,7 @@
                           ><span class="p"><span class="pre">]</span></span></em
                         ><a
                           class="headerlink"
-                          href="#id23"
+                          href="#id36"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -6115,7 +6433,7 @@
                       <dd></dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt class="sig sig-object py" id="id24">
+                      <dt class="sig sig-object py" id="id37">
                         <span class="sig-name descname"
                           ><span class="pre">total_queries</span></span
                         ><em class="property"
@@ -6129,7 +6447,7 @@
                           ><span class="pre">0</span></em
                         ><a
                           class="headerlink"
-                          href="#id24"
+                          href="#id37"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -6234,11 +6552,189 @@
                       >
                     </p>
                     <p>
-                      A dataclass that encapsulates the configuration parameters
-                      controlling query generation. Contains settings for
-                      various query features like aggregation, projection, and
-                      merging.
+                      Configuration parameters controlling query generation
+                      behavior.
                     </p>
+                    <p>
+                      This class encapsulates the probability and limit settings
+                      that determine what kinds of queries are generated. It
+                      controls aspects like how likely different operations are
+                      to appear and how complex they can be.
+                    </p>
+                    <dl class="py attribute">
+                      <dt
+                        class="sig sig-object py"
+                        id="pqg.query_structure.QueryStructure.groupby_aggregation_probability"
+                      >
+                        <span class="sig-name descname"
+                          ><span class="pre"
+                            >groupby_aggregation_probability</span
+                          ></span
+                        ><a
+                          class="headerlink"
+                          href="#pqg.query_structure.QueryStructure.groupby_aggregation_probability"
+                          title="Link to this definition"
+                          >¶</a
+                        >
+                      </dt>
+                      <dd>
+                        <p>
+                          Probability (0-1) of including a GROUP BY operation
+                        </p>
+                        <dl class="field-list simple">
+                          <dt class="field-odd">
+                            Type<span class="colon">:</span>
+                          </dt>
+                          <dd class="field-odd"><p>float</p></dd>
+                        </dl>
+                      </dd>
+                    </dl>
+                    <dl class="py attribute">
+                      <dt
+                        class="sig sig-object py"
+                        id="pqg.query_structure.QueryStructure.max_groupby_columns"
+                      >
+                        <span class="sig-name descname"
+                          ><span class="pre">max_groupby_columns</span></span
+                        ><a
+                          class="headerlink"
+                          href="#pqg.query_structure.QueryStructure.max_groupby_columns"
+                          title="Link to this definition"
+                          >¶</a
+                        >
+                      </dt>
+                      <dd>
+                        <p>Maximum number of columns that can be grouped on</p>
+                        <dl class="field-list simple">
+                          <dt class="field-odd">
+                            Type<span class="colon">:</span>
+                          </dt>
+                          <dd class="field-odd"><p>int</p></dd>
+                        </dl>
+                      </dd>
+                    </dl>
+                    <dl class="py attribute">
+                      <dt
+                        class="sig sig-object py"
+                        id="pqg.query_structure.QueryStructure.max_merges"
+                      >
+                        <span class="sig-name descname"
+                          ><span class="pre">max_merges</span></span
+                        ><a
+                          class="headerlink"
+                          href="#pqg.query_structure.QueryStructure.max_merges"
+                          title="Link to this definition"
+                          >¶</a
+                        >
+                      </dt>
+                      <dd>
+                        <p>Maximum number of table joins allowed in a query</p>
+                        <dl class="field-list simple">
+                          <dt class="field-odd">
+                            Type<span class="colon">:</span>
+                          </dt>
+                          <dd class="field-odd"><p>int</p></dd>
+                        </dl>
+                      </dd>
+                    </dl>
+                    <dl class="py attribute">
+                      <dt
+                        class="sig sig-object py"
+                        id="pqg.query_structure.QueryStructure.max_projection_columns"
+                      >
+                        <span class="sig-name descname"
+                          ><span class="pre">max_projection_columns</span></span
+                        ><a
+                          class="headerlink"
+                          href="#pqg.query_structure.QueryStructure.max_projection_columns"
+                          title="Link to this definition"
+                          >¶</a
+                        >
+                      </dt>
+                      <dd>
+                        <p>Maximum number of columns that can be selected</p>
+                        <dl class="field-list simple">
+                          <dt class="field-odd">
+                            Type<span class="colon">:</span>
+                          </dt>
+                          <dd class="field-odd"><p>int</p></dd>
+                        </dl>
+                      </dd>
+                    </dl>
+                    <dl class="py attribute">
+                      <dt
+                        class="sig sig-object py"
+                        id="pqg.query_structure.QueryStructure.max_selection_conditions"
+                      >
+                        <span class="sig-name descname"
+                          ><span class="pre"
+                            >max_selection_conditions</span
+                          ></span
+                        ><a
+                          class="headerlink"
+                          href="#pqg.query_structure.QueryStructure.max_selection_conditions"
+                          title="Link to this definition"
+                          >¶</a
+                        >
+                      </dt>
+                      <dd>
+                        <p>Maximum number of WHERE clause conditions</p>
+                        <dl class="field-list simple">
+                          <dt class="field-odd">
+                            Type<span class="colon">:</span>
+                          </dt>
+                          <dd class="field-odd"><p>int</p></dd>
+                        </dl>
+                      </dd>
+                    </dl>
+                    <dl class="py attribute">
+                      <dt
+                        class="sig sig-object py"
+                        id="pqg.query_structure.QueryStructure.projection_probability"
+                      >
+                        <span class="sig-name descname"
+                          ><span class="pre">projection_probability</span></span
+                        ><a
+                          class="headerlink"
+                          href="#pqg.query_structure.QueryStructure.projection_probability"
+                          title="Link to this definition"
+                          >¶</a
+                        >
+                      </dt>
+                      <dd>
+                        <p>Probability (0-1) of including a SELECT operation</p>
+                        <dl class="field-list simple">
+                          <dt class="field-odd">
+                            Type<span class="colon">:</span>
+                          </dt>
+                          <dd class="field-odd"><p>float</p></dd>
+                        </dl>
+                      </dd>
+                    </dl>
+                    <dl class="py attribute">
+                      <dt
+                        class="sig sig-object py"
+                        id="pqg.query_structure.QueryStructure.selection_probability"
+                      >
+                        <span class="sig-name descname"
+                          ><span class="pre">selection_probability</span></span
+                        ><a
+                          class="headerlink"
+                          href="#pqg.query_structure.QueryStructure.selection_probability"
+                          title="Link to this definition"
+                          >¶</a
+                        >
+                      </dt>
+                      <dd>
+                        <p>Probability (0-1) of including a WHERE operation</p>
+                        <dl class="field-list simple">
+                          <dt class="field-odd">
+                            Type<span class="colon">:</span>
+                          </dt>
+                          <dd class="field-odd"><p>float</p></dd>
+                        </dl>
+                      </dd>
+                    </dl>
                     <dl class="py method">
                       <dt
                         class="sig sig-object py"
@@ -6328,10 +6824,7 @@
                       </dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt
-                        class="sig sig-object py"
-                        id="pqg.query_structure.QueryStructure.groupby_aggregation_probability"
-                      >
+                      <dt class="sig sig-object py" id="id38">
                         <span class="sig-name descname"
                           ><span class="pre"
                             >groupby_aggregation_probability</span
@@ -6342,7 +6835,7 @@
                           ><span class="pre">float</span></em
                         ><a
                           class="headerlink"
-                          href="#pqg.query_structure.QueryStructure.groupby_aggregation_probability"
+                          href="#id38"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -6350,10 +6843,7 @@
                       <dd></dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt
-                        class="sig sig-object py"
-                        id="pqg.query_structure.QueryStructure.max_groupby_columns"
-                      >
+                      <dt class="sig sig-object py" id="id39">
                         <span class="sig-name descname"
                           ><span class="pre">max_groupby_columns</span></span
                         ><em class="property"
@@ -6362,7 +6852,7 @@
                           ><span class="pre">int</span></em
                         ><a
                           class="headerlink"
-                          href="#pqg.query_structure.QueryStructure.max_groupby_columns"
+                          href="#id39"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -6370,10 +6860,7 @@
                       <dd></dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt
-                        class="sig sig-object py"
-                        id="pqg.query_structure.QueryStructure.max_merges"
-                      >
+                      <dt class="sig sig-object py" id="id40">
                         <span class="sig-name descname"
                           ><span class="pre">max_merges</span></span
                         ><em class="property"
@@ -6382,7 +6869,7 @@
                           ><span class="pre">int</span></em
                         ><a
                           class="headerlink"
-                          href="#pqg.query_structure.QueryStructure.max_merges"
+                          href="#id40"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -6390,10 +6877,7 @@
                       <dd></dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt
-                        class="sig sig-object py"
-                        id="pqg.query_structure.QueryStructure.max_projection_columns"
-                      >
+                      <dt class="sig sig-object py" id="id41">
                         <span class="sig-name descname"
                           ><span class="pre">max_projection_columns</span></span
                         ><em class="property"
@@ -6402,7 +6886,7 @@
                           ><span class="pre">int</span></em
                         ><a
                           class="headerlink"
-                          href="#pqg.query_structure.QueryStructure.max_projection_columns"
+                          href="#id41"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -6410,10 +6894,7 @@
                       <dd></dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt
-                        class="sig sig-object py"
-                        id="pqg.query_structure.QueryStructure.max_selection_conditions"
-                      >
+                      <dt class="sig sig-object py" id="id42">
                         <span class="sig-name descname"
                           ><span class="pre"
                             >max_selection_conditions</span
@@ -6424,7 +6905,7 @@
                           ><span class="pre">int</span></em
                         ><a
                           class="headerlink"
-                          href="#pqg.query_structure.QueryStructure.max_selection_conditions"
+                          href="#id42"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -6432,10 +6913,7 @@
                       <dd></dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt
-                        class="sig sig-object py"
-                        id="pqg.query_structure.QueryStructure.projection_probability"
-                      >
+                      <dt class="sig sig-object py" id="id43">
                         <span class="sig-name descname"
                           ><span class="pre">projection_probability</span></span
                         ><em class="property"
@@ -6444,7 +6922,7 @@
                           ><span class="pre">float</span></em
                         ><a
                           class="headerlink"
-                          href="#pqg.query_structure.QueryStructure.projection_probability"
+                          href="#id43"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -6452,10 +6930,7 @@
                       <dd></dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt
-                        class="sig sig-object py"
-                        id="pqg.query_structure.QueryStructure.selection_probability"
-                      >
+                      <dt class="sig sig-object py" id="id44">
                         <span class="sig-name descname"
                           ><span class="pre">selection_probability</span></span
                         ><em class="property"
@@ -6464,7 +6939,7 @@
                           ><span class="pre">float</span></em
                         ><a
                           class="headerlink"
-                          href="#pqg.query_structure.QueryStructure.selection_probability"
+                          href="#id44"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -6600,7 +7075,7 @@
                       </dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt class="sig sig-object py" id="id25">
+                      <dt class="sig sig-object py" id="id45">
                         <span class="sig-name descname"
                           ><span class="pre">entities</span></span
                         ><em class="property"
@@ -6615,7 +7090,7 @@
                           ><span class="p"><span class="pre">]</span></span></em
                         ><a
                           class="headerlink"
-                          href="#id25"
+                          href="#id45"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -6988,15 +7463,15 @@
                         >
                       </dt>
                       <dd>
-                        <p>Apply the operation to the given entity.</p>
+                        <p>Apply the operation to the given entity name.</p>
                         <dl class="field-list simple">
                           <dt class="field-odd">
                             Parameters<span class="colon">:</span>
                           </dt>
                           <dd class="field-odd">
                             <p>
-                              <strong>entity</strong> (<em>str</em>) – The name
-                              of the entity to apply the operation to.
+                              <strong>entity</strong> – Name of the entity
+                              (table) to apply the operation to.
                             </p>
                           </dd>
                           <dt class="field-even">
@@ -7004,14 +7479,11 @@
                           </dt>
                           <dd class="field-even">
                             <p>
-                              The string representation of the applied
-                              operation.
+                              A pandas query string fragment representing this
+                              operation. For example: “.groupby([‘col’])” or
+                              “[[‘col1’, ‘col2’]]”
                             </p>
                           </dd>
-                          <dt class="field-odd">
-                            Return type<span class="colon">:</span>
-                          </dt>
-                          <dd class="field-odd"><p>str</p></dd>
                         </dl>
                       </dd>
                     </dl>
@@ -7337,7 +7809,7 @@
                       </dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt class="sig sig-object py" id="id26">
+                      <dt class="sig sig-object py" id="id46">
                         <span class="sig-name descname"
                           ><span class="pre">foreign_keys</span></span
                         ><em class="property"
@@ -7353,7 +7825,7 @@
                           ><span class="p"><span class="pre">]</span></span></em
                         ><a
                           class="headerlink"
-                          href="#id26"
+                          href="#id46"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -7557,7 +8029,7 @@
                       </dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt class="sig sig-object py" id="id27">
+                      <dt class="sig sig-object py" id="id47">
                         <span class="sig-name descname"
                           ><span class="pre">name</span></span
                         ><em class="property"
@@ -7566,7 +8038,7 @@
                           ><span class="pre">str</span></em
                         ><a
                           class="headerlink"
-                          href="#id27"
+                          href="#id47"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -7574,7 +8046,7 @@
                       <dd></dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt class="sig sig-object py" id="id28">
+                      <dt class="sig sig-object py" id="id48">
                         <span class="sig-name descname"
                           ><span class="pre">primary_key</span></span
                         ><em class="property"
@@ -7592,7 +8064,7 @@
                           ><span class="pre">None</span></em
                         ><a
                           class="headerlink"
-                          href="#id28"
+                          href="#id48"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -7600,7 +8072,7 @@
                       <dd></dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt class="sig sig-object py" id="id29">
+                      <dt class="sig sig-object py" id="id49">
                         <span class="sig-name descname"
                           ><span class="pre">properties</span></span
                         ><em class="property"
@@ -7650,7 +8122,7 @@
                           ><span class="p"><span class="pre">]</span></span></em
                         ><a
                           class="headerlink"
-                          href="#id29"
+                          href="#id49"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -7741,7 +8213,15 @@
                         ><span class="pre">object</span></code
                       >
                     </p>
-                    <p>Configuration options for query generation.</p>
+                    <p>
+                      Configuration options for controlling query generation
+                      behavior.
+                    </p>
+                    <p>
+                      This class provides settings that determine how queries
+                      are generated and validated, including performance options
+                      like parallel processing.
+                    </p>
                     <dl class="py attribute">
                       <dt
                         class="sig sig-object py"
@@ -7757,10 +8237,7 @@
                         >
                       </dt>
                       <dd>
-                        <p>
-                          If True, retry generation until queries produce
-                          non-empty results
-                        </p>
+                        <p>If True, only generate queries that return data</p>
                         <dl class="field-list simple">
                           <dt class="field-odd">
                             Type<span class="colon">:</span>
@@ -7785,8 +8262,8 @@
                       </dt>
                       <dd>
                         <p>
-                          If True, format generated queries across multiple
-                          lines
+                          If True, format queries with line breaks for
+                          readability
                         </p>
                         <dl class="field-list simple">
                           <dt class="field-odd">
@@ -7811,9 +8288,7 @@
                         >
                       </dt>
                       <dd>
-                        <p>
-                          If True, use parallel processing for query generation
-                        </p>
+                        <p>If True, generate queries in parallel</p>
                         <dl class="field-list simple">
                           <dt class="field-odd">
                             Type<span class="colon">:</span>
@@ -7837,7 +8312,7 @@
                         >
                       </dt>
                       <dd>
-                        <p>Number of queries to generate</p>
+                        <p>Total number of queries to generate</p>
                         <dl class="field-list simple">
                           <dt class="field-odd">
                             Type<span class="colon">:</span>
@@ -7846,8 +8321,19 @@
                         </dl>
                       </dd>
                     </dl>
+                    <p class="rubric">Example</p>
+                    <dl class="simple">
+                      <dt>options = GenerateOptions(</dt>
+                      <dd>
+                        <p>
+                          ensure_non_empty=True, num_queries=1000,
+                          multi_processing=True
+                        </p>
+                      </dd>
+                    </dl>
+                    <p>) generator.generate(options)</p>
                     <dl class="py attribute">
-                      <dt class="sig sig-object py" id="id30">
+                      <dt class="sig sig-object py" id="id50">
                         <span class="sig-name descname"
                           ><span class="pre">ensure_non_empty</span></span
                         ><em class="property"
@@ -7861,7 +8347,7 @@
                           ><span class="pre">False</span></em
                         ><a
                           class="headerlink"
-                          href="#id30"
+                          href="#id50"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -7943,7 +8429,7 @@
                       </dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt class="sig sig-object py" id="id31">
+                      <dt class="sig sig-object py" id="id51">
                         <span class="sig-name descname"
                           ><span class="pre">multi_line</span></span
                         ><em class="property"
@@ -7957,7 +8443,7 @@
                           ><span class="pre">False</span></em
                         ><a
                           class="headerlink"
-                          href="#id31"
+                          href="#id51"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -7965,7 +8451,7 @@
                       <dd></dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt class="sig sig-object py" id="id32">
+                      <dt class="sig sig-object py" id="id52">
                         <span class="sig-name descname"
                           ><span class="pre">multi_processing</span></span
                         ><em class="property"
@@ -7979,7 +8465,7 @@
                           ><span class="pre">True</span></em
                         ><a
                           class="headerlink"
-                          href="#id32"
+                          href="#id52"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -7987,7 +8473,7 @@
                       <dd></dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt class="sig sig-object py" id="id33">
+                      <dt class="sig sig-object py" id="id53">
                         <span class="sig-name descname"
                           ><span class="pre">num_queries</span></span
                         ><em class="property"
@@ -8001,7 +8487,7 @@
                           ><span class="pre">1000</span></em
                         ><a
                           class="headerlink"
-                          href="#id33"
+                          href="#id53"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -8371,15 +8857,15 @@
                         >
                       </dt>
                       <dd>
-                        <p>Apply the operation to the given entity.</p>
+                        <p>Apply the operation to the given entity name.</p>
                         <dl class="field-list simple">
                           <dt class="field-odd">
                             Parameters<span class="colon">:</span>
                           </dt>
                           <dd class="field-odd">
                             <p>
-                              <strong>entity</strong> (<em>str</em>) – The name
-                              of the entity to apply the operation to.
+                              <strong>entity</strong> – Name of the entity
+                              (table) to apply the operation to.
                             </p>
                           </dd>
                           <dt class="field-even">
@@ -8387,14 +8873,11 @@
                           </dt>
                           <dd class="field-even">
                             <p>
-                              The string representation of the applied
-                              operation.
+                              A pandas query string fragment representing this
+                              operation. For example: “.groupby([‘col’])” or
+                              “[[‘col1’, ‘col2’]]”
                             </p>
                           </dd>
-                          <dt class="field-odd">
-                            Return type<span class="colon">:</span>
-                          </dt>
-                          <dd class="field-odd"><p>str</p></dd>
                         </dl>
                       </dd>
                     </dl>
@@ -8513,15 +8996,15 @@
                         >
                       </dt>
                       <dd>
-                        <p>Apply the operation to the given entity.</p>
+                        <p>Apply the operation to the given entity name.</p>
                         <dl class="field-list simple">
                           <dt class="field-odd">
                             Parameters<span class="colon">:</span>
                           </dt>
                           <dd class="field-odd">
                             <p>
-                              <strong>entity</strong> (<em>str</em>) – The name
-                              of the entity to apply the operation to.
+                              <strong>entity</strong> – Name of the entity
+                              (table) to apply the operation to.
                             </p>
                           </dd>
                           <dt class="field-even">
@@ -8529,14 +9012,11 @@
                           </dt>
                           <dd class="field-even">
                             <p>
-                              The string representation of the applied
-                              operation.
+                              A pandas query string fragment representing this
+                              operation. For example: “.groupby([‘col’])” or
+                              “[[‘col1’, ‘col2’]]”
                             </p>
                           </dd>
-                          <dt class="field-odd">
-                            Return type<span class="colon">:</span>
-                          </dt>
-                          <dd class="field-odd"><p>str</p></dd>
                         </dl>
                       </dd>
                     </dl>
@@ -8753,15 +9233,15 @@
                         >
                       </dt>
                       <dd>
-                        <p>Apply the operation to the given entity.</p>
+                        <p>Apply the operation to the given entity name.</p>
                         <dl class="field-list simple">
                           <dt class="field-odd">
                             Parameters<span class="colon">:</span>
                           </dt>
                           <dd class="field-odd">
                             <p>
-                              <strong>entity</strong> (<em>str</em>) – The name
-                              of the entity to apply the operation to.
+                              <strong>entity</strong> – Name of the entity
+                              (table) to apply the operation to.
                             </p>
                           </dd>
                           <dt class="field-even">
@@ -8769,19 +9249,16 @@
                           </dt>
                           <dd class="field-even">
                             <p>
-                              The string representation of the applied
-                              operation.
+                              A pandas query string fragment representing this
+                              operation. For example: “.groupby([‘col’])” or
+                              “[[‘col1’, ‘col2’]]”
                             </p>
                           </dd>
-                          <dt class="field-odd">
-                            Return type<span class="colon">:</span>
-                          </dt>
-                          <dd class="field-odd"><p>str</p></dd>
                         </dl>
                       </dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt class="sig sig-object py" id="id34">
+                      <dt class="sig sig-object py" id="id54">
                         <span class="sig-name descname"
                           ><span class="pre">columns</span></span
                         ><em class="property"
@@ -8792,7 +9269,7 @@
                           ><span class="p"><span class="pre">]</span></span></em
                         ><a
                           class="headerlink"
-                          href="#id34"
+                          href="#id54"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -8856,9 +9333,85 @@
                         ><span class="pre">object</span></code
                       >
                     </p>
-                    <p>Represents a date property with a defined range.</p>
+                    <p>Date property definition with range constraints.</p>
+                    <p>
+                      Used to define date columns in entity schemas, providing
+                      valid date ranges for query generation. Generates dates
+                      between the min and max values inclusive.
+                    </p>
+                    <dl class="py attribute">
+                      <dt class="sig sig-object py" id="pqg.PropertyDate.min">
+                        <span class="sig-name descname"
+                          ><span class="pre">min</span></span
+                        ><a
+                          class="headerlink"
+                          href="#pqg.PropertyDate.min"
+                          title="Link to this definition"
+                          >¶</a
+                        >
+                      </dt>
+                      <dd>
+                        <p>Earliest allowed date</p>
+                        <dl class="field-list simple">
+                          <dt class="field-odd">
+                            Type<span class="colon">:</span>
+                          </dt>
+                          <dd class="field-odd"><p>datetime.date</p></dd>
+                        </dl>
+                      </dd>
+                    </dl>
                     <dl class="py attribute">
                       <dt class="sig sig-object py" id="pqg.PropertyDate.max">
+                        <span class="sig-name descname"
+                          ><span class="pre">max</span></span
+                        ><a
+                          class="headerlink"
+                          href="#pqg.PropertyDate.max"
+                          title="Link to this definition"
+                          >¶</a
+                        >
+                      </dt>
+                      <dd>
+                        <p>Latest allowed date</p>
+                        <dl class="field-list simple">
+                          <dt class="field-odd">
+                            Type<span class="colon">:</span>
+                          </dt>
+                          <dd class="field-odd"><p>datetime.date</p></dd>
+                        </dl>
+                      </dd>
+                    </dl>
+                    <dl class="py attribute">
+                      <dt class="sig sig-object py" id="pqg.PropertyDate.type">
+                        <span class="sig-name descname"
+                          ><span class="pre">type</span></span
+                        ><a
+                          class="headerlink"
+                          href="#pqg.PropertyDate.type"
+                          title="Link to this definition"
+                          >¶</a
+                        >
+                      </dt>
+                      <dd>
+                        <p>Always “date”, used for schema parsing</p>
+                        <dl class="field-list simple">
+                          <dt class="field-odd">
+                            Type<span class="colon">:</span>
+                          </dt>
+                          <dd class="field-odd"><p>str</p></dd>
+                        </dl>
+                      </dd>
+                    </dl>
+                    <p class="rubric">Example</p>
+                    <p># Dates in the year 2023 created_at = PropertyDate(</p>
+                    <blockquote>
+                      <div>
+                        <p>min=date(2023, 1, 1), max=date(2023, 12, 31)</p>
+                      </div>
+                    </blockquote>
+                    <p>)</p>
+                    <dl class="py attribute">
+                      <dt class="sig sig-object py" id="id55">
                         <span class="sig-name descname"
                           ><span class="pre">max</span></span
                         ><em class="property"
@@ -8867,7 +9420,7 @@
                           ><span class="pre">date</span></em
                         ><a
                           class="headerlink"
-                          href="#pqg.PropertyDate.max"
+                          href="#id55"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -8875,7 +9428,7 @@
                       <dd></dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt class="sig sig-object py" id="pqg.PropertyDate.min">
+                      <dt class="sig sig-object py" id="id56">
                         <span class="sig-name descname"
                           ><span class="pre">min</span></span
                         ><em class="property"
@@ -8884,7 +9437,7 @@
                           ><span class="pre">date</span></em
                         ><a
                           class="headerlink"
-                          href="#pqg.PropertyDate.min"
+                          href="#id56"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -8892,7 +9445,7 @@
                       <dd></dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt class="sig sig-object py" id="pqg.PropertyDate.type">
+                      <dt class="sig sig-object py" id="id57">
                         <span class="sig-name descname"
                           ><span class="pre">type</span></span
                         ><em class="property"
@@ -8906,7 +9459,7 @@
                           ><span class="pre">'date'</span></em
                         ><a
                           class="headerlink"
-                          href="#pqg.PropertyDate.type"
+                          href="#id57"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -8969,12 +9522,63 @@
                         ><span class="pre">object</span></code
                       >
                     </p>
+                    <p>Enumeration property definition with allowed values.</p>
                     <p>
-                      Represents an enumeration property with a list of possible
-                      values.
+                      Used to define columns with a fixed set of possible values
+                      in entity schemas, such as status fields or categories.
                     </p>
                     <dl class="py attribute">
+                      <dt
+                        class="sig sig-object py"
+                        id="pqg.PropertyEnum.values"
+                      >
+                        <span class="sig-name descname"
+                          ><span class="pre">values</span></span
+                        ><a
+                          class="headerlink"
+                          href="#pqg.PropertyEnum.values"
+                          title="Link to this definition"
+                          >¶</a
+                        >
+                      </dt>
+                      <dd>
+                        <p>List of valid string values for this property</p>
+                        <dl class="field-list simple">
+                          <dt class="field-odd">
+                            Type<span class="colon">:</span>
+                          </dt>
+                          <dd class="field-odd"><p>List[str]</p></dd>
+                        </dl>
+                      </dd>
+                    </dl>
+                    <dl class="py attribute">
                       <dt class="sig sig-object py" id="pqg.PropertyEnum.type">
+                        <span class="sig-name descname"
+                          ><span class="pre">type</span></span
+                        ><a
+                          class="headerlink"
+                          href="#pqg.PropertyEnum.type"
+                          title="Link to this definition"
+                          >¶</a
+                        >
+                      </dt>
+                      <dd>
+                        <p>Always “enum”, used for schema parsing</p>
+                        <dl class="field-list simple">
+                          <dt class="field-odd">
+                            Type<span class="colon">:</span>
+                          </dt>
+                          <dd class="field-odd"><p>str</p></dd>
+                        </dl>
+                      </dd>
+                    </dl>
+                    <p class="rubric">Example</p>
+                    <p>
+                      status = PropertyEnum(values=[“active”, “inactive”,
+                      “pending”])
+                    </p>
+                    <dl class="py attribute">
+                      <dt class="sig sig-object py" id="id58">
                         <span class="sig-name descname"
                           ><span class="pre">type</span></span
                         ><em class="property"
@@ -8988,7 +9592,7 @@
                           ><span class="pre">'enum'</span></em
                         ><a
                           class="headerlink"
-                          href="#pqg.PropertyEnum.type"
+                          href="#id58"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -8996,10 +9600,7 @@
                       <dd></dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt
-                        class="sig sig-object py"
-                        id="pqg.PropertyEnum.values"
-                      >
+                      <dt class="sig sig-object py" id="id59">
                         <span class="sig-name descname"
                           ><span class="pre">values</span></span
                         ><em class="property"
@@ -9010,7 +9611,7 @@
                           ><span class="p"><span class="pre">]</span></span></em
                         ><a
                           class="headerlink"
-                          href="#pqg.PropertyEnum.values"
+                          href="#id59"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -9074,9 +9675,78 @@
                         ><span class="pre">object</span></code
                       >
                     </p>
-                    <p>Represents a float property with a defined range.</p>
+                    <p>
+                      Floating point property definition with range constraints.
+                    </p>
+                    <p>
+                      Used to define decimal/float columns in entity schemas,
+                      providing valid value ranges for query generation.
+                    </p>
+                    <dl class="py attribute">
+                      <dt class="sig sig-object py" id="pqg.PropertyFloat.min">
+                        <span class="sig-name descname"
+                          ><span class="pre">min</span></span
+                        ><a
+                          class="headerlink"
+                          href="#pqg.PropertyFloat.min"
+                          title="Link to this definition"
+                          >¶</a
+                        >
+                      </dt>
+                      <dd>
+                        <p>Minimum allowed value (inclusive)</p>
+                        <dl class="field-list simple">
+                          <dt class="field-odd">
+                            Type<span class="colon">:</span>
+                          </dt>
+                          <dd class="field-odd"><p>float</p></dd>
+                        </dl>
+                      </dd>
+                    </dl>
                     <dl class="py attribute">
                       <dt class="sig sig-object py" id="pqg.PropertyFloat.max">
+                        <span class="sig-name descname"
+                          ><span class="pre">max</span></span
+                        ><a
+                          class="headerlink"
+                          href="#pqg.PropertyFloat.max"
+                          title="Link to this definition"
+                          >¶</a
+                        >
+                      </dt>
+                      <dd>
+                        <p>Maximum allowed value (inclusive)</p>
+                        <dl class="field-list simple">
+                          <dt class="field-odd">
+                            Type<span class="colon">:</span>
+                          </dt>
+                          <dd class="field-odd"><p>float</p></dd>
+                        </dl>
+                      </dd>
+                    </dl>
+                    <dl class="py attribute">
+                      <dt class="sig sig-object py" id="pqg.PropertyFloat.type">
+                        <span class="sig-name descname"
+                          ><span class="pre">type</span></span
+                        ><a
+                          class="headerlink"
+                          href="#pqg.PropertyFloat.type"
+                          title="Link to this definition"
+                          >¶</a
+                        >
+                      </dt>
+                      <dd>
+                        <p>Always “float”, used for schema parsing</p>
+                        <dl class="field-list simple">
+                          <dt class="field-odd">
+                            Type<span class="colon">:</span>
+                          </dt>
+                          <dd class="field-odd"><p>str</p></dd>
+                        </dl>
+                      </dd>
+                    </dl>
+                    <dl class="py attribute">
+                      <dt class="sig sig-object py" id="id60">
                         <span class="sig-name descname"
                           ><span class="pre">max</span></span
                         ><em class="property"
@@ -9085,7 +9755,7 @@
                           ><span class="pre">float</span></em
                         ><a
                           class="headerlink"
-                          href="#pqg.PropertyFloat.max"
+                          href="#id60"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -9093,7 +9763,7 @@
                       <dd></dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt class="sig sig-object py" id="pqg.PropertyFloat.min">
+                      <dt class="sig sig-object py" id="id61">
                         <span class="sig-name descname"
                           ><span class="pre">min</span></span
                         ><em class="property"
@@ -9102,7 +9772,7 @@
                           ><span class="pre">float</span></em
                         ><a
                           class="headerlink"
-                          href="#pqg.PropertyFloat.min"
+                          href="#id61"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -9110,7 +9780,7 @@
                       <dd></dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt class="sig sig-object py" id="pqg.PropertyFloat.type">
+                      <dt class="sig sig-object py" id="id62">
                         <span class="sig-name descname"
                           ><span class="pre">type</span></span
                         ><em class="property"
@@ -9124,7 +9794,7 @@
                           ><span class="pre">'float'</span></em
                         ><a
                           class="headerlink"
-                          href="#pqg.PropertyFloat.type"
+                          href="#id62"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -9188,9 +9858,76 @@
                         ><span class="pre">object</span></code
                       >
                     </p>
-                    <p>Represents an integer property with a defined range.</p>
+                    <p>Integer property definition with range constraints.</p>
+                    <p>
+                      Used to define integer columns in entity schemas,
+                      providing valid value ranges for query generation.
+                    </p>
+                    <dl class="py attribute">
+                      <dt class="sig sig-object py" id="pqg.PropertyInt.min">
+                        <span class="sig-name descname"
+                          ><span class="pre">min</span></span
+                        ><a
+                          class="headerlink"
+                          href="#pqg.PropertyInt.min"
+                          title="Link to this definition"
+                          >¶</a
+                        >
+                      </dt>
+                      <dd>
+                        <p>Minimum allowed value (inclusive)</p>
+                        <dl class="field-list simple">
+                          <dt class="field-odd">
+                            Type<span class="colon">:</span>
+                          </dt>
+                          <dd class="field-odd"><p>int</p></dd>
+                        </dl>
+                      </dd>
+                    </dl>
                     <dl class="py attribute">
                       <dt class="sig sig-object py" id="pqg.PropertyInt.max">
+                        <span class="sig-name descname"
+                          ><span class="pre">max</span></span
+                        ><a
+                          class="headerlink"
+                          href="#pqg.PropertyInt.max"
+                          title="Link to this definition"
+                          >¶</a
+                        >
+                      </dt>
+                      <dd>
+                        <p>Maximum allowed value (inclusive)</p>
+                        <dl class="field-list simple">
+                          <dt class="field-odd">
+                            Type<span class="colon">:</span>
+                          </dt>
+                          <dd class="field-odd"><p>int</p></dd>
+                        </dl>
+                      </dd>
+                    </dl>
+                    <dl class="py attribute">
+                      <dt class="sig sig-object py" id="pqg.PropertyInt.type">
+                        <span class="sig-name descname"
+                          ><span class="pre">type</span></span
+                        ><a
+                          class="headerlink"
+                          href="#pqg.PropertyInt.type"
+                          title="Link to this definition"
+                          >¶</a
+                        >
+                      </dt>
+                      <dd>
+                        <p>Always “int”, used for schema parsing</p>
+                        <dl class="field-list simple">
+                          <dt class="field-odd">
+                            Type<span class="colon">:</span>
+                          </dt>
+                          <dd class="field-odd"><p>str</p></dd>
+                        </dl>
+                      </dd>
+                    </dl>
+                    <dl class="py attribute">
+                      <dt class="sig sig-object py" id="id63">
                         <span class="sig-name descname"
                           ><span class="pre">max</span></span
                         ><em class="property"
@@ -9199,7 +9936,7 @@
                           ><span class="pre">int</span></em
                         ><a
                           class="headerlink"
-                          href="#pqg.PropertyInt.max"
+                          href="#id63"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -9207,7 +9944,7 @@
                       <dd></dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt class="sig sig-object py" id="pqg.PropertyInt.min">
+                      <dt class="sig sig-object py" id="id64">
                         <span class="sig-name descname"
                           ><span class="pre">min</span></span
                         ><em class="property"
@@ -9216,7 +9953,7 @@
                           ><span class="pre">int</span></em
                         ><a
                           class="headerlink"
-                          href="#pqg.PropertyInt.min"
+                          href="#id64"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -9224,7 +9961,7 @@
                       <dd></dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt class="sig sig-object py" id="pqg.PropertyInt.type">
+                      <dt class="sig sig-object py" id="id65">
                         <span class="sig-name descname"
                           ><span class="pre">type</span></span
                         ><em class="property"
@@ -9238,7 +9975,7 @@
                           ><span class="pre">'int'</span></em
                         ><a
                           class="headerlink"
-                          href="#pqg.PropertyInt.type"
+                          href="#id65"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -9303,14 +10040,70 @@
                       >
                     </p>
                     <p>
-                      Represents a string property with specified starting
-                      characters.
+                      String property definition with character constraints.
+                    </p>
+                    <p>
+                      Used to define text columns in entity schemas, with
+                      optional constraints on what characters strings can start
+                      with. This allows generating realistic looking text data.
                     </p>
                     <dl class="py attribute">
                       <dt
                         class="sig sig-object py"
                         id="pqg.PropertyString.starting_character"
                       >
+                        <span class="sig-name descname"
+                          ><span class="pre">starting_character</span></span
+                        ><a
+                          class="headerlink"
+                          href="#pqg.PropertyString.starting_character"
+                          title="Link to this definition"
+                          >¶</a
+                        >
+                      </dt>
+                      <dd>
+                        <p>
+                          List of valid first characters for generated strings
+                        </p>
+                        <dl class="field-list simple">
+                          <dt class="field-odd">
+                            Type<span class="colon">:</span>
+                          </dt>
+                          <dd class="field-odd"><p>List[str]</p></dd>
+                        </dl>
+                      </dd>
+                    </dl>
+                    <dl class="py attribute">
+                      <dt
+                        class="sig sig-object py"
+                        id="pqg.PropertyString.type"
+                      >
+                        <span class="sig-name descname"
+                          ><span class="pre">type</span></span
+                        ><a
+                          class="headerlink"
+                          href="#pqg.PropertyString.type"
+                          title="Link to this definition"
+                          >¶</a
+                        >
+                      </dt>
+                      <dd>
+                        <p>Always “string”, used for schema parsing</p>
+                        <dl class="field-list simple">
+                          <dt class="field-odd">
+                            Type<span class="colon">:</span>
+                          </dt>
+                          <dd class="field-odd"><p>str</p></dd>
+                        </dl>
+                      </dd>
+                    </dl>
+                    <p class="rubric">Example</p>
+                    <p>
+                      # Names starting with uppercase letters name =
+                      PropertyString(starting_character=list(string.ascii_uppercase))
+                    </p>
+                    <dl class="py attribute">
+                      <dt class="sig sig-object py" id="id66">
                         <span class="sig-name descname"
                           ><span class="pre">starting_character</span></span
                         ><em class="property"
@@ -9321,7 +10114,7 @@
                           ><span class="p"><span class="pre">]</span></span></em
                         ><a
                           class="headerlink"
-                          href="#pqg.PropertyString.starting_character"
+                          href="#id66"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -9329,10 +10122,7 @@
                       <dd></dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt
-                        class="sig sig-object py"
-                        id="pqg.PropertyString.type"
-                      >
+                      <dt class="sig sig-object py" id="id67">
                         <span class="sig-name descname"
                           ><span class="pre">type</span></span
                         ><em class="property"
@@ -9346,7 +10136,7 @@
                           ><span class="pre">'string'</span></em
                         ><a
                           class="headerlink"
-                          href="#pqg.PropertyString.type"
+                          href="#id67"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -10789,11 +11579,189 @@
                       >
                     </p>
                     <p>
-                      A dataclass that encapsulates the configuration parameters
-                      controlling query generation. Contains settings for
-                      various query features like aggregation, projection, and
-                      merging.
+                      Configuration parameters controlling query generation
+                      behavior.
                     </p>
+                    <p>
+                      This class encapsulates the probability and limit settings
+                      that determine what kinds of queries are generated. It
+                      controls aspects like how likely different operations are
+                      to appear and how complex they can be.
+                    </p>
+                    <dl class="py attribute">
+                      <dt
+                        class="sig sig-object py"
+                        id="pqg.QueryStructure.groupby_aggregation_probability"
+                      >
+                        <span class="sig-name descname"
+                          ><span class="pre"
+                            >groupby_aggregation_probability</span
+                          ></span
+                        ><a
+                          class="headerlink"
+                          href="#pqg.QueryStructure.groupby_aggregation_probability"
+                          title="Link to this definition"
+                          >¶</a
+                        >
+                      </dt>
+                      <dd>
+                        <p>
+                          Probability (0-1) of including a GROUP BY operation
+                        </p>
+                        <dl class="field-list simple">
+                          <dt class="field-odd">
+                            Type<span class="colon">:</span>
+                          </dt>
+                          <dd class="field-odd"><p>float</p></dd>
+                        </dl>
+                      </dd>
+                    </dl>
+                    <dl class="py attribute">
+                      <dt
+                        class="sig sig-object py"
+                        id="pqg.QueryStructure.max_groupby_columns"
+                      >
+                        <span class="sig-name descname"
+                          ><span class="pre">max_groupby_columns</span></span
+                        ><a
+                          class="headerlink"
+                          href="#pqg.QueryStructure.max_groupby_columns"
+                          title="Link to this definition"
+                          >¶</a
+                        >
+                      </dt>
+                      <dd>
+                        <p>Maximum number of columns that can be grouped on</p>
+                        <dl class="field-list simple">
+                          <dt class="field-odd">
+                            Type<span class="colon">:</span>
+                          </dt>
+                          <dd class="field-odd"><p>int</p></dd>
+                        </dl>
+                      </dd>
+                    </dl>
+                    <dl class="py attribute">
+                      <dt
+                        class="sig sig-object py"
+                        id="pqg.QueryStructure.max_merges"
+                      >
+                        <span class="sig-name descname"
+                          ><span class="pre">max_merges</span></span
+                        ><a
+                          class="headerlink"
+                          href="#pqg.QueryStructure.max_merges"
+                          title="Link to this definition"
+                          >¶</a
+                        >
+                      </dt>
+                      <dd>
+                        <p>Maximum number of table joins allowed in a query</p>
+                        <dl class="field-list simple">
+                          <dt class="field-odd">
+                            Type<span class="colon">:</span>
+                          </dt>
+                          <dd class="field-odd"><p>int</p></dd>
+                        </dl>
+                      </dd>
+                    </dl>
+                    <dl class="py attribute">
+                      <dt
+                        class="sig sig-object py"
+                        id="pqg.QueryStructure.max_projection_columns"
+                      >
+                        <span class="sig-name descname"
+                          ><span class="pre">max_projection_columns</span></span
+                        ><a
+                          class="headerlink"
+                          href="#pqg.QueryStructure.max_projection_columns"
+                          title="Link to this definition"
+                          >¶</a
+                        >
+                      </dt>
+                      <dd>
+                        <p>Maximum number of columns that can be selected</p>
+                        <dl class="field-list simple">
+                          <dt class="field-odd">
+                            Type<span class="colon">:</span>
+                          </dt>
+                          <dd class="field-odd"><p>int</p></dd>
+                        </dl>
+                      </dd>
+                    </dl>
+                    <dl class="py attribute">
+                      <dt
+                        class="sig sig-object py"
+                        id="pqg.QueryStructure.max_selection_conditions"
+                      >
+                        <span class="sig-name descname"
+                          ><span class="pre"
+                            >max_selection_conditions</span
+                          ></span
+                        ><a
+                          class="headerlink"
+                          href="#pqg.QueryStructure.max_selection_conditions"
+                          title="Link to this definition"
+                          >¶</a
+                        >
+                      </dt>
+                      <dd>
+                        <p>Maximum number of WHERE clause conditions</p>
+                        <dl class="field-list simple">
+                          <dt class="field-odd">
+                            Type<span class="colon">:</span>
+                          </dt>
+                          <dd class="field-odd"><p>int</p></dd>
+                        </dl>
+                      </dd>
+                    </dl>
+                    <dl class="py attribute">
+                      <dt
+                        class="sig sig-object py"
+                        id="pqg.QueryStructure.projection_probability"
+                      >
+                        <span class="sig-name descname"
+                          ><span class="pre">projection_probability</span></span
+                        ><a
+                          class="headerlink"
+                          href="#pqg.QueryStructure.projection_probability"
+                          title="Link to this definition"
+                          >¶</a
+                        >
+                      </dt>
+                      <dd>
+                        <p>Probability (0-1) of including a SELECT operation</p>
+                        <dl class="field-list simple">
+                          <dt class="field-odd">
+                            Type<span class="colon">:</span>
+                          </dt>
+                          <dd class="field-odd"><p>float</p></dd>
+                        </dl>
+                      </dd>
+                    </dl>
+                    <dl class="py attribute">
+                      <dt
+                        class="sig sig-object py"
+                        id="pqg.QueryStructure.selection_probability"
+                      >
+                        <span class="sig-name descname"
+                          ><span class="pre">selection_probability</span></span
+                        ><a
+                          class="headerlink"
+                          href="#pqg.QueryStructure.selection_probability"
+                          title="Link to this definition"
+                          >¶</a
+                        >
+                      </dt>
+                      <dd>
+                        <p>Probability (0-1) of including a WHERE operation</p>
+                        <dl class="field-list simple">
+                          <dt class="field-odd">
+                            Type<span class="colon">:</span>
+                          </dt>
+                          <dd class="field-odd"><p>float</p></dd>
+                        </dl>
+                      </dd>
+                    </dl>
                     <dl class="py method">
                       <dt
                         class="sig sig-object py"
@@ -10883,10 +11851,7 @@
                       </dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt
-                        class="sig sig-object py"
-                        id="pqg.QueryStructure.groupby_aggregation_probability"
-                      >
+                      <dt class="sig sig-object py" id="id68">
                         <span class="sig-name descname"
                           ><span class="pre"
                             >groupby_aggregation_probability</span
@@ -10897,7 +11862,7 @@
                           ><span class="pre">float</span></em
                         ><a
                           class="headerlink"
-                          href="#pqg.QueryStructure.groupby_aggregation_probability"
+                          href="#id68"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -10905,10 +11870,7 @@
                       <dd></dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt
-                        class="sig sig-object py"
-                        id="pqg.QueryStructure.max_groupby_columns"
-                      >
+                      <dt class="sig sig-object py" id="id69">
                         <span class="sig-name descname"
                           ><span class="pre">max_groupby_columns</span></span
                         ><em class="property"
@@ -10917,7 +11879,7 @@
                           ><span class="pre">int</span></em
                         ><a
                           class="headerlink"
-                          href="#pqg.QueryStructure.max_groupby_columns"
+                          href="#id69"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -10925,10 +11887,7 @@
                       <dd></dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt
-                        class="sig sig-object py"
-                        id="pqg.QueryStructure.max_merges"
-                      >
+                      <dt class="sig sig-object py" id="id70">
                         <span class="sig-name descname"
                           ><span class="pre">max_merges</span></span
                         ><em class="property"
@@ -10937,7 +11896,7 @@
                           ><span class="pre">int</span></em
                         ><a
                           class="headerlink"
-                          href="#pqg.QueryStructure.max_merges"
+                          href="#id70"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -10945,10 +11904,7 @@
                       <dd></dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt
-                        class="sig sig-object py"
-                        id="pqg.QueryStructure.max_projection_columns"
-                      >
+                      <dt class="sig sig-object py" id="id71">
                         <span class="sig-name descname"
                           ><span class="pre">max_projection_columns</span></span
                         ><em class="property"
@@ -10957,7 +11913,7 @@
                           ><span class="pre">int</span></em
                         ><a
                           class="headerlink"
-                          href="#pqg.QueryStructure.max_projection_columns"
+                          href="#id71"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -10965,10 +11921,7 @@
                       <dd></dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt
-                        class="sig sig-object py"
-                        id="pqg.QueryStructure.max_selection_conditions"
-                      >
+                      <dt class="sig sig-object py" id="id72">
                         <span class="sig-name descname"
                           ><span class="pre"
                             >max_selection_conditions</span
@@ -10979,7 +11932,7 @@
                           ><span class="pre">int</span></em
                         ><a
                           class="headerlink"
-                          href="#pqg.QueryStructure.max_selection_conditions"
+                          href="#id72"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -10987,10 +11940,7 @@
                       <dd></dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt
-                        class="sig sig-object py"
-                        id="pqg.QueryStructure.projection_probability"
-                      >
+                      <dt class="sig sig-object py" id="id73">
                         <span class="sig-name descname"
                           ><span class="pre">projection_probability</span></span
                         ><em class="property"
@@ -10999,7 +11949,7 @@
                           ><span class="pre">float</span></em
                         ><a
                           class="headerlink"
-                          href="#pqg.QueryStructure.projection_probability"
+                          href="#id73"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -11007,10 +11957,7 @@
                       <dd></dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt
-                        class="sig sig-object py"
-                        id="pqg.QueryStructure.selection_probability"
-                      >
+                      <dt class="sig sig-object py" id="id74">
                         <span class="sig-name descname"
                           ><span class="pre">selection_probability</span></span
                         ><em class="property"
@@ -11019,7 +11966,7 @@
                           ><span class="pre">float</span></em
                         ><a
                           class="headerlink"
-                          href="#pqg.QueryStructure.selection_probability"
+                          href="#id74"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -11138,7 +12085,7 @@
                       </dd>
                     </dl>
                     <dl class="py attribute">
-                      <dt class="sig sig-object py" id="id35">
+                      <dt class="sig sig-object py" id="id75">
                         <span class="sig-name descname"
                           ><span class="pre">entities</span></span
                         ><em class="property"
@@ -11153,7 +12100,7 @@
                           ><span class="p"><span class="pre">]</span></span></em
                         ><a
                           class="headerlink"
-                          href="#id35"
+                          href="#id75"
                           title="Link to this definition"
                           >¶</a
                         >
@@ -11506,15 +12453,15 @@
                         >
                       </dt>
                       <dd>
-                        <p>Apply the operation to the given entity.</p>
+                        <p>Apply the operation to the given entity name.</p>
                         <dl class="field-list simple">
                           <dt class="field-odd">
                             Parameters<span class="colon">:</span>
                           </dt>
                           <dd class="field-odd">
                             <p>
-                              <strong>entity</strong> (<em>str</em>) – The name
-                              of the entity to apply the operation to.
+                              <strong>entity</strong> – Name of the entity
+                              (table) to apply the operation to.
                             </p>
                           </dd>
                           <dt class="field-even">
@@ -11522,14 +12469,11 @@
                           </dt>
                           <dd class="field-even">
                             <p>
-                              The string representation of the applied
-                              operation.
+                              A pandas query string fragment representing this
+                              operation. For example: “.groupby([‘col’])” or
+                              “[[‘col1’, ‘col2’]]”
                             </p>
                           </dd>
-                          <dt class="field-odd">
-                            Return type<span class="colon">:</span>
-                          </dt>
-                          <dd class="field-odd"><p>str</p></dd>
                         </dl>
                       </dd>
                     </dl>
@@ -11696,7 +12640,7 @@
                   <li>
                     Previous:
                     <a href="index.html" title="previous chapter"
-                      >pqg documentation</a
+                      >Welcome to pqg documentation</a
                     >
                   </li>
                 </ul>
