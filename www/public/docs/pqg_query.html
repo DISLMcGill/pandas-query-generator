@@ -16,7 +16,7 @@
       type="text/css"
     />
     <link
-      href="../../_static/alabaster.css?v=27fed22d"
+      href="../../_static/alabaster.css?v=ec641305"
       rel="stylesheet"
       type="text/css"
     />
@@ -45,7 +45,7 @@
 
 
 <div class="viewcode-block" id="Query">
-<a class="viewcode-back" href="../../pqg.html#pqg.query.Query">[docs]</a>
+<a class="viewcode-back" href="../../pqg.html#pqg.Query">[docs]</a>
 <span class="k">class</span> <span class="nc">Query</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">"""</span>
 <span class="sd">  Represents a complete database query with tracking for query complexity.</span>
@@ -58,8 +58,7 @@
 <span class="sd">    entity (str): The name of the target entity.</span>
 <span class="sd">    operations (List[Operation]): List of operations to apply.</span>
 <span class="sd">    multi_line (bool): Whether to format output across multiple lines.</span>
-<span class="sd">    available_columns (Set[str]): Columns available for operations.</span>
-<span class="sd">    complexity (int): Measure of query complexity based on merge operations.</span>
+<span class="sd">    columns (Set[str]): Columns available for operations.</span>
 <span class="sd">  """</span>
 
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
@@ -74,28 +73,40 @@
     <span class="bp">self</span><span class="o">.</span><span class="n">multi_line</span> <span class="o">=</span> <span class="n">multi_line</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">columns</span>
 
+<div class="viewcode-block" id="Query.__str__">
+<a class="viewcode-back" href="../../api_reference.html#pqg.Query.__str__">[docs]</a>
   <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="k">return</span> <span class="p">(</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">format_multi_line</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
       <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">multi_line</span>
       <span class="k">else</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="si">}{</span><span class="s1">''</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="p">)</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">operations</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span>
-    <span class="p">)</span>
+    <span class="p">)</span></div>
 
+
+<div class="viewcode-block" id="Query.__hash__">
+<a class="viewcode-back" href="../../api_reference.html#pqg.Query.__hash__">[docs]</a>
   <span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Hash based on complexity and string representation."""</span>
-    <span class="k">return</span> <span class="nb">hash</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">complexity</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="nb">hash</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">complexity</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)))</span></div>
 
+
+<div class="viewcode-block" id="Query.__eq__">
+<a class="viewcode-back" href="../../api_reference.html#pqg.Query.__eq__">[docs]</a>
   <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Equality comparison based on complexity and string representation."""</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Query</span><span class="p">):</span>
       <span class="k">return</span> <span class="bp">NotImplemented</span>
-    <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">complexity</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span> <span class="o">==</span> <span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">complexity</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">other</span><span class="p">))</span>
+    <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">complexity</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span> <span class="o">==</span> <span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">complexity</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">other</span><span class="p">))</span></div>
 
+
+<div class="viewcode-block" id="Query.__lt__">
+<a class="viewcode-back" href="../../api_reference.html#pqg.Query.__lt__">[docs]</a>
   <span class="k">def</span> <span class="fm">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Less than comparison based on complexity and string representation."""</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Query</span><span class="p">):</span>
       <span class="k">return</span> <span class="bp">NotImplemented</span>
-    <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">complexity</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">complexity</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">other</span><span class="p">))</span>
+    <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">complexity</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">complexity</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">other</span><span class="p">))</span></div>
+
 
   <span class="nd">@property</span>
   <span class="k">def</span> <span class="nf">complexity</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
@@ -112,7 +123,7 @@
 <span class="sd">    5. GroupBy complexity: Number of grouping columns plus weight of aggregation</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        int: Complexity score for the query</span>
+<span class="sd">      int: Complexity score for the query</span>
 <span class="sd">    """</span>
 
     <span class="k">def</span> <span class="nf">get_merge_complexity</span><span class="p">(</span><span class="n">op</span><span class="p">:</span> <span class="n">Operation</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
@@ -184,7 +195,7 @@
     <span class="k">return</span> <span class="n">merged</span>
 
 <div class="viewcode-block" id="Query.format_multi_line">
-<a class="viewcode-back" href="../../pqg.html#pqg.query.Query.format_multi_line">[docs]</a>
+<a class="viewcode-back" href="../../pqg.html#pqg.Query.format_multi_line">[docs]</a>
   <span class="k">def</span> <span class="nf">format_multi_line</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_counter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Format the query across multiple lines for better readability.</span>
@@ -241,6 +252,16 @@
       <div aria-label="Main" class="sphinxsidebar" role="navigation">
         <div class="sphinxsidebarwrapper">
           <h1 class="logo"><a href="../../index.html">pqg</a></h1>
+          <p>
+            <iframe
+              allowtransparency="true"
+              frameborder="0"
+              height="35px"
+              scrolling="0"
+              src="https://ghbtns.com/github-btn.html?user=DISLMcGill&amp;repo=pandas-query-generator&amp;type=watch&amp;count=true&amp;size=large&amp;v=2"
+              width="200px"
+            ></iframe>
+          </p>
           <search id="searchbox" role="search" style="display: none">
             <div class="searchformwrapper">
               <form action="../../search.html" class="search" method="get">
@@ -267,8 +288,13 @@
           </p>
           <ul>
             <li class="toctree-l1">
-              <a class="reference internal" href="../../pqg.html"
-                >pqg package</a
+              <a class="reference internal" href="../../quickstart.html"
+                >Quickstart Guide</a
+              >
+            </li>
+            <li class="toctree-l1">
+              <a class="reference internal" href="../../api_reference.html"
+                >API Reference</a
               >
             </li>
           </ul>
@@ -295,5 +321,15 @@
       <a href="https://www.sphinx-doc.org/">Sphinx 8.1.3</a> &amp;
       <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
     </div>
+    <a
+      class="github"
+      href="https://github.com/DISLMcGill/pandas-query-generator"
+    >
+      <img
+        alt="Fork me on GitHub"
+        class="github"
+        src="../../_static/github-banner.svg"
+      />
+    </a>
   </body>
 </html>

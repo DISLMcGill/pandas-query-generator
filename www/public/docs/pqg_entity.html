@@ -16,7 +16,7 @@
       type="text/css"
     />
     <link
-      href="../../_static/alabaster.css?v=27fed22d"
+      href="../../_static/alabaster.css?v=ec641305"
       rel="stylesheet"
       type="text/css"
     />
@@ -46,7 +46,7 @@
 
 
 <div class="viewcode-block" id="PropertyInt">
-<a class="viewcode-back" href="../../pqg.html#pqg.entity.PropertyInt">[docs]</a>
+<a class="viewcode-back" href="../../pqg.html#pqg.PropertyInt">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">PropertyInt</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">"""</span>
@@ -68,7 +68,7 @@
 
 
 <div class="viewcode-block" id="PropertyFloat">
-<a class="viewcode-back" href="../../pqg.html#pqg.entity.PropertyFloat">[docs]</a>
+<a class="viewcode-back" href="../../pqg.html#pqg.PropertyFloat">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">PropertyFloat</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">"""</span>
@@ -90,7 +90,7 @@
 
 
 <div class="viewcode-block" id="PropertyEnum">
-<a class="viewcode-back" href="../../pqg.html#pqg.entity.PropertyEnum">[docs]</a>
+<a class="viewcode-back" href="../../pqg.html#pqg.PropertyEnum">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">PropertyEnum</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">"""</span>
@@ -113,7 +113,7 @@
 
 
 <div class="viewcode-block" id="PropertyString">
-<a class="viewcode-back" href="../../pqg.html#pqg.entity.PropertyString">[docs]</a>
+<a class="viewcode-back" href="../../pqg.html#pqg.PropertyString">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">PropertyString</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">"""</span>
@@ -138,7 +138,7 @@
 
 
 <div class="viewcode-block" id="PropertyDate">
-<a class="viewcode-back" href="../../pqg.html#pqg.entity.PropertyDate">[docs]</a>
+<a class="viewcode-back" href="../../pqg.html#pqg.PropertyDate">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">PropertyDate</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">"""</span>
@@ -171,7 +171,7 @@
 
 
 <div class="viewcode-block" id="Entity">
-<a class="viewcode-back" href="../../pqg.html#pqg.entity.Entity">[docs]</a>
+<a class="viewcode-back" href="../../pqg.html#pqg.Entity">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">Entity</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">"""</span>
@@ -193,6 +193,8 @@
   <span class="n">properties</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Property</span><span class="p">]</span>
   <span class="n">foreign_keys</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
 
+<div class="viewcode-block" id="Entity.__hash__">
+<a class="viewcode-back" href="../../api_reference.html#pqg.Entity.__hash__">[docs]</a>
   <span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Generate a hash based on the entity's name.</span>
@@ -203,8 +205,11 @@
 <span class="sd">    Returns:</span>
 <span class="sd">      int: Hash value for the entity.</span>
 <span class="sd">    """</span>
-    <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
 
+
+<div class="viewcode-block" id="Entity.__eq__">
+<a class="viewcode-back" href="../../api_reference.html#pqg.Entity.__eq__">[docs]</a>
   <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Compare this entity with another for equality.</span>
@@ -220,10 +225,11 @@
 <span class="sd">    """</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Entity</span><span class="p">):</span>
       <span class="k">return</span> <span class="bp">NotImplemented</span>
-    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">name</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">name</span></div>
+
 
 <div class="viewcode-block" id="Entity.from_configuration">
-<a class="viewcode-back" href="../../pqg.html#pqg.entity.Entity.from_configuration">[docs]</a>
+<a class="viewcode-back" href="../../pqg.html#pqg.Entity.from_configuration">[docs]</a>
   <span class="nd">@staticmethod</span>
   <span class="k">def</span> <span class="nf">from_configuration</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">'Entity'</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
@@ -304,7 +310,7 @@
     <span class="k">return</span> <span class="n">ranges</span>
 
 <div class="viewcode-block" id="Entity.generate_dataframe">
-<a class="viewcode-back" href="../../pqg.html#pqg.entity.Entity.generate_dataframe">[docs]</a>
+<a class="viewcode-back" href="../../pqg.html#pqg.Entity.generate_dataframe">[docs]</a>
   <span class="k">def</span> <span class="nf">generate_dataframe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_rows</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Generate a Pandas dataframe using this entity's information.</span>
@@ -377,6 +383,16 @@
       <div aria-label="Main" class="sphinxsidebar" role="navigation">
         <div class="sphinxsidebarwrapper">
           <h1 class="logo"><a href="../../index.html">pqg</a></h1>
+          <p>
+            <iframe
+              allowtransparency="true"
+              frameborder="0"
+              height="35px"
+              scrolling="0"
+              src="https://ghbtns.com/github-btn.html?user=DISLMcGill&amp;repo=pandas-query-generator&amp;type=watch&amp;count=true&amp;size=large&amp;v=2"
+              width="200px"
+            ></iframe>
+          </p>
           <search id="searchbox" role="search" style="display: none">
             <div class="searchformwrapper">
               <form action="../../search.html" class="search" method="get">
@@ -403,8 +419,13 @@
           </p>
           <ul>
             <li class="toctree-l1">
-              <a class="reference internal" href="../../pqg.html"
-                >pqg package</a
+              <a class="reference internal" href="../../quickstart.html"
+                >Quickstart Guide</a
+              >
+            </li>
+            <li class="toctree-l1">
+              <a class="reference internal" href="../../api_reference.html"
+                >API Reference</a
               >
             </li>
           </ul>
@@ -431,5 +452,15 @@
       <a href="https://www.sphinx-doc.org/">Sphinx 8.1.3</a> &amp;
       <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
     </div>
+    <a
+      class="github"
+      href="https://github.com/DISLMcGill/pandas-query-generator"
+    >
+      <img
+        alt="Fork me on GitHub"
+        class="github"
+        src="../../_static/github-banner.svg"
+      />
+    </a>
   </body>
 </html>
