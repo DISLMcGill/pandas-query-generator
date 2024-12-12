@@ -47,7 +47,7 @@ both iteration over entities and direct access to specific entities by name.</p>
 <dd><p>Set of Entity objects in the schema.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>t.Set[<a class="reference internal" href="pqg.html#pqg.Entity" title="pqg.Entity">Entity</a>]</p>
+<dd class="field-odd"><p>t.Set[<a class="reference internal" href="#pqg.Entity" title="pqg.Entity">Entity</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -58,7 +58,7 @@ both iteration over entities and direct access to specific entities by name.</p>
 <dd><p>Internal mapping of entity names to Entity objects.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>t.Dict[str, <a class="reference internal" href="pqg.html#pqg.Entity" title="pqg.Entity">Entity</a>]</p>
+<dd class="field-odd"><p>t.Dict[str, <a class="reference internal" href="#pqg.Entity" title="pqg.Entity">Entity</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -75,7 +75,7 @@ both iteration over entities and direct access to specific entities by name.</p>
 <dd class="field-even"><p>The requested entity.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="pqg.html#pqg.Entity" title="pqg.Entity">Entity</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="#pqg.Entity" title="pqg.Entity">Entity</a></p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>KeyError</strong> – If no entity exists with the given name.</p>
@@ -92,7 +92,7 @@ both iteration over entities and direct access to specific entities by name.</p>
 <dd class="field-odd"><p>Iterator yielding Entity objects.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Iterator[<a class="reference internal" href="pqg.html#pqg.Entity" title="pqg.Entity">Entity</a>]</p>
+<dd class="field-even"><p>Iterator[<a class="reference internal" href="#pqg.Entity" title="pqg.Entity">Entity</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -127,7 +127,7 @@ Expected to have an ‘entities’ key mapping to entity configs.</p>
 <dd class="field-even"><p>A new Schema instance containing the entities defined in the dictionary.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="pqg.html#pqg.Schema" title="pqg.Schema">Schema</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="#pqg.Schema" title="pqg.Schema">Schema</a></p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>ValueError</strong> – If the dictionary structure is invalid.</p>
@@ -166,7 +166,7 @@ a Schema object with Entity instances for each configured entity.</p>
 <dd class="field-even"><p>A new Schema instance containing the entities defined in the file.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="pqg.html#pqg.Schema" title="pqg.Schema">Schema</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="#pqg.Schema" title="pqg.Schema">Schema</a></p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
@@ -299,7 +299,7 @@ as the hash basis ensures proper hash table behavior.</p>
 <dd class="field-even"><p>An instance of the Entity class.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="pqg.html#pqg.Entity" title="pqg.Entity">Entity</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="#pqg.Entity" title="pqg.Entity">Entity</a></p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>ValueError</strong> – If an unknown property type is encountered.</p>
@@ -779,7 +779,7 @@ different operations are to appear and how complex they can be.</p>
 <dd class="field-even"><p>Instance configured according to the provided arguments</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="pqg.html#pqg.QueryStructure" title="pqg.QueryStructure">QueryStructure</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="#pqg.QueryStructure" title="pqg.QueryStructure">QueryStructure</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1234,7 +1234,7 @@ association between queries and their execution results if they exist.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pqg.QueryPool.statistics">
-<span class="sig-name descname"><span class="pre">statistics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">force_execute</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="pqg.html#pqg.query_pool.QueryStatistics" title="pqg.query_pool.QueryStatistics"><span class="pre">QueryStatistics</span></a></span></span><a class="reference internal" href="_modules/pqg/query_pool.html#QueryPool.statistics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pqg.QueryPool.statistics" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">statistics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">force_execute</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pqg.query_pool.QueryStatistics" title="pqg.query_pool.QueryStatistics"><span class="pre">QueryStatistics</span></a></span></span><a class="reference internal" href="_modules/pqg/query_pool.html#QueryPool.statistics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pqg.QueryPool.statistics" title="Link to this definition">¶</a></dt>
 <dd><p>Generate comprehensive statistics about the query pool.</p>
 <p>Analyzes query characteristics and execution results to measure how well
 the generated queries match the target parameters.</p>
@@ -1453,7 +1453,7 @@ and collects distributions of various operation characteristics.</p>
 <dd><p>Statistics about query execution outcomes</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="pqg.html#pqg.query_pool.ExecutionStatistics" title="pqg.query_pool.ExecutionStatistics">pqg.query_pool.ExecutionStatistics</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="#pqg.query_pool.ExecutionStatistics" title="pqg.query_pool.ExecutionStatistics">pqg.query_pool.ExecutionStatistics</a></p>
 </dd>
 </dl>
 </dd></dl>
