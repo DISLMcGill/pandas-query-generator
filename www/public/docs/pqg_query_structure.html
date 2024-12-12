@@ -1,32 +1,31 @@
 <!doctype html>
 
-<html lang="en" data-content_root="../../">
+<html data-content_root="../../" lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pqg.query_structure &#8212; pqg documentation</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>pqg.query_structure — pqg documentation</title>
     <link
-      rel="stylesheet"
-      type="text/css"
       href="../../_static/pygments.css?v=d1102ebc"
-    />
-    <link
       rel="stylesheet"
       type="text/css"
+    />
+    <link
       href="../../_static/basic.css?v=686e5160"
-    />
-    <link
       rel="stylesheet"
       type="text/css"
+    />
+    <link
       href="../../_static/alabaster.css?v=27fed22d"
+      rel="stylesheet"
+      type="text/css"
     />
     <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" />
-
-    <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+    <link href="../../genindex.html" rel="index" title="Index" />
+    <link href="../../search.html" rel="search" title="Search" />
+    <link href="../../_static/custom.css" rel="stylesheet" type="text/css" />
   </head>
   <body>
     <div class="document">
@@ -45,10 +44,10 @@
 <a class="viewcode-back" href="../../pqg.html#pqg.query_structure.QueryStructure">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">QueryStructure</span><span class="p">:</span>
-<span class="w">  </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">  </span><span class="sd">"""</span>
 <span class="sd">  A dataclass that encapsulates the configuration parameters controlling query generation.</span>
 <span class="sd">  Contains settings for various query features like aggregation, projection, and merging.</span>
-<span class="sd">  &quot;&quot;&quot;</span>
+<span class="sd">  """</span>
 
   <span class="n">groupby_aggregation_probability</span><span class="p">:</span> <span class="nb">float</span>
   <span class="n">max_groupby_columns</span><span class="p">:</span> <span class="nb">int</span>
@@ -61,8 +60,8 @@
 <div class="viewcode-block" id="QueryStructure.from_args">
 <a class="viewcode-back" href="../../pqg.html#pqg.query_structure.QueryStructure.from_args">[docs]</a>
   <span class="nd">@staticmethod</span>
-  <span class="k">def</span> <span class="nf">from_args</span><span class="p">(</span><span class="n">arguments</span><span class="p">:</span> <span class="n">Arguments</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;QueryStructure&#39;</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+  <span class="k">def</span> <span class="nf">from_args</span><span class="p">(</span><span class="n">arguments</span><span class="p">:</span> <span class="n">Arguments</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">'QueryStructure'</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Create a QueryStructure instance from command-line arguments.</span>
 
 <span class="sd">    Args:</span>
@@ -70,7 +69,7 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">      QueryStructure: Instance configured according to the provided arguments</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">return</span> <span class="n">QueryStructure</span><span class="p">(</span>
       <span class="n">groupby_aggregation_probability</span><span class="o">=</span><span class="n">arguments</span><span class="o">.</span><span class="n">groupby_aggregation_probability</span><span class="p">,</span>
       <span class="n">max_groupby_columns</span><span class="o">=</span><span class="n">arguments</span><span class="o">.</span><span class="n">max_groupby_columns</span><span class="p">,</span>
@@ -87,22 +86,21 @@
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+      <div aria-label="Main" class="sphinxsidebar" role="navigation">
         <div class="sphinxsidebarwrapper">
           <h1 class="logo"><a href="../../index.html">pqg</a></h1>
-
-          <search id="searchbox" style="display: none" role="search">
+          <search id="searchbox" role="search" style="display: none">
             <div class="searchformwrapper">
-              <form class="search" action="../../search.html" method="get">
+              <form action="../../search.html" class="search" method="get">
                 <input
-                  type="text"
-                  name="q"
                   aria-labelledby="searchlabel"
+                  autocapitalize="off"
                   autocomplete="off"
                   autocorrect="off"
-                  autocapitalize="off"
-                  spellcheck="false"
+                  name="q"
                   placeholder="Search"
+                  spellcheck="false"
+                  type="text"
                 />
                 <input type="submit" value="Go" />
               </form>
@@ -122,7 +120,6 @@
               >
             </li>
           </ul>
-
           <div class="relations">
             <h3>Related Topics</h3>
             <ul>
@@ -142,7 +139,7 @@
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &#169;2024, Liam Scalzulli. | Powered by
+      ©2024, Liam Scalzulli. | Powered by
       <a href="https://www.sphinx-doc.org/">Sphinx 8.1.3</a> &amp;
       <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
     </div>

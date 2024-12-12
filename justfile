@@ -15,21 +15,7 @@ all: fmt check readme
 build:
   uv build
 
-demo:
-  just run \
-    --groupby-aggregation-probability 0.5 \
-    --max-groupby-columns 5 \
-    --max-merges 10 \
-    --max-projection-columns 10 \
-    --max-selection-conditions 10 \
-    --num-queries 1000 \
-    --projection-probability 0.5 \
-    --schema examples/tpch/schema.json \
-    --selection-probability 0.5 \
-    --sort \
-    --verbose
-
-deploy:
+deploy-web: generate-docs
   cd www && bun run build && bunx gh-pages -d dist
 
 dev-deps:
@@ -44,8 +30,14 @@ count:
 fmt:
   ruff check --select I --fix && ruff format
 
+fmt-web:
+  cd www && prettier --write .
+
 generate-docs:
-  cd docs && just build
+  cd docs && uv run sphinx-build -M html config build
+  rm -rf www/public/docs
+  uv run ./bin/convert-docs.py --source docs/build/html --output www/public/docs
+  just fmt-web
 
 generate-example-output:
   ./bin/generate-example-output

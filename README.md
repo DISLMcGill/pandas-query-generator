@@ -36,16 +36,8 @@ You can install the query generator using [pip](https://pip.pypa.io/en/stable/in
 pip install pqg
 ```
 
-Alternatively, you can use the local web playground:
-
-```bash
-cd www && bun install && bunx --bun vite
-```
-
-_n.b._ This command will require you to have [bun](https://bun.sh/) installed on your machine.
-
-This will spin up a development server at `http://localhost:5173` where you can interact with the playground.
-You can upload your schemas, tweak query parameters and generate queries.
+Alternatively, you can check out the hosted [web playground](https://dislmcgill.github.io/pandas-query-generator/)
+if you're interested in generating queries fast with little setup.
 
 ## Usage
 
@@ -164,12 +156,12 @@ print(*query_pool, sep='\n\n')
 
 Comprehensive internal documentation is generated using the
 [sphinx](https://www.sphinx-doc.org/en/master/index.html#) Python package, and a
-live instance is hosted at
-[https://dislmcgill.github.io/pandas-query-generator/docs/index.html](https://dislmcgill.github.io/pandas-query-generator/docs/index.html).
+[live instance](https://dislmcgill.github.io/pandas-query-generator/docs/index.html)
+is hosted alongside the web playground.
 
 ## How does it work?
 
-Check out the [paper](https://github.com/DISLMcGill/pandas-query-generator/blob/master/docs/paper.pdf) in the `/docs` folder for more information!
+Check out the [paper](https://github.com/DISLMcGill/pandas-query-generator/blob/master/docs/paper.pdf) in the docs folder for more information!
 
 ## Prior Art
 

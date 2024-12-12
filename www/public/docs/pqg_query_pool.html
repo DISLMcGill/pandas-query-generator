@@ -1,32 +1,31 @@
 <!doctype html>
 
-<html lang="en" data-content_root="../../">
+<html data-content_root="../../" lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pqg.query_pool &#8212; pqg documentation</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>pqg.query_pool — pqg documentation</title>
     <link
-      rel="stylesheet"
-      type="text/css"
       href="../../_static/pygments.css?v=d1102ebc"
-    />
-    <link
       rel="stylesheet"
       type="text/css"
+    />
+    <link
       href="../../_static/basic.css?v=686e5160"
-    />
-    <link
       rel="stylesheet"
       type="text/css"
+    />
+    <link
       href="../../_static/alabaster.css?v=27fed22d"
+      rel="stylesheet"
+      type="text/css"
     />
     <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" />
-
-    <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+    <link href="../../genindex.html" rel="index" title="Index" />
+    <link href="../../search.html" rel="search" title="Search" />
+    <link href="../../_static/custom.css" rel="stylesheet" type="text/css" />
   </head>
   <body>
     <div class="document">
@@ -62,7 +61,7 @@
 <a class="viewcode-back" href="../../pqg.html#pqg.query_pool.ExecutionStatistics">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">ExecutionStatistics</span><span class="p">:</span>
-<span class="w">  </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">  </span><span class="sd">"""</span>
 <span class="sd">  Statistics about query execution results.</span>
 
 <span class="sd">  Tracks the success/failure rates of query executions and categorizes results.</span>
@@ -73,7 +72,7 @@
 <span class="sd">    non_empty: Number of queries that returned non-empty result sets</span>
 <span class="sd">    empty: Number of queries that returned empty result sets</span>
 <span class="sd">    errors: Counter mapping error types to their occurrence count</span>
-<span class="sd">  &quot;&quot;&quot;</span>
+<span class="sd">  """</span>
 
   <span class="n">successful</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
   <span class="n">failed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
@@ -85,7 +84,7 @@
     <span class="n">total</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">successful</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">failed</span>
 
     <span class="k">if</span> <span class="n">total</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-      <span class="k">return</span> <span class="s1">&#39;&#39;</span>
+      <span class="k">return</span> <span class="s1">''</span>
 
     <span class="n">success_rate</span><span class="p">,</span> <span class="n">empty_rate</span> <span class="o">=</span> <span class="p">(</span>
       <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">successful</span> <span class="o">/</span> <span class="n">total</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span>
@@ -93,17 +92,17 @@
     <span class="p">)</span>
 
     <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span>
-      <span class="sa">f</span><span class="s1">&#39;Execution Results (n = </span><span class="si">{</span><span class="n">total</span><span class="si">}</span><span class="s1">):&#39;</span><span class="p">,</span>
-      <span class="sa">f</span><span class="s1">&#39;  Success Rate: </span><span class="si">{</span><span class="n">success_rate</span><span class="si">:</span><span class="s1">5.1f</span><span class="si">}</span><span class="s1">% (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">successful</span><span class="si">}</span><span class="s1"> / </span><span class="si">{</span><span class="n">total</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">,</span>
-      <span class="sa">f</span><span class="s1">&#39;  Queries with Empty Result Sets: </span><span class="si">{</span><span class="n">empty_rate</span><span class="si">:</span><span class="s1">4.1f</span><span class="si">}</span><span class="s1">% (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">empty</span><span class="si">}</span><span class="s1"> / </span><span class="si">{</span><span class="n">total</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">,</span>
+      <span class="sa">f</span><span class="s1">'Execution Results (n = </span><span class="si">{</span><span class="n">total</span><span class="si">}</span><span class="s1">):'</span><span class="p">,</span>
+      <span class="sa">f</span><span class="s1">'  Success Rate: </span><span class="si">{</span><span class="n">success_rate</span><span class="si">:</span><span class="s1">5.1f</span><span class="si">}</span><span class="s1">% (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">successful</span><span class="si">}</span><span class="s1"> / </span><span class="si">{</span><span class="n">total</span><span class="si">}</span><span class="s1">)'</span><span class="p">,</span>
+      <span class="sa">f</span><span class="s1">'  Queries with Empty Result Sets: </span><span class="si">{</span><span class="n">empty_rate</span><span class="si">:</span><span class="s1">4.1f</span><span class="si">}</span><span class="s1">% (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">empty</span><span class="si">}</span><span class="s1"> / </span><span class="si">{</span><span class="n">total</span><span class="si">}</span><span class="s1">)'</span><span class="p">,</span>
     <span class="p">]</span>
 
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="p">:</span>
       <span class="n">lines</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
-        <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;Errors:&#39;</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;  </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">error</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">most_common</span><span class="p">()]]</span>
+        <span class="p">[</span><span class="s1">''</span><span class="p">,</span> <span class="s1">'Errors:'</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span><span class="sa">f</span><span class="s1">'  </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s1">'</span> <span class="k">for</span> <span class="n">error</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">most_common</span><span class="p">()]]</span>
       <span class="p">)</span>
 
-    <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span></div>
 
 
 
@@ -111,7 +110,7 @@
 <a class="viewcode-back" href="../../pqg.html#pqg.query_pool.QueryStatistics">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">QueryStatistics</span><span class="p">:</span>
-<span class="w">  </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">  </span><span class="sd">"""</span>
 <span class="sd">  Statistics comparing actual query characteristics against target parameters.</span>
 
 <span class="sd">  Analyzes how closely generated queries match the desired structure parameters</span>
@@ -129,7 +128,7 @@
 <span class="sd">    groupby_columns: List of column counts from each groupby operation</span>
 <span class="sd">    merge_count: List of merge counts from each query</span>
 <span class="sd">    execution_results: Statistics about query execution outcomes</span>
-<span class="sd">  &quot;&quot;&quot;</span>
+<span class="sd">  """</span>
 
   <span class="n">query_structure</span><span class="p">:</span> <span class="n">QueryStructure</span>
   <span class="n">total_queries</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
@@ -145,26 +144,26 @@
 
   <span class="nd">@staticmethod</span>
   <span class="k">def</span> <span class="nf">_safe_stats</span><span class="p">(</span><span class="n">values</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate mean, standard deviation, and max for a list of values.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Calculate mean, standard deviation, and max for a list of values."""</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">values</span><span class="p">:</span>
       <span class="k">return</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mi">0</span>
     <span class="k">return</span> <span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">values</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">stdev</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="mf">0.0</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">values</span><span class="p">))</span>
 
   <span class="nd">@staticmethod</span>
   <span class="k">def</span> <span class="nf">_format_frequency</span><span class="p">(</span><span class="n">label</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">actual</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Format a frequency line.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Format a frequency line."""</span>
     <span class="k">if</span> <span class="n">target</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-      <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;  </span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">actual</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">%&#39;</span>
-    <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;  </span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">actual</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">% vs </span><span class="si">{</span><span class="n">target</span><span class="o">*</span><span class="mi">100</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">%&#39;</span>
+      <span class="k">return</span> <span class="sa">f</span><span class="s1">'  </span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">actual</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">%'</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s1">'  </span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">actual</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">% vs </span><span class="si">{</span><span class="n">target</span><span class="o">*</span><span class="mi">100</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">%'</span>
 
   <span class="nd">@staticmethod</span>
   <span class="k">def</span> <span class="nf">_format_count</span><span class="p">(</span><span class="n">label</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">mean</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">std</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">max_val</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Format a count line.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;  </span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">mean</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1"> ± </span><span class="si">{</span><span class="n">std</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1"> | </span><span class="si">{</span><span class="n">max_val</span><span class="si">}</span><span class="s1"> vs </span><span class="si">{</span><span class="n">limit</span><span class="si">}</span><span class="s1">&#39;</span>
+<span class="w">    </span><span class="sd">"""Format a count line."""</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s1">'  </span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">mean</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1"> ± </span><span class="si">{</span><span class="n">std</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1"> | </span><span class="si">{</span><span class="n">max_val</span><span class="si">}</span><span class="s1"> vs </span><span class="si">{</span><span class="n">limit</span><span class="si">}</span><span class="s1">'</span>
 
   <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_queries</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-      <span class="k">return</span> <span class="s1">&#39;&#39;</span>
+      <span class="k">return</span> <span class="s1">''</span>
 
     <span class="n">probabilities</span> <span class="o">=</span> <span class="p">(</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">queries_with_selection</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_queries</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span>
@@ -174,47 +173,47 @@
     <span class="p">)</span>
 
     <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span>
-      <span class="sa">f</span><span class="s1">&#39;Query Statistics (n = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">total_queries</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">,</span>
-      <span class="s1">&#39;&#39;</span><span class="p">,</span>
-      <span class="s1">&#39;Operation Probabilities (actual vs target):&#39;</span><span class="p">,</span>
+      <span class="sa">f</span><span class="s1">'Query Statistics (n = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">total_queries</span><span class="si">}</span><span class="s1">)'</span><span class="p">,</span>
+      <span class="s1">''</span><span class="p">,</span>
+      <span class="s1">'Operation Probabilities (actual vs target):'</span><span class="p">,</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">_format_frequency</span><span class="p">(</span>
-        <span class="s1">&#39;Selection:&#39;</span><span class="p">,</span> <span class="n">probabilities</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">query_structure</span><span class="o">.</span><span class="n">selection_probability</span>
+        <span class="s1">'Selection:'</span><span class="p">,</span> <span class="n">probabilities</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">query_structure</span><span class="o">.</span><span class="n">selection_probability</span>
       <span class="p">),</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">_format_frequency</span><span class="p">(</span>
-        <span class="s1">&#39;Projection:&#39;</span><span class="p">,</span> <span class="n">probabilities</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">query_structure</span><span class="o">.</span><span class="n">projection_probability</span>
+        <span class="s1">'Projection:'</span><span class="p">,</span> <span class="n">probabilities</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">query_structure</span><span class="o">.</span><span class="n">projection_probability</span>
       <span class="p">),</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">_format_frequency</span><span class="p">(</span>
-        <span class="s1">&#39;GroupBy:&#39;</span><span class="p">,</span> <span class="n">probabilities</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">query_structure</span><span class="o">.</span><span class="n">groupby_aggregation_probability</span>
+        <span class="s1">'GroupBy:'</span><span class="p">,</span> <span class="n">probabilities</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">query_structure</span><span class="o">.</span><span class="n">groupby_aggregation_probability</span>
       <span class="p">),</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">_format_frequency</span><span class="p">(</span><span class="s1">&#39;Merge:&#39;</span><span class="p">,</span> <span class="n">probabilities</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span>
-      <span class="s1">&#39;&#39;</span><span class="p">,</span>
-      <span class="s1">&#39;Operation Counts (avg ± std | max vs limit):&#39;</span><span class="p">,</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">_format_frequency</span><span class="p">(</span><span class="s1">'Merge:'</span><span class="p">,</span> <span class="n">probabilities</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span>
+      <span class="s1">''</span><span class="p">,</span>
+      <span class="s1">'Operation Counts (avg ± std | max vs limit):'</span><span class="p">,</span>
     <span class="p">]</span>
 
     <span class="k">for</span> <span class="n">data</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">limit</span> <span class="ow">in</span> <span class="p">[</span>
       <span class="p">(</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">selection_conditions</span><span class="p">,</span>
-        <span class="s1">&#39;Selection conditions:&#39;</span><span class="p">,</span>
+        <span class="s1">'Selection conditions:'</span><span class="p">,</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">query_structure</span><span class="o">.</span><span class="n">max_selection_conditions</span><span class="p">,</span>
       <span class="p">),</span>
-      <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">projection_columns</span><span class="p">,</span> <span class="s1">&#39;Projection columns:&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">query_structure</span><span class="o">.</span><span class="n">max_projection_columns</span><span class="p">),</span>
-      <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">groupby_columns</span><span class="p">,</span> <span class="s1">&#39;GroupBy columns:&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">query_structure</span><span class="o">.</span><span class="n">max_groupby_columns</span><span class="p">),</span>
-      <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">merge_count</span><span class="p">,</span> <span class="s1">&#39;Merges per query:&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">query_structure</span><span class="o">.</span><span class="n">max_merges</span><span class="p">),</span>
+      <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">projection_columns</span><span class="p">,</span> <span class="s1">'Projection columns:'</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">query_structure</span><span class="o">.</span><span class="n">max_projection_columns</span><span class="p">),</span>
+      <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">groupby_columns</span><span class="p">,</span> <span class="s1">'GroupBy columns:'</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">query_structure</span><span class="o">.</span><span class="n">max_groupby_columns</span><span class="p">),</span>
+      <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">merge_count</span><span class="p">,</span> <span class="s1">'Merges per query:'</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">query_structure</span><span class="o">.</span><span class="n">max_merges</span><span class="p">),</span>
     <span class="p">]:</span>
       <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
         <span class="n">mean</span><span class="p">,</span> <span class="n">std</span><span class="p">,</span> <span class="n">max_val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_safe_stats</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
         <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_format_count</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="n">std</span><span class="p">,</span> <span class="n">max_val</span><span class="p">,</span> <span class="n">limit</span><span class="p">))</span>
 
-    <span class="n">lines</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">execution_results</span><span class="p">)])</span>
+    <span class="n">lines</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">''</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">execution_results</span><span class="p">)])</span>
 
-    <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="QueryPool">
 <a class="viewcode-back" href="../../pqg.html#pqg.query_pool.QueryPool">[docs]</a>
 <span class="k">class</span> <span class="nc">QueryPool</span><span class="p">:</span>
-<span class="w">  </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">  </span><span class="sd">"""</span>
 <span class="sd">  Manages a collection of database queries with execution and analysis capabilities.</span>
 
 <span class="sd">  Provides functionality for executing queries in parallel, filtering based on results,</span>
@@ -227,7 +226,7 @@
 <span class="sd">    _sample_data: Dictionary mapping entity names to sample DataFrames</span>
 <span class="sd">    _results: Cached query execution results (DataFrame/Series, error message)</span>
 <span class="sd">    _with_status: Whether to display progress bars during operations</span>
-<span class="sd">  &quot;&quot;&quot;</span>
+<span class="sd">  """</span>
 
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
@@ -245,41 +244,41 @@
     <span class="bp">self</span><span class="o">.</span><span class="n">_with_status</span> <span class="o">=</span> <span class="n">with_status</span>
 
   <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the number of queries in the pool.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Return the number of queries in the pool."""</span>
     <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_queries</span><span class="p">)</span>
 
   <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Iterator</span><span class="p">[</span><span class="n">Query</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Iterate over the queries in the pool.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Iterate over the queries in the pool."""</span>
     <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_queries</span><span class="p">)</span>
 
   <span class="nd">@staticmethod</span>
   <span class="k">def</span> <span class="nf">_execute_multi_line_query</span><span class="p">(</span>
     <span class="n">query</span><span class="p">:</span> <span class="n">Query</span><span class="p">,</span> <span class="n">sample_data</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]</span>
   <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QueryResult</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Execute a multi-line query by executing each line sequentially.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Execute a multi-line query by executing each line sequentially."""</span>
     <span class="k">try</span><span class="p">:</span>
       <span class="n">local_vars</span> <span class="o">=</span> <span class="n">sample_data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-      <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">):</span>
-        <span class="n">df_name</span><span class="p">,</span> <span class="n">expression</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; = &#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+      <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">):</span>
+        <span class="n">df_name</span><span class="p">,</span> <span class="n">expression</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">' = '</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
         <span class="n">result</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">expression</span><span class="p">,</span> <span class="p">{},</span> <span class="n">local_vars</span><span class="p">)</span>
         <span class="n">local_vars</span><span class="p">[</span><span class="n">df_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span>
-      <span class="n">last_df</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">local_vars</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;df&#39;</span><span class="p">))</span>
+      <span class="n">last_df</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">local_vars</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'df'</span><span class="p">))</span>
       <span class="k">return</span> <span class="n">local_vars</span><span class="p">[</span><span class="n">last_df</span><span class="p">],</span> <span class="kc">None</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-      <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+      <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span>
 
   <span class="nd">@staticmethod</span>
   <span class="k">def</span> <span class="nf">_execute_single_query</span><span class="p">(</span><span class="n">query</span><span class="p">:</span> <span class="n">Query</span><span class="p">,</span> <span class="n">sample_data</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">QueryResult</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Execute a single query and handle any errors.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Execute a single query and handle any errors."""</span>
     <span class="k">try</span><span class="p">:</span>
       <span class="k">if</span> <span class="n">query</span><span class="o">.</span><span class="n">multi_line</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">QueryPool</span><span class="o">.</span><span class="n">_execute_multi_line_query</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">sample_data</span><span class="p">)</span>
       <span class="n">result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">query</span><span class="p">),</span> <span class="n">local_dict</span><span class="o">=</span><span class="n">sample_data</span><span class="p">)</span>
       <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">)):</span>
         <span class="k">return</span> <span class="n">result</span><span class="p">,</span> <span class="kc">None</span>
-      <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;Result was not a DataFrame or Series: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">result</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+      <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'Result was not a DataFrame or Series: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">result</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-      <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+      <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span>
 
 <div class="viewcode-block" id="QueryPool.execute">
 <a class="viewcode-back" href="../../pqg.html#pqg.query_pool.QueryPool.execute">[docs]</a>
@@ -288,7 +287,7 @@
     <span class="n">force_execute</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">num_processes</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
   <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">QueryResult</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Execute all queries against the sample data, either in parallel or sequentially.</span>
 
 <span class="sd">    Evaluates queries using either multiprocessing for parallel execution or</span>
@@ -303,7 +302,7 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">      List of tuples containing (result, error) for each query</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_queries</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
       <span class="k">return</span> <span class="p">[]</span>
 
@@ -313,20 +312,20 @@
     <span class="n">f</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_execute_single_query</span><span class="p">,</span> <span class="n">sample_data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_sample_data</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_multi_processing</span><span class="p">:</span>
-      <span class="n">ctx</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">get_context</span><span class="p">(</span><span class="s1">&#39;fork&#39;</span><span class="p">)</span>
+      <span class="n">ctx</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">get_context</span><span class="p">(</span><span class="s1">'fork'</span><span class="p">)</span>
 
       <span class="k">with</span> <span class="n">ctx</span><span class="o">.</span><span class="n">Pool</span><span class="p">(</span><span class="n">num_processes</span><span class="p">)</span> <span class="k">as</span> <span class="n">pool</span><span class="p">:</span>
         <span class="n">iterator</span> <span class="o">=</span> <span class="n">pool</span><span class="o">.</span><span class="n">imap</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_queries</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_with_status</span><span class="p">:</span>
           <span class="n">iterator</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span>
-            <span class="n">iterator</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_queries</span><span class="p">),</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;Executing queries&#39;</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;query&#39;</span>
+            <span class="n">iterator</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_queries</span><span class="p">),</span> <span class="n">desc</span><span class="o">=</span><span class="s1">'Executing queries'</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s1">'query'</span>
           <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_results</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">iterator</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
       <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_with_status</span><span class="p">:</span>
-        <span class="n">iterator</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_queries</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;Executing queries&#39;</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;query&#39;</span><span class="p">)</span>
+        <span class="n">iterator</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_queries</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">'Executing queries'</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s1">'query'</span><span class="p">)</span>
       <span class="k">else</span><span class="p">:</span>
         <span class="n">iterator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_queries</span>
 
@@ -342,16 +341,16 @@
     <span class="n">filter_type</span><span class="p">:</span> <span class="n">QueryFilter</span><span class="p">,</span>
     <span class="n">force_execute</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
   <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Filter queries based on their execution results.</span>
 
 <span class="sd">    Modifies the query pool in-place to keep only queries matching the filter</span>
-<span class="sd">    criteria. Executes queries if results don&#39;t exist.</span>
+<span class="sd">    criteria. Executes queries if results don't exist.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">      filter_type: Criteria for keeping queries (NON_EMPTY, EMPTY, etc.)</span>
 <span class="sd">      force_execute: If True, re-execute queries before filtering</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_results</span> <span class="ow">or</span> <span class="n">force_execute</span><span class="p">:</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">_results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
 
@@ -388,15 +387,15 @@
 <div class="viewcode-block" id="QueryPool.items">
 <a class="viewcode-back" href="../../pqg.html#pqg.query_pool.QueryPool.items">[docs]</a>
   <span class="k">def</span> <span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Iterator</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">Query</span><span class="p">,</span> <span class="n">QueryResult</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Iterate over query-result pairs.</span>
 
 <span class="sd">    Each iteration yields a tuple containing a query and its execution result.</span>
-<span class="sd">    If results haven&#39;t been computed yet, executes the queries first.</span>
+<span class="sd">    If results haven't been computed yet, executes the queries first.</span>
 
 <span class="sd">    Yields:</span>
 <span class="sd">      tuple[Query, QueryResult]: Pairs of (query, (result, error))</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_results</span><span class="p">:</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
     <span class="k">return</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_queries</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_results</span><span class="p">)</span></div>
@@ -405,14 +404,14 @@
 <div class="viewcode-block" id="QueryPool.results">
 <a class="viewcode-back" href="../../pqg.html#pqg.query_pool.QueryPool.results">[docs]</a>
   <span class="k">def</span> <span class="nf">results</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Iterator</span><span class="p">[</span><span class="n">QueryResult</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Iterate over query results.</span>
 
-<span class="sd">    If results haven&#39;t been computed yet, executes the queries first.</span>
+<span class="sd">    If results haven't been computed yet, executes the queries first.</span>
 
 <span class="sd">    Yields:</span>
 <span class="sd">        QueryResult: Pairs of (result, error) for each query</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_results</span><span class="p">:</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
     <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_results</span><span class="p">)</span></div>
@@ -421,7 +420,7 @@
 <div class="viewcode-block" id="QueryPool.statistics">
 <a class="viewcode-back" href="../../pqg.html#pqg.query_pool.QueryPool.statistics">[docs]</a>
   <span class="k">def</span> <span class="nf">statistics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">force_execute</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QueryStatistics</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Generate comprehensive statistics about the query pool.</span>
 
 <span class="sd">    Analyzes query characteristics and execution results to measure how well</span>
@@ -432,7 +431,7 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">      Statistics comparing actual vs. target characteristics</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_results</span> <span class="ow">or</span> <span class="n">force_execute</span><span class="p">:</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">_results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
 
@@ -496,7 +495,7 @@
 <div class="viewcode-block" id="QueryPool.save">
 <a class="viewcode-back" href="../../pqg.html#pqg.query_pool.QueryPool.save">[docs]</a>
   <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">create_dirs</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Save all queries to a file.</span>
 
 <span class="sd">    Each query is saved on a separate line in its string representation.</span>
@@ -505,25 +504,25 @@
 <span class="sd">    Args:</span>
 <span class="sd">      output_file: Path to the output file</span>
 <span class="sd">      create_dirs: If True, creates parent directories if needed</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">create_dirs</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">output_file</span><span class="p">):</span>
       <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">output_file</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="n">queries</span> <span class="o">=</span> <span class="nb">filter</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">q</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_queries</span><span class="p">))</span>
 
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="s1">&#39;w+&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-      <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">queries</span><span class="p">))</span></div>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="s1">'w+'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+      <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'</span><span class="se">\n\n</span><span class="s1">'</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">queries</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="QueryPool.sort">
 <a class="viewcode-back" href="../../pqg.html#pqg.query_pool.QueryPool.sort">[docs]</a>
   <span class="k">def</span> <span class="nf">sort</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Sort queries by their complexity.</span>
 
 <span class="sd">    Orders queries based on their complexity score while maintaining the</span>
 <span class="sd">    association between queries and their execution results if they exist.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_results</span><span class="p">:</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">_queries</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_queries</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
@@ -537,22 +536,21 @@
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+      <div aria-label="Main" class="sphinxsidebar" role="navigation">
         <div class="sphinxsidebarwrapper">
           <h1 class="logo"><a href="../../index.html">pqg</a></h1>
-
-          <search id="searchbox" style="display: none" role="search">
+          <search id="searchbox" role="search" style="display: none">
             <div class="searchformwrapper">
-              <form class="search" action="../../search.html" method="get">
+              <form action="../../search.html" class="search" method="get">
                 <input
-                  type="text"
-                  name="q"
                   aria-labelledby="searchlabel"
+                  autocapitalize="off"
                   autocomplete="off"
                   autocorrect="off"
-                  autocapitalize="off"
-                  spellcheck="false"
+                  name="q"
                   placeholder="Search"
+                  spellcheck="false"
+                  type="text"
                 />
                 <input type="submit" value="Go" />
               </form>
@@ -572,7 +570,6 @@
               >
             </li>
           </ul>
-
           <div class="relations">
             <h3>Related Topics</h3>
             <ul>
@@ -592,7 +589,7 @@
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &#169;2024, Liam Scalzulli. | Powered by
+      ©2024, Liam Scalzulli. | Powered by
       <a href="https://www.sphinx-doc.org/">Sphinx 8.1.3</a> &amp;
       <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
     </div>
