@@ -49,7 +49,17 @@
 <a class="viewcode-back" href="../../pqg.html#pqg.entity.PropertyInt">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">PropertyInt</span><span class="p">:</span>
-<span class="w">  </span><span class="sd">"""Represents an integer property with a defined range."""</span>
+<span class="w">  </span><span class="sd">"""</span>
+<span class="sd">  Integer property definition with range constraints.</span>
+
+<span class="sd">  Used to define integer columns in entity schemas, providing</span>
+<span class="sd">  valid value ranges for query generation.</span>
+
+<span class="sd">  Attributes:</span>
+<span class="sd">    min: Minimum allowed value (inclusive)</span>
+<span class="sd">    max: Maximum allowed value (inclusive)</span>
+<span class="sd">    type: Always "int", used for schema parsing</span>
+<span class="sd">  """</span>
 
   <span class="nb">min</span><span class="p">:</span> <span class="nb">int</span>
   <span class="nb">max</span><span class="p">:</span> <span class="nb">int</span>
@@ -61,7 +71,17 @@
 <a class="viewcode-back" href="../../pqg.html#pqg.entity.PropertyFloat">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">PropertyFloat</span><span class="p">:</span>
-<span class="w">  </span><span class="sd">"""Represents a float property with a defined range."""</span>
+<span class="w">  </span><span class="sd">"""</span>
+<span class="sd">  Floating point property definition with range constraints.</span>
+
+<span class="sd">  Used to define decimal/float columns in entity schemas, providing</span>
+<span class="sd">  valid value ranges for query generation.</span>
+
+<span class="sd">  Attributes:</span>
+<span class="sd">    min: Minimum allowed value (inclusive)</span>
+<span class="sd">    max: Maximum allowed value (inclusive)</span>
+<span class="sd">    type: Always "float", used for schema parsing</span>
+<span class="sd">  """</span>
 
   <span class="nb">min</span><span class="p">:</span> <span class="nb">float</span>
   <span class="nb">max</span><span class="p">:</span> <span class="nb">float</span>
@@ -73,7 +93,19 @@
 <a class="viewcode-back" href="../../pqg.html#pqg.entity.PropertyEnum">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">PropertyEnum</span><span class="p">:</span>
-<span class="w">  </span><span class="sd">"""Represents an enumeration property with a list of possible values."""</span>
+<span class="w">  </span><span class="sd">"""</span>
+<span class="sd">  Enumeration property definition with allowed values.</span>
+
+<span class="sd">  Used to define columns with a fixed set of possible values in entity schemas,</span>
+<span class="sd">  such as status fields or categories.</span>
+
+<span class="sd">  Attributes:</span>
+<span class="sd">    values: List of valid string values for this property</span>
+<span class="sd">    type: Always "enum", used for schema parsing</span>
+
+<span class="sd">  Example:</span>
+<span class="sd">    status = PropertyEnum(values=["active", "inactive", "pending"])</span>
+<span class="sd">  """</span>
 
   <span class="n">values</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
   <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'enum'</span></div>
@@ -84,7 +116,21 @@
 <a class="viewcode-back" href="../../pqg.html#pqg.entity.PropertyString">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">PropertyString</span><span class="p">:</span>
-<span class="w">  </span><span class="sd">"""Represents a string property with specified starting characters."""</span>
+<span class="w">  </span><span class="sd">"""</span>
+<span class="sd">  String property definition with character constraints.</span>
+
+<span class="sd">  Used to define text columns in entity schemas, with optional constraints</span>
+<span class="sd">  on what characters strings can start with. This allows generating realistic</span>
+<span class="sd">  looking text data.</span>
+
+<span class="sd">  Attributes:</span>
+<span class="sd">    starting_character: List of valid first characters for generated strings</span>
+<span class="sd">    type: Always "string", used for schema parsing</span>
+
+<span class="sd">  Example:</span>
+<span class="sd">    # Names starting with uppercase letters</span>
+<span class="sd">    name = PropertyString(starting_character=list(string.ascii_uppercase))</span>
+<span class="sd">  """</span>
 
   <span class="n">starting_character</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
   <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'string'</span></div>
@@ -95,7 +141,25 @@
 <a class="viewcode-back" href="../../pqg.html#pqg.entity.PropertyDate">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">PropertyDate</span><span class="p">:</span>
-<span class="w">  </span><span class="sd">"""Represents a date property with a defined range."""</span>
+<span class="w">  </span><span class="sd">"""</span>
+<span class="sd">  Date property definition with range constraints.</span>
+
+<span class="sd">  Used to define date columns in entity schemas, providing valid</span>
+<span class="sd">  date ranges for query generation. Generates dates between the</span>
+<span class="sd">  min and max values inclusive.</span>
+
+<span class="sd">  Attributes:</span>
+<span class="sd">    min: Earliest allowed date</span>
+<span class="sd">    max: Latest allowed date</span>
+<span class="sd">    type: Always "date", used for schema parsing</span>
+
+<span class="sd">  Example:</span>
+<span class="sd">    # Dates in the year 2023</span>
+<span class="sd">    created_at = PropertyDate(</span>
+<span class="sd">      min=date(2023, 1, 1),</span>
+<span class="sd">      max=date(2023, 12, 31)</span>
+<span class="sd">    )</span>
+<span class="sd">  """</span>
 
   <span class="nb">min</span><span class="p">:</span> <span class="n">date</span>
   <span class="nb">max</span><span class="p">:</span> <span class="n">date</span>

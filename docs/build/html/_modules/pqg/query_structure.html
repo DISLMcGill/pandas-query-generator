@@ -25,7 +25,6 @@
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-
     <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
   </head>
   <body>
@@ -46,8 +45,20 @@
 <span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">QueryStructure</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">  A dataclass that encapsulates the configuration parameters controlling query generation.</span>
-<span class="sd">  Contains settings for various query features like aggregation, projection, and merging.</span>
+<span class="sd">  Configuration parameters controlling query generation behavior.</span>
+
+<span class="sd">  This class encapsulates the probability and limit settings that determine</span>
+<span class="sd">  what kinds of queries are generated. It controls aspects like how likely</span>
+<span class="sd">  different operations are to appear and how complex they can be.</span>
+
+<span class="sd">  Attributes:</span>
+<span class="sd">    groupby_aggregation_probability: Probability (0-1) of including a GROUP BY operation</span>
+<span class="sd">    max_groupby_columns: Maximum number of columns that can be grouped on</span>
+<span class="sd">    max_merges: Maximum number of table joins allowed in a query</span>
+<span class="sd">    max_projection_columns: Maximum number of columns that can be selected</span>
+<span class="sd">    max_selection_conditions: Maximum number of WHERE clause conditions</span>
+<span class="sd">    projection_probability: Probability (0-1) of including a SELECT operation</span>
+<span class="sd">    selection_probability: Probability (0-1) of including a WHERE operation</span>
 <span class="sd">  &quot;&quot;&quot;</span>
 
   <span class="n">groupby_aggregation_probability</span><span class="p">:</span> <span class="nb">float</span>
@@ -122,7 +133,6 @@
               >
             </li>
           </ul>
-
           <div class="relations">
             <h3>Related Topics</h3>
             <ul>

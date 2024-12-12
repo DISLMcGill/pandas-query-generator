@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <meta content="width=device-width, initial-scale=1" name="viewport" />
-    <title>pqg documentation — pqg documentation</title>
+    <title>Welcome to pqg documentation — pqg documentation</title>
     <link href="pygments.css?v=d1102ebc" rel="stylesheet" type="text/css" />
     <link href="basic.css?v=686e5160" rel="stylesheet" type="text/css" />
     <link href="alabaster.css?v=27fed22d" rel="stylesheet" type="text/css" />
@@ -22,143 +22,185 @@
       <div class="documentwrapper">
         <div class="bodywrapper">
           <div class="body" role="main">
-            <section id="pqg-documentation">
+            <section id="welcome-to-pqg-documentation">
               <h1>
-                pqg documentation<a
+                Welcome to pqg documentation<a
                   class="headerlink"
-                  href="#pqg-documentation"
+                  href="#welcome-to-pqg-documentation"
                   title="Link to this heading"
                   >¶</a
                 >
               </h1>
               <p>
-                Add your content using
-                <code class="docutils literal notranslate"
-                  ><span class="pre">reStructuredText</span></code
-                >
-                syntax. See the
-                <a
-                  class="reference external"
-                  href="https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html"
-                  >reStructuredText</a
-                >
-                documentation for details.
+                pqg (Pandas Query Generator) is a tool for generating synthetic
+                pandas queries to help train machine learning models for query
+                cost estimation and cardinality prediction.
               </p>
-              <div class="toctree-wrapper compound">
-                <p class="caption" role="heading">
-                  <span class="caption-text">Contents:</span>
-                </p>
-                <ul>
-                  <li class="toctree-l1">
-                    <a class="reference internal" href="pqg.html"
-                      >pqg package</a
-                    >
-                    <ul>
-                      <li class="toctree-l2">
-                        <a class="reference internal" href="pqg.html#submodules"
-                          >Submodules</a
-                        >
-                      </li>
-                      <li class="toctree-l2">
-                        <a
-                          class="reference internal"
-                          href="pqg.html#module-pqg.arguments"
-                          >pqg.arguments module</a
-                        >
-                      </li>
-                      <li class="toctree-l2">
-                        <a
-                          class="reference internal"
-                          href="pqg.html#module-pqg.entity"
-                          >pqg.entity module</a
-                        >
-                      </li>
-                      <li class="toctree-l2">
-                        <a
-                          class="reference internal"
-                          href="pqg.html#module-pqg.generator"
-                          >pqg.generator module</a
-                        >
-                      </li>
-                      <li class="toctree-l2">
-                        <a
-                          class="reference internal"
-                          href="pqg.html#module-pqg.group_by_aggregation"
-                          >pqg.group_by_aggregation module</a
-                        >
-                      </li>
-                      <li class="toctree-l2">
-                        <a
-                          class="reference internal"
-                          href="pqg.html#module-pqg.merge"
-                          >pqg.merge module</a
-                        >
-                      </li>
-                      <li class="toctree-l2">
-                        <a
-                          class="reference internal"
-                          href="pqg.html#module-pqg.operation"
-                          >pqg.operation module</a
-                        >
-                      </li>
-                      <li class="toctree-l2">
-                        <a
-                          class="reference internal"
-                          href="pqg.html#module-pqg.projection"
-                          >pqg.projection module</a
-                        >
-                      </li>
-                      <li class="toctree-l2">
-                        <a
-                          class="reference internal"
-                          href="pqg.html#module-pqg.query"
-                          >pqg.query module</a
-                        >
-                      </li>
-                      <li class="toctree-l2">
-                        <a
-                          class="reference internal"
-                          href="pqg.html#module-pqg.query_builder"
-                          >pqg.query_builder module</a
-                        >
-                      </li>
-                      <li class="toctree-l2">
-                        <a
-                          class="reference internal"
-                          href="pqg.html#module-pqg.query_pool"
-                          >pqg.query_pool module</a
-                        >
-                      </li>
-                      <li class="toctree-l2">
-                        <a
-                          class="reference internal"
-                          href="pqg.html#module-pqg.query_structure"
-                          >pqg.query_structure module</a
-                        >
-                      </li>
-                      <li class="toctree-l2">
-                        <a
-                          class="reference internal"
-                          href="pqg.html#module-pqg.schema"
-                          >pqg.schema module</a
-                        >
-                      </li>
-                      <li class="toctree-l2">
-                        <a
-                          class="reference internal"
-                          href="pqg.html#module-pqg.selection"
-                          >pqg.selection module</a
-                        >
-                      </li>
-                      <li class="toctree-l2">
-                        <a class="reference internal" href="pqg.html#module-pqg"
-                          >Module contents</a
-                        >
-                      </li>
-                    </ul>
+              <section id="features">
+                <h2>
+                  Features<a
+                    class="headerlink"
+                    href="#features"
+                    title="Link to this heading"
+                    >¶</a
+                  >
+                </h2>
+                <ul class="simple">
+                  <li>
+                    <p>
+                      Generate complex pandas queries based on schema
+                      definitions
+                    </p>
                   </li>
+                  <li>
+                    <p>
+                      Support for selections, projections, joins, and
+                      aggregations
+                    </p>
+                  </li>
+                  <li>
+                    <p>
+                      Configurable query complexity and operation probabilities
+                    </p>
+                  </li>
+                  <li><p>Built-in query execution and validation</p></li>
+                  <li><p>Both CLI and library interfaces</p></li>
                 </ul>
-              </div>
+              </section>
+              <section id="getting-started">
+                <h2>
+                  Getting Started<a
+                    class="headerlink"
+                    href="#getting-started"
+                    title="Link to this heading"
+                    >¶</a
+                  >
+                </h2>
+                <p>
+                  Check out the
+                  <span class="xref std std-ref">quickstart</span> guide or dive
+                  into the <span class="xref std std-ref">api_reference</span>.
+                </p>
+                <div class="toctree-wrapper compound">
+                  <p class="caption" role="heading">
+                    <span class="caption-text">Contents:</span>
+                  </p>
+                  <ul>
+                    <li class="toctree-l1">
+                      <a class="reference internal" href="pqg.html"
+                        >pqg package</a
+                      >
+                      <ul>
+                        <li class="toctree-l2">
+                          <a
+                            class="reference internal"
+                            href="pqg.html#submodules"
+                            >Submodules</a
+                          >
+                        </li>
+                        <li class="toctree-l2">
+                          <a
+                            class="reference internal"
+                            href="pqg.html#module-pqg.arguments"
+                            >pqg.arguments module</a
+                          >
+                        </li>
+                        <li class="toctree-l2">
+                          <a
+                            class="reference internal"
+                            href="pqg.html#module-pqg.entity"
+                            >pqg.entity module</a
+                          >
+                        </li>
+                        <li class="toctree-l2">
+                          <a
+                            class="reference internal"
+                            href="pqg.html#module-pqg.generator"
+                            >pqg.generator module</a
+                          >
+                        </li>
+                        <li class="toctree-l2">
+                          <a
+                            class="reference internal"
+                            href="pqg.html#module-pqg.group_by_aggregation"
+                            >pqg.group_by_aggregation module</a
+                          >
+                        </li>
+                        <li class="toctree-l2">
+                          <a
+                            class="reference internal"
+                            href="pqg.html#module-pqg.merge"
+                            >pqg.merge module</a
+                          >
+                        </li>
+                        <li class="toctree-l2">
+                          <a
+                            class="reference internal"
+                            href="pqg.html#module-pqg.operation"
+                            >pqg.operation module</a
+                          >
+                        </li>
+                        <li class="toctree-l2">
+                          <a
+                            class="reference internal"
+                            href="pqg.html#module-pqg.projection"
+                            >pqg.projection module</a
+                          >
+                        </li>
+                        <li class="toctree-l2">
+                          <a
+                            class="reference internal"
+                            href="pqg.html#module-pqg.query"
+                            >pqg.query module</a
+                          >
+                        </li>
+                        <li class="toctree-l2">
+                          <a
+                            class="reference internal"
+                            href="pqg.html#module-pqg.query_builder"
+                            >pqg.query_builder module</a
+                          >
+                        </li>
+                        <li class="toctree-l2">
+                          <a
+                            class="reference internal"
+                            href="pqg.html#module-pqg.query_pool"
+                            >pqg.query_pool module</a
+                          >
+                        </li>
+                        <li class="toctree-l2">
+                          <a
+                            class="reference internal"
+                            href="pqg.html#module-pqg.query_structure"
+                            >pqg.query_structure module</a
+                          >
+                        </li>
+                        <li class="toctree-l2">
+                          <a
+                            class="reference internal"
+                            href="pqg.html#module-pqg.schema"
+                            >pqg.schema module</a
+                          >
+                        </li>
+                        <li class="toctree-l2">
+                          <a
+                            class="reference internal"
+                            href="pqg.html#module-pqg.selection"
+                            >pqg.selection module</a
+                          >
+                        </li>
+                        <li class="toctree-l2">
+                          <a
+                            class="reference internal"
+                            href="pqg.html#module-pqg"
+                            >Module contents</a
+                          >
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </div>
+              </section>
             </section>
           </div>
         </div>

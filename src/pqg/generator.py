@@ -16,13 +16,24 @@ from .schema import Schema
 @dataclass
 class GenerateOptions:
   """
-  Configuration options for query generation.
+  Configuration options for controlling query generation behavior.
+
+  This class provides settings that determine how queries are generated
+  and validated, including performance options like parallel processing.
 
   Attributes:
-    ensure_non_empty: If True, retry generation until queries produce non-empty results
-    multi_line: If True, format generated queries across multiple lines
-    multi_processing: If True, use parallel processing for query generation
-    num_queries: Number of queries to generate
+    ensure_non_empty: If True, only generate queries that return data
+    multi_line: If True, format queries with line breaks for readability
+    multi_processing: If True, generate queries in parallel
+    num_queries: Total number of queries to generate
+
+  Example:
+    options = GenerateOptions(
+      ensure_non_empty=True,
+      num_queries=1000,
+      multi_processing=True
+    )
+    generator.generate(options)
   """
 
   ensure_non_empty: bool = False

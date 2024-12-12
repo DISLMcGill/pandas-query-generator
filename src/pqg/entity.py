@@ -10,7 +10,17 @@ import pandas as pd
 
 @dataclass
 class PropertyInt:
-  """Represents an integer property with a defined range."""
+  """
+  Integer property definition with range constraints.
+
+  Used to define integer columns in entity schemas, providing
+  valid value ranges for query generation.
+
+  Attributes:
+    min: Minimum allowed value (inclusive)
+    max: Maximum allowed value (inclusive)
+    type: Always "int", used for schema parsing
+  """
 
   min: int
   max: int
@@ -19,7 +29,17 @@ class PropertyInt:
 
 @dataclass
 class PropertyFloat:
-  """Represents a float property with a defined range."""
+  """
+  Floating point property definition with range constraints.
+
+  Used to define decimal/float columns in entity schemas, providing
+  valid value ranges for query generation.
+
+  Attributes:
+    min: Minimum allowed value (inclusive)
+    max: Maximum allowed value (inclusive)
+    type: Always "float", used for schema parsing
+  """
 
   min: float
   max: float
@@ -28,7 +48,19 @@ class PropertyFloat:
 
 @dataclass
 class PropertyEnum:
-  """Represents an enumeration property with a list of possible values."""
+  """
+  Enumeration property definition with allowed values.
+
+  Used to define columns with a fixed set of possible values in entity schemas,
+  such as status fields or categories.
+
+  Attributes:
+    values: List of valid string values for this property
+    type: Always "enum", used for schema parsing
+
+  Example:
+    status = PropertyEnum(values=["active", "inactive", "pending"])
+  """
 
   values: t.List[str]
   type: str = 'enum'
@@ -36,7 +68,21 @@ class PropertyEnum:
 
 @dataclass
 class PropertyString:
-  """Represents a string property with specified starting characters."""
+  """
+  String property definition with character constraints.
+
+  Used to define text columns in entity schemas, with optional constraints
+  on what characters strings can start with. This allows generating realistic
+  looking text data.
+
+  Attributes:
+    starting_character: List of valid first characters for generated strings
+    type: Always "string", used for schema parsing
+
+  Example:
+    # Names starting with uppercase letters
+    name = PropertyString(starting_character=list(string.ascii_uppercase))
+  """
 
   starting_character: t.List[str]
   type: str = 'string'
@@ -44,7 +90,25 @@ class PropertyString:
 
 @dataclass
 class PropertyDate:
-  """Represents a date property with a defined range."""
+  """
+  Date property definition with range constraints.
+
+  Used to define date columns in entity schemas, providing valid
+  date ranges for query generation. Generates dates between the
+  min and max values inclusive.
+
+  Attributes:
+    min: Earliest allowed date
+    max: Latest allowed date
+    type: Always "date", used for schema parsing
+
+  Example:
+    # Dates in the year 2023
+    created_at = PropertyDate(
+      min=date(2023, 1, 1),
+      max=date(2023, 12, 31)
+    )
+  """
 
   min: date
   max: date

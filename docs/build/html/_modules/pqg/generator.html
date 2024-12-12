@@ -25,7 +25,6 @@
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-
     <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
   </head>
   <body>
@@ -37,105 +36,223 @@
             <div class="highlight">
               <pre>
 <span></span><span class="kn">import</span> <span class="nn">multiprocessing</span> <span class="k">as</span> <span class="nn">mp</span>
+<span class="kn">import</span> <span class="nn">typing</span> <span class="k">as</span> <span class="nn">t</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
 
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
 
+<span class="kn">from</span> <span class="nn">.arguments</span> <span class="kn">import</span> <span class="n">Arguments</span>
 <span class="kn">from</span> <span class="nn">.query_builder</span> <span class="kn">import</span> <span class="n">QueryBuilder</span>
-<span class="kn">from</span> <span class="nn">.query_pool</span> <span class="kn">import</span> <span class="n">QueryPool</span>
+<span class="kn">from</span> <span class="nn">.query_pool</span> <span class="kn">import</span> <span class="n">QueryPool</span><span class="p">,</span> <span class="n">QueryResult</span>
 <span class="kn">from</span> <span class="nn">.query_structure</span> <span class="kn">import</span> <span class="n">QueryStructure</span>
 <span class="kn">from</span> <span class="nn">.schema</span> <span class="kn">import</span> <span class="n">Schema</span>
+
+
+<div class="viewcode-block" id="GenerateOptions">
+<a class="viewcode-back" href="../../pqg.html#pqg.generator.GenerateOptions">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">GenerateOptions</span><span class="p">:</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  Configuration options for controlling query generation behavior.</span>
+
+<span class="sd">  This class provides settings that determine how queries are generated</span>
+<span class="sd">  and validated, including performance options like parallel processing.</span>
+
+<span class="sd">  Attributes:</span>
+<span class="sd">    ensure_non_empty: If True, only generate queries that return data</span>
+<span class="sd">    multi_line: If True, format queries with line breaks for readability</span>
+<span class="sd">    multi_processing: If True, generate queries in parallel</span>
+<span class="sd">    num_queries: Total number of queries to generate</span>
+
+<span class="sd">  Example:</span>
+<span class="sd">    options = GenerateOptions(</span>
+<span class="sd">      ensure_non_empty=True,</span>
+<span class="sd">      num_queries=1000,</span>
+<span class="sd">      multi_processing=True</span>
+<span class="sd">    )</span>
+<span class="sd">    generator.generate(options)</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="n">ensure_non_empty</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+  <span class="n">multi_line</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+  <span class="n">multi_processing</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+  <span class="n">num_queries</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span>
+
+<div class="viewcode-block" id="GenerateOptions.from_args">
+<a class="viewcode-back" href="../../pqg.html#pqg.generator.GenerateOptions.from_args">[docs]</a>
+  <span class="nd">@staticmethod</span>
+  <span class="k">def</span> <span class="nf">from_args</span><span class="p">(</span><span class="n">arguments</span><span class="p">:</span> <span class="n">Arguments</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;GenerateOptions&#39;</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create GenerateOptions from command-line arguments.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      arguments: Parsed command-line arguments</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">      GenerateOptions configured according to provided arguments</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">GenerateOptions</span><span class="p">(</span>
+      <span class="n">arguments</span><span class="o">.</span><span class="n">ensure_non_empty</span><span class="p">,</span>
+      <span class="n">arguments</span><span class="o">.</span><span class="n">multi_line</span><span class="p">,</span>
+      <span class="ow">not</span> <span class="n">arguments</span><span class="o">.</span><span class="n">disable_multi_processing</span><span class="p">,</span>
+      <span class="n">arguments</span><span class="o">.</span><span class="n">num_queries</span><span class="p">,</span>
+    <span class="p">)</span></div>
+</div>
+
 
 
 <div class="viewcode-block" id="Generator">
 <a class="viewcode-back" href="../../pqg.html#pqg.generator.Generator">[docs]</a>
 <span class="k">class</span> <span class="nc">Generator</span><span class="p">:</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  Generator for creating pools of pandas DataFrame queries.</span>
+
+<span class="sd">  This class handles the generation of valid pandas DataFrame queries based on a provided</span>
+<span class="sd">  schema and query structure parameters. It supports both parallel and sequential query</span>
+<span class="sd">  generation with optional progress tracking.</span>
+
+<span class="sd">  The generator can ensure that queries produce non-empty results by retrying failed</span>
+<span class="sd">  generations, and supports formatting queries in both single-line and multi-line styles.</span>
+
+<span class="sd">  Attributes:</span>
+<span class="sd">    schema: Schema defining the database structure and relationships</span>
+<span class="sd">    query_structure: Parameters controlling query complexity and features</span>
+<span class="sd">    sample_data: Dictionary mapping entity names to sample DataFrames</span>
+<span class="sd">    with_status: Whether to display progress bars during operations</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">schema</span><span class="p">:</span> <span class="n">Schema</span><span class="p">,</span> <span class="n">query_structure</span><span class="p">:</span> <span class="n">QueryStructure</span><span class="p">,</span> <span class="n">with_status</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Generator for creating pools of pandas DataFrame queries.</span>
+<span class="sd">    Initialize generator with schema and generation parameters.</span>
 
-<span class="sd">    This class handles the generation of valid DataFrame queries based on a provided</span>
-<span class="sd">    schema and query structure parameters. It manages sample data generation and</span>
-<span class="sd">    parallel query generation.</span>
-
-<span class="sd">    Attributes:</span>
-<span class="sd">      schema: Schema defining the database structure</span>
+<span class="sd">    Args:</span>
+<span class="sd">      schema: Schema defining database structure and relationships</span>
 <span class="sd">      query_structure: Parameters controlling query generation</span>
-<span class="sd">      sample_data: Dictionary of sample DataFrames for each entity</span>
-<span class="sd">      with_status: Whether to display progress bars during operations</span>
+<span class="sd">      with_status: If True, display progress bars during operations</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">schema</span> <span class="o">=</span> <span class="n">schema</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">query_structure</span> <span class="o">=</span> <span class="n">query_structure</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">schema</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">query_structure</span> <span class="o">=</span> <span class="n">schema</span><span class="p">,</span> <span class="n">query_structure</span>
 
-    <span class="bp">self</span><span class="o">.</span><span class="n">sample_data</span><span class="p">,</span> <span class="n">entities</span> <span class="o">=</span> <span class="p">{},</span> <span class="n">schema</span><span class="o">.</span><span class="n">entities</span>
+    <span class="n">entities</span> <span class="o">=</span> <span class="n">schema</span><span class="o">.</span><span class="n">entities</span>
 
     <span class="k">if</span> <span class="n">with_status</span><span class="p">:</span>
       <span class="n">entities</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">schema</span><span class="o">.</span><span class="n">entities</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;Generating sample data&#39;</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;entity&#39;</span><span class="p">)</span>
 
-    <span class="k">for</span> <span class="n">entity</span> <span class="ow">in</span> <span class="n">entities</span><span class="p">:</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">sample_data</span><span class="p">[</span><span class="n">entity</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">entity</span><span class="o">.</span><span class="n">generate_dataframe</span><span class="p">()</span>
+    <span class="n">sample_data</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
 
-    <span class="bp">self</span><span class="o">.</span><span class="n">with_status</span> <span class="o">=</span> <span class="n">with_status</span>
+    <span class="k">for</span> <span class="n">entity</span> <span class="ow">in</span> <span class="n">entities</span><span class="p">:</span>
+      <span class="n">sample_data</span><span class="p">[</span><span class="n">entity</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">entity</span><span class="o">.</span><span class="n">generate_dataframe</span><span class="p">()</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">sample_data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">with_status</span> <span class="o">=</span> <span class="n">sample_data</span><span class="p">,</span> <span class="n">with_status</span>
 
   <span class="nd">@staticmethod</span>
-  <span class="k">def</span> <span class="nf">_generate_single_query</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">query_structure</span><span class="p">,</span> <span class="n">multi_line</span><span class="p">,</span> <span class="n">_</span><span class="p">):</span>
+  <span class="k">def</span> <span class="nf">_generate_single_query</span><span class="p">(</span>
+    <span class="n">schema</span><span class="p">:</span> <span class="n">Schema</span><span class="p">,</span>
+    <span class="n">query_structure</span><span class="p">:</span> <span class="n">QueryStructure</span><span class="p">,</span>
+    <span class="n">sample_data</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">],</span>
+    <span class="n">generate_options</span><span class="p">:</span> <span class="n">GenerateOptions</span><span class="p">,</span>
+    <span class="n">_</span><span class="p">,</span>
+  <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Generate a single query using provided parameters.</span>
+<span class="sd">    Generate a single query, optionally ensuring non-empty results.</span>
+
+<span class="sd">    This method creates a query using the provided schema and structure parameters.</span>
+<span class="sd">    If ensure_non_empty is True, it will retry generation until the query produces</span>
+<span class="sd">    a non-empty result when executed against the sample data.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">      schema: Database schema containing entity definitions</span>
-<span class="sd">      query_structure: Configuration parameters for query generation</span>
-<span class="sd">      multi_line: Whether to format the query across multiple lines</span>
-<span class="sd">      _: Ignored parameter (used for parallel mapping)</span>
+<span class="sd">      query_structure: Parameters controlling query complexity and features</span>
+<span class="sd">      sample_data: Sample DataFrames for testing query results</span>
+<span class="sd">      generate_options: Configuration options for generation</span>
+<span class="sd">      _: Ignored parameter (required for parallel mapping)</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">      Query: A randomly generated query conforming to the schema and structure</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">      When ensure_non_empty is True, this method may enter an indefinite loop</span>
+<span class="sd">      if it cannot generate a query producing non-empty results.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">QueryBuilder</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">query_structure</span><span class="p">,</span> <span class="n">multi_line</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+    <span class="n">query</span> <span class="o">=</span> <span class="n">QueryBuilder</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">query_structure</span><span class="p">,</span> <span class="n">generate_options</span><span class="o">.</span><span class="n">multi_line</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">generate_options</span><span class="o">.</span><span class="n">ensure_non_empty</span><span class="p">:</span>
+      <span class="n">result</span> <span class="o">=</span> <span class="n">QueryPool</span><span class="o">.</span><span class="n">_execute_single_query</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">sample_data</span><span class="p">)</span>
+
+      <span class="k">def</span> <span class="nf">should_retry</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="n">QueryResult</span><span class="p">):</span>
+        <span class="n">df_result</span><span class="p">,</span> <span class="n">error</span> <span class="o">=</span> <span class="n">result</span>
+
+        <span class="k">if</span> <span class="n">error</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">df_result</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+          <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">df_result</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+          <span class="k">return</span> <span class="n">df_result</span><span class="o">.</span><span class="n">empty</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">df_result</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
+          <span class="k">return</span> <span class="n">df_result</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span>
+
+        <span class="k">return</span> <span class="kc">False</span>
+
+      <span class="k">while</span> <span class="n">should_retry</span><span class="p">(</span><span class="n">result</span><span class="p">):</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="n">QueryBuilder</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">query_structure</span><span class="p">,</span> <span class="n">generate_options</span><span class="o">.</span><span class="n">multi_line</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">QueryPool</span><span class="o">.</span><span class="n">_execute_single_query</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">sample_data</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">query</span>
 
 <div class="viewcode-block" id="Generator.generate">
 <a class="viewcode-back" href="../../pqg.html#pqg.generator.Generator.generate">[docs]</a>
-  <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queries</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">multi_line</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">multi_processing</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QueryPool</span><span class="p">:</span>
+  <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">:</span> <span class="n">GenerateOptions</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QueryPool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Generate a pool of queries using either parallel or sequential processing.</span>
+<span class="sd">    Generate a pool of queries using parallel or sequential processing.</span>
 
-<span class="sd">    Creates multiple queries either concurrently using a process pool or</span>
-<span class="sd">    sequentially based on the multi_processing parameter. Each query is</span>
-<span class="sd">    randomly generated according to the schema and query structure parameters.</span>
+<span class="sd">    This method creates multiple queries according to the specified options,</span>
+<span class="sd">    either concurrently using a process pool or sequentially. Progress is</span>
+<span class="sd">    tracked with a progress bar when with_status is True.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">      queries: Number of queries to generate</span>
-<span class="sd">      multi_line: Whether to format queries across multiple lines</span>
-<span class="sd">      multi_processing: Whether to use multiprocessing (default: True)</span>
+<span class="sd">      options: Configuration options controlling generation behavior</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">      QueryPool: A pool containing the generated queries and their sample data</span>
+<span class="sd">      QueryPool containing the generated queries and sample data</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">      When using parallel processing, the progress bar accurately tracks</span>
+<span class="sd">      completion across all processes. The resulting QueryPool contains</span>
+<span class="sd">      all successfully generated queries in an arbitrary order.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">f</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_generate_single_query</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">schema</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">query_structure</span><span class="p">,</span> <span class="n">multi_line</span><span class="p">)</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">_generate_single_query</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">schema</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">query_structure</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_data</span><span class="p">,</span> <span class="n">options</span>
+    <span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">multi_processing</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">multi_processing</span><span class="p">:</span>
       <span class="k">with</span> <span class="n">mp</span><span class="o">.</span><span class="n">Pool</span><span class="p">()</span> <span class="k">as</span> <span class="n">pool</span><span class="p">:</span>
-        <span class="n">generated_queries</span> <span class="o">=</span> <span class="n">pool</span><span class="o">.</span><span class="n">imap</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="n">queries</span><span class="p">))</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">with_status</span><span class="p">:</span>
-          <span class="n">generated_queries</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span>
-            <span class="n">generated_queries</span><span class="p">,</span>
-            <span class="n">total</span><span class="o">=</span><span class="n">queries</span><span class="p">,</span>
+        <span class="n">generated_queries</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+          <span class="n">tqdm</span><span class="p">(</span>
+            <span class="n">pool</span><span class="o">.</span><span class="n">imap</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">num_queries</span><span class="p">)),</span>
             <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;Generating queries&#39;</span><span class="p">,</span>
+            <span class="n">disable</span><span class="o">=</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">with_status</span><span class="p">,</span>
+            <span class="n">total</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">num_queries</span><span class="p">,</span>
             <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;query&#39;</span><span class="p">,</span>
           <span class="p">)</span>
-
-        <span class="n">queries_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">generated_queries</span><span class="p">)</span>
+        <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">with_status</span><span class="p">:</span>
-        <span class="n">iterator</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">queries</span><span class="p">),</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;Generating queries&#39;</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;query&#39;</span><span class="p">)</span>
-      <span class="k">else</span><span class="p">:</span>
-        <span class="n">iterator</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">queries</span><span class="p">)</span>
-
-      <span class="n">queries_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">iterator</span><span class="p">]</span>
+      <span class="n">generated_queries</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">f</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span>
+          <span class="nb">range</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">num_queries</span><span class="p">),</span>
+          <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;Generating queries&#39;</span><span class="p">,</span>
+          <span class="n">disable</span><span class="o">=</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">with_status</span><span class="p">,</span>
+          <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;query&#39;</span><span class="p">,</span>
+        <span class="p">)</span>
+      <span class="p">]</span>
 
     <span class="k">return</span> <span class="n">QueryPool</span><span class="p">(</span>
-      <span class="n">queries_list</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">query_structure</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_data</span><span class="p">,</span> <span class="n">multi_processing</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">with_status</span>
+      <span class="n">generated_queries</span><span class="p">,</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">query_structure</span><span class="p">,</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">sample_data</span><span class="p">,</span>
+      <span class="n">options</span><span class="o">.</span><span class="n">multi_processing</span><span class="p">,</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">with_status</span><span class="p">,</span>
     <span class="p">)</span></div>
 </div>
 
@@ -179,7 +296,6 @@
               >
             </li>
           </ul>
-
           <div class="relations">
             <h3>Related Topics</h3>
             <ul>
