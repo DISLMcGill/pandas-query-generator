@@ -1,40 +1,32 @@
-<!doctype html>
+<!DOCTYPE html>
 
 <html lang="en" data-content_root="../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pqg.entity &#8212; pqg documentation</title>
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="../../_static/pygments.css?v=d1102ebc"
-    />
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="../../_static/basic.css?v=686e5160"
-    />
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="../../_static/alabaster.css?v=27fed22d"
-    />
+    <title>pqg.entity &#8212; pqg  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic.css?v=686e5160" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=ec641305" />
     <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" />
-    <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
-  </head>
-  <body>
+    <link rel="search" title="Search" href="../../search.html" />  
+<link
+  rel="stylesheet"
+  href="../../_static/custom.css"
+  type="text/css"
+/>
+   
+  </head><body>   
+
     <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body" role="main">
-            <h1>Source code for pqg.entity</h1>
-            <div class="highlight">
-              <pre>
+  <div class="documentwrapper">
+    <div class="bodywrapper"> 
+
+      <div class="body" role="main">
+  <h1>Source code for pqg.entity</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">random</span>
 <span class="kn">import</span> <span class="nn">string</span>
 <span class="kn">import</span> <span class="nn">sys</span>
@@ -46,7 +38,7 @@
 
 
 <div class="viewcode-block" id="PropertyInt">
-<a class="viewcode-back" href="../../pqg.html#pqg.entity.PropertyInt">[docs]</a>
+<a class="viewcode-back" href="../../pqg.html#pqg.PropertyInt">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">PropertyInt</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;</span>
@@ -68,7 +60,7 @@
 
 
 <div class="viewcode-block" id="PropertyFloat">
-<a class="viewcode-back" href="../../pqg.html#pqg.entity.PropertyFloat">[docs]</a>
+<a class="viewcode-back" href="../../pqg.html#pqg.PropertyFloat">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">PropertyFloat</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;</span>
@@ -90,7 +82,7 @@
 
 
 <div class="viewcode-block" id="PropertyEnum">
-<a class="viewcode-back" href="../../pqg.html#pqg.entity.PropertyEnum">[docs]</a>
+<a class="viewcode-back" href="../../pqg.html#pqg.PropertyEnum">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">PropertyEnum</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;</span>
@@ -113,7 +105,7 @@
 
 
 <div class="viewcode-block" id="PropertyString">
-<a class="viewcode-back" href="../../pqg.html#pqg.entity.PropertyString">[docs]</a>
+<a class="viewcode-back" href="../../pqg.html#pqg.PropertyString">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">PropertyString</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;</span>
@@ -138,7 +130,7 @@
 
 
 <div class="viewcode-block" id="PropertyDate">
-<a class="viewcode-back" href="../../pqg.html#pqg.entity.PropertyDate">[docs]</a>
+<a class="viewcode-back" href="../../pqg.html#pqg.PropertyDate">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">PropertyDate</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;</span>
@@ -171,7 +163,7 @@
 
 
 <div class="viewcode-block" id="Entity">
-<a class="viewcode-back" href="../../pqg.html#pqg.entity.Entity">[docs]</a>
+<a class="viewcode-back" href="../../pqg.html#pqg.Entity">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">Entity</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;</span>
@@ -193,6 +185,8 @@
   <span class="n">properties</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Property</span><span class="p">]</span>
   <span class="n">foreign_keys</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
 
+<div class="viewcode-block" id="Entity.__hash__">
+<a class="viewcode-back" href="../../api_reference.html#pqg.Entity.__hash__">[docs]</a>
   <span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Generate a hash based on the entity&#39;s name.</span>
@@ -203,8 +197,11 @@
 <span class="sd">    Returns:</span>
 <span class="sd">      int: Hash value for the entity.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
 
+
+<div class="viewcode-block" id="Entity.__eq__">
+<a class="viewcode-back" href="../../api_reference.html#pqg.Entity.__eq__">[docs]</a>
   <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compare this entity with another for equality.</span>
@@ -220,10 +217,11 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Entity</span><span class="p">):</span>
       <span class="k">return</span> <span class="bp">NotImplemented</span>
-    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">name</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">name</span></div>
+
 
 <div class="viewcode-block" id="Entity.from_configuration">
-<a class="viewcode-back" href="../../pqg.html#pqg.entity.Entity.from_configuration">[docs]</a>
+<a class="viewcode-back" href="../../pqg.html#pqg.Entity.from_configuration">[docs]</a>
   <span class="nd">@staticmethod</span>
   <span class="k">def</span> <span class="nf">from_configuration</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Entity&#39;</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -304,7 +302,7 @@
     <span class="k">return</span> <span class="n">ranges</span>
 
 <div class="viewcode-block" id="Entity.generate_dataframe">
-<a class="viewcode-back" href="../../pqg.html#pqg.entity.Entity.generate_dataframe">[docs]</a>
+<a class="viewcode-back" href="../../pqg.html#pqg.Entity.generate_dataframe">[docs]</a>
   <span class="k">def</span> <span class="nf">generate_dataframe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_rows</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Generate a Pandas dataframe using this entity&#39;s information.</span>
@@ -369,68 +367,79 @@
     <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span></div>
 </div>
 
-</pre>
-            </div>
-          </div>
-        </div>
-      </div>
+</pre></div>
+</div> 
+    </div>
+  </div>
       <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
-          <h1 class="logo"><a href="../../index.html">pqg</a></h1>
-
-          <search id="searchbox" style="display: none" role="search">
-            <div class="searchformwrapper">
-              <form class="search" action="../../search.html" method="get">
-                <input
-                  type="text"
-                  name="q"
-                  aria-labelledby="searchlabel"
-                  autocomplete="off"
-                  autocorrect="off"
-                  autocapitalize="off"
-                  spellcheck="false"
-                  placeholder="Search"
-                />
-                <input type="submit" value="Go" />
-              </form>
-            </div>
-          </search>
-          <script>
-            document.getElementById("searchbox").style.display = "block";
-          </script>
-          <h3>Navigation</h3>
-          <p class="caption" role="heading">
-            <span class="caption-text">Contents:</span>
-          </p>
+<h1 class="logo"><a href="../../index.html">pqg</a></h1>
+   
+<p>
+  <iframe
+    src="https://ghbtns.com/github-btn.html?user=DISLMcGill&repo=pandas-query-generator&type=watch&count=true&size=large&v=2"
+    allowtransparency="true"
+    frameborder="0"
+    scrolling="0"
+    width="200px"
+    height="35px"
+  ></iframe>
+</p>
+   
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quickstart Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api_reference.html">API Reference</a></li>
+</ul>
+ <div class="relations">
+  <h3>Related Topics</h3>
+  <ul>
+    <li>
+      <a href="../../index.html">Documentation overview</a>
+      <ul>
+        <li>
+          <a href="../index.html">Module code</a>
           <ul>
-            <li class="toctree-l1">
-              <a class="reference internal" href="../../pqg.html"
-                >pqg package</a
-              >
-            </li>
           </ul>
-          <div class="relations">
-            <h3>Related Topics</h3>
-            <ul>
-              <li>
-                <a href="../../index.html">Documentation overview</a>
-                <ul>
-                  <li>
-                    <a href="../index.html">Module code</a>
-                    <ul></ul>
-                  </li>
-                </ul>
-              </li>
-            </ul>
-          </div>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>    
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="footer">
-      &#169;2024, Liam Scalzulli. | Powered by
-      <a href="https://www.sphinx-doc.org/">Sphinx 8.1.3</a> &amp;
-      <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
-    </div>
+<div class="footer">
+  &#169;2024, Liam Scalzulli. 
+  | Powered by
+  <a href="https://www.sphinx-doc.org/">Sphinx 8.1.3</a> &amp;
+  <a href="https://alabaster.readthedocs.io"
+    >Alabaster 1.0.0</a
+  >
+  
+</div>
+
+
+<a
+  href="https://github.com/DISLMcGill/pandas-query-generator"
+  class="github"
+>
+  <img
+    src="../../_static/github-banner.svg"
+    alt="Fork me on GitHub"
+    class="github"
+  />
+</a>
+ 
   </body>
 </html>
