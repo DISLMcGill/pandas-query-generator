@@ -3,7 +3,7 @@ import path from 'path';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-  base: "/pandas-query-generator",
+  base: '/pandas-query-generator',
   plugins: [react()],
   resolve: {
     alias: {
