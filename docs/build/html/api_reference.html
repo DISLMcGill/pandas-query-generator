@@ -1,0 +1,1634 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>API Reference &#8212; pqg  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=686e5160" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=ec641305" />
+    <script src="_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Quickstart Guide" href="quickstart.html" />  
+<link
+  rel="stylesheet"
+  href="_static/custom.css"
+  type="text/css"
+/>
+   
+  </head><body>   
+
+    <div class="document">
+  <div class="documentwrapper">
+    <div class="bodywrapper"> 
+
+      <div class="body" role="main">
+  <section id="api-reference">
+<span id="id1"></span><h1>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading">¶</a></h1>
+<p>This reference documents the key classes and functions in pqg.</p>
+<section id="schema-components">
+<h2>Schema Components<a class="headerlink" href="#schema-components" title="Link to this heading">¶</a></h2>
+<section id="schema">
+<h3>Schema<a class="headerlink" href="#schema" title="Link to this heading">¶</a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="pqg.Schema">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pqg.</span></span><span class="sig-name descname"><span class="pre">Schema</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entities:</span> <span class="pre">~typing.Set[~pqg.entity.Entity]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pqg/schema.html#Schema"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pqg.Schema" title="Link to this definition">¶</a></dt>
+<dd><p>A dictionary-like class representing a database schema containing multiple entities.</p>
+<p>The Schema class provides dictionary-style access to Entity objects, allowing for
+both iteration over entities and direct access to specific entities by name.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.Schema.entities">
+<span class="sig-name descname"><span class="pre">entities</span></span><a class="headerlink" href="#pqg.Schema.entities" title="Link to this definition">¶</a></dt>
+<dd><p>Set of Entity objects in the schema.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>t.Set[<a class="reference internal" href="#pqg.Entity" title="pqg.Entity">Entity</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.Schema._entity_map">
+<span class="sig-name descname"><span class="pre">_entity_map</span></span><a class="headerlink" href="#pqg.Schema._entity_map" title="Link to this definition">¶</a></dt>
+<dd><p>Internal mapping of entity names to Entity objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>t.Dict[str, <a class="reference internal" href="#pqg.Entity" title="pqg.Entity">Entity</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqg.Schema.__getitem__">
+<span class="sig-name descname"><span class="pre">__getitem__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="pqg.html#pqg.entity.Entity" title="pqg.entity.Entity"><span class="pre">Entity</span></a></span></span><a class="reference internal" href="_modules/pqg/schema.html#Schema.__getitem__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pqg.Schema.__getitem__" title="Link to this definition">¶</a></dt>
+<dd><p>Get an entity by name using dictionary-style access.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> (<em>str</em>) – The name of the entity to retrieve.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The requested entity.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pqg.Entity" title="pqg.Entity">Entity</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>KeyError</strong> – If no entity exists with the given name.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqg.Schema.__iter__">
+<span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pqg.html#pqg.entity.Entity" title="pqg.entity.Entity"><span class="pre">Entity</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/pqg/schema.html#Schema.__iter__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pqg.Schema.__iter__" title="Link to this definition">¶</a></dt>
+<dd><p>Iterate over all entities in the schema.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Iterator yielding Entity objects.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Iterator[<a class="reference internal" href="#pqg.Entity" title="pqg.Entity">Entity</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqg.Schema.__len__">
+<span class="sig-name descname"><span class="pre">__len__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/pqg/schema.html#Schema.__len__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pqg.Schema.__len__" title="Link to this definition">¶</a></dt>
+<dd><p>Get the number of entities in the schema.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Total number of entities.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqg.Schema.from_dict">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="pqg.html#pqg.schema.Schema" title="pqg.schema.Schema"><span class="pre">Schema</span></a></span></span><a class="reference internal" href="_modules/pqg/schema.html#Schema.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pqg.Schema.from_dict" title="Link to this definition">¶</a></dt>
+<dd><p>Create a Schema instance from a dictionary.</p>
+<p>Similar to from_file but accepts a dictionary directly instead of reading
+from a file. This is useful for creating schemas programmatically or when
+the schema definition is already in memory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>dict</em>) – Dictionary containing the schema configuration.
+Expected to have an ‘entities’ key mapping to entity configs.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A new Schema instance containing the entities defined in the dictionary.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pqg.Schema" title="pqg.Schema">Schema</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the dictionary structure is invalid.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<dl>
+<dt>schema_dict = {</dt><dd><dl>
+<dt>“entities”: {</dt><dd><dl class="simple">
+<dt>“customer”: {</dt><dd><p>“primary_key”: “id”,
+“properties”: {…},
+“foreign_keys”: {…}</p>
+</dd>
+</dl>
+<p>}</p>
+</dd>
+</dl>
+<p>}</p>
+</dd>
+</dl>
+<p>}</p>
+<p>schema = Schema.from_dict(schema_dict)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqg.Schema.from_file">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="pqg.html#pqg.schema.Schema" title="pqg.schema.Schema"><span class="pre">Schema</span></a></span></span><a class="reference internal" href="_modules/pqg/schema.html#Schema.from_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pqg.Schema.from_file" title="Link to this definition">¶</a></dt>
+<dd><p>Create a Schema instance by loading entity configurations from a JSON file.</p>
+<p>This method reads a JSON file containing entity configurations and creates
+a Schema object with Entity instances for each configured entity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – The file path to the JSON configuration file.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A new Schema instance containing the entities defined in the file.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pqg.Schema" title="pqg.Schema">Schema</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>json.JSONDecodeError</strong> – If the file contains invalid JSON.</p></li>
+<li><p><strong>FileNotFoundError</strong> – If the specified file does not exist.</p></li>
+<li><p><strong>PermissionError</strong> – If the file cannot be read due to permission issues.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If the ‘entities’ key is not present in the JSON file, an empty Schema
+will be returned.</p>
+</div>
+<p class="rubric">Example</p>
+<p>schema = Schema.from_file(‘path/to/schema_config.json’)</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="entity">
+<h3>Entity<a class="headerlink" href="#entity" title="Link to this heading">¶</a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="pqg.Entity">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pqg.</span></span><span class="sig-name descname"><span class="pre">Entity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">primary_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">properties</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="pqg.html#pqg.entity.PropertyInt" title="pqg.entity.PropertyInt"><span class="pre">PropertyInt</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="pqg.html#pqg.entity.PropertyFloat" title="pqg.entity.PropertyFloat"><span class="pre">PropertyFloat</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="pqg.html#pqg.entity.PropertyEnum" title="pqg.entity.PropertyEnum"><span class="pre">PropertyEnum</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="pqg.html#pqg.entity.PropertyString" title="pqg.entity.PropertyString"><span class="pre">PropertyString</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="pqg.html#pqg.entity.PropertyDate" title="pqg.entity.PropertyDate"><span class="pre">PropertyDate</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">foreign_keys</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pqg/entity.html#Entity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pqg.Entity" title="Link to this definition">¶</a></dt>
+<dd><p>Represents entity information parsed from schema files.</p>
+<p>This class is used to generate well-formed and meaningful queries based on
+entity information and a high-level structure describing how queries should
+generally look (see <cite>QueryStructure</cite>).</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.Entity.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#pqg.Entity.name" title="Link to this definition">¶</a></dt>
+<dd><p>The name of the entity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.Entity.primary_key">
+<span class="sig-name descname"><span class="pre">primary_key</span></span><a class="headerlink" href="#pqg.Entity.primary_key" title="Link to this definition">¶</a></dt>
+<dd><p>The primary key(s) of the entity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str | t.List[str] | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.Entity.properties">
+<span class="sig-name descname"><span class="pre">properties</span></span><a class="headerlink" href="#pqg.Entity.properties" title="Link to this definition">¶</a></dt>
+<dd><p>A dictionary of property names to their definitions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>t.Dict[str, Property]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.Entity.foreign_keys">
+<span class="sig-name descname"><span class="pre">foreign_keys</span></span><a class="headerlink" href="#pqg.Entity.foreign_keys" title="Link to this definition">¶</a></dt>
+<dd><p>A dictionary of foreign key relationships.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>t.Dict[str, t.List[str]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqg.Entity.__eq__">
+<span class="sig-name descname"><span class="pre">__eq__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/pqg/entity.html#Entity.__eq__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pqg.Entity.__eq__" title="Link to this definition">¶</a></dt>
+<dd><p>Compare this entity with another for equality.</p>
+<p>Entities are considered equal if they have the same name,
+as names must be unique within a schema.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> – The object to compare with.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the objects are equal, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqg.Entity.__hash__">
+<span class="sig-name descname"><span class="pre">__hash__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/pqg/entity.html#Entity.__hash__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pqg.Entity.__hash__" title="Link to this definition">¶</a></dt>
+<dd><p>Generate a hash based on the entity’s name.</p>
+<p>Since entity names must be unique within a schema, using the name
+as the hash basis ensures proper hash table behavior.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Hash value for the entity.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pqg.Entity.data_ranges">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">data_ranges</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#pqg.Entity.data_ranges" title="Link to this definition">¶</a></dt>
+<dd><p>Get the data ranges for all properties of the entity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A dictionary mapping property names to their respective ranges or possible values.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqg.Entity.from_configuration">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_configuration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="pqg.html#pqg.entity.Entity" title="pqg.entity.Entity"><span class="pre">Entity</span></a></span></span><a class="reference internal" href="_modules/pqg/entity.html#Entity.from_configuration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pqg.Entity.from_configuration" title="Link to this definition">¶</a></dt>
+<dd><p>Create an Entity instance from a configuration dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>config</strong> (<em>t.Dict</em>) – A dictionary containing entity configuration.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An instance of the Entity class.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pqg.Entity" title="pqg.Entity">Entity</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If an unknown property type is encountered.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqg.Entity.generate_dataframe">
+<span class="sig-name descname"><span class="pre">generate_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_rows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/pqg/entity.html#Entity.generate_dataframe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pqg.Entity.generate_dataframe" title="Link to this definition">¶</a></dt>
+<dd><p>Generate a Pandas dataframe using this entity’s information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>num_rows</strong> (<em>int</em>) – The number of rows to generate. Default is 1000.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dataframe populated with randomly generated data based on the entity’s properties.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If the entity has a unique primary key of type int, the number of rows may be limited
+to the range of possible values for that key.</p>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pqg.Entity.has_unique_primary_key">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">has_unique_primary_key</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#pqg.Entity.has_unique_primary_key" title="Link to this definition">¶</a></dt>
+<dd><p>Check if the entity has a single, unique primary key.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="property-types">
+<h3>Property Types<a class="headerlink" href="#property-types" title="Link to this heading">¶</a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="pqg.PropertyInt">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pqg.</span></span><span class="sig-name descname"><span class="pre">PropertyInt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">min</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'int'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pqg/entity.html#PropertyInt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pqg.PropertyInt" title="Link to this definition">¶</a></dt>
+<dd><p>Integer property definition with range constraints.</p>
+<p>Used to define integer columns in entity schemas, providing
+valid value ranges for query generation.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.PropertyInt.min">
+<span class="sig-name descname"><span class="pre">min</span></span><a class="headerlink" href="#pqg.PropertyInt.min" title="Link to this definition">¶</a></dt>
+<dd><p>Minimum allowed value (inclusive)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.PropertyInt.max">
+<span class="sig-name descname"><span class="pre">max</span></span><a class="headerlink" href="#pqg.PropertyInt.max" title="Link to this definition">¶</a></dt>
+<dd><p>Maximum allowed value (inclusive)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.PropertyInt.type">
+<span class="sig-name descname"><span class="pre">type</span></span><a class="headerlink" href="#pqg.PropertyInt.type" title="Link to this definition">¶</a></dt>
+<dd><p>Always “int”, used for schema parsing</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pqg.PropertyFloat">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pqg.</span></span><span class="sig-name descname"><span class="pre">PropertyFloat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">min</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'float'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pqg/entity.html#PropertyFloat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pqg.PropertyFloat" title="Link to this definition">¶</a></dt>
+<dd><p>Floating point property definition with range constraints.</p>
+<p>Used to define decimal/float columns in entity schemas, providing
+valid value ranges for query generation.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.PropertyFloat.min">
+<span class="sig-name descname"><span class="pre">min</span></span><a class="headerlink" href="#pqg.PropertyFloat.min" title="Link to this definition">¶</a></dt>
+<dd><p>Minimum allowed value (inclusive)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.PropertyFloat.max">
+<span class="sig-name descname"><span class="pre">max</span></span><a class="headerlink" href="#pqg.PropertyFloat.max" title="Link to this definition">¶</a></dt>
+<dd><p>Maximum allowed value (inclusive)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.PropertyFloat.type">
+<span class="sig-name descname"><span class="pre">type</span></span><a class="headerlink" href="#pqg.PropertyFloat.type" title="Link to this definition">¶</a></dt>
+<dd><p>Always “float”, used for schema parsing</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pqg.PropertyEnum">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pqg.</span></span><span class="sig-name descname"><span class="pre">PropertyEnum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'enum'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pqg/entity.html#PropertyEnum"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pqg.PropertyEnum" title="Link to this definition">¶</a></dt>
+<dd><p>Enumeration property definition with allowed values.</p>
+<p>Used to define columns with a fixed set of possible values in entity schemas,
+such as status fields or categories.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.PropertyEnum.values">
+<span class="sig-name descname"><span class="pre">values</span></span><a class="headerlink" href="#pqg.PropertyEnum.values" title="Link to this definition">¶</a></dt>
+<dd><p>List of valid string values for this property</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.PropertyEnum.type">
+<span class="sig-name descname"><span class="pre">type</span></span><a class="headerlink" href="#pqg.PropertyEnum.type" title="Link to this definition">¶</a></dt>
+<dd><p>Always “enum”, used for schema parsing</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Example</p>
+<p>status = PropertyEnum(values=[“active”, “inactive”, “pending”])</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pqg.PropertyString">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pqg.</span></span><span class="sig-name descname"><span class="pre">PropertyString</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">starting_character</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'string'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pqg/entity.html#PropertyString"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pqg.PropertyString" title="Link to this definition">¶</a></dt>
+<dd><p>String property definition with character constraints.</p>
+<p>Used to define text columns in entity schemas, with optional constraints
+on what characters strings can start with. This allows generating realistic
+looking text data.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.PropertyString.starting_character">
+<span class="sig-name descname"><span class="pre">starting_character</span></span><a class="headerlink" href="#pqg.PropertyString.starting_character" title="Link to this definition">¶</a></dt>
+<dd><p>List of valid first characters for generated strings</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.PropertyString.type">
+<span class="sig-name descname"><span class="pre">type</span></span><a class="headerlink" href="#pqg.PropertyString.type" title="Link to this definition">¶</a></dt>
+<dd><p>Always “string”, used for schema parsing</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Example</p>
+<p># Names starting with uppercase letters
+name = PropertyString(starting_character=list(string.ascii_uppercase))</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pqg.PropertyDate">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pqg.</span></span><span class="sig-name descname"><span class="pre">PropertyDate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">min</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'date'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pqg/entity.html#PropertyDate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pqg.PropertyDate" title="Link to this definition">¶</a></dt>
+<dd><p>Date property definition with range constraints.</p>
+<p>Used to define date columns in entity schemas, providing valid
+date ranges for query generation. Generates dates between the
+min and max values inclusive.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.PropertyDate.min">
+<span class="sig-name descname"><span class="pre">min</span></span><a class="headerlink" href="#pqg.PropertyDate.min" title="Link to this definition">¶</a></dt>
+<dd><p>Earliest allowed date</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>datetime.date</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.PropertyDate.max">
+<span class="sig-name descname"><span class="pre">max</span></span><a class="headerlink" href="#pqg.PropertyDate.max" title="Link to this definition">¶</a></dt>
+<dd><p>Latest allowed date</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>datetime.date</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.PropertyDate.type">
+<span class="sig-name descname"><span class="pre">type</span></span><a class="headerlink" href="#pqg.PropertyDate.type" title="Link to this definition">¶</a></dt>
+<dd><p>Always “date”, used for schema parsing</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Example</p>
+<p># Dates in the year 2023
+created_at = PropertyDate(</p>
+<blockquote>
+<div><p>min=date(2023, 1, 1),
+max=date(2023, 12, 31)</p>
+</div></blockquote>
+<p>)</p>
+</dd></dl>
+
+</section>
+</section>
+<section id="query-generation">
+<h2>Query Generation<a class="headerlink" href="#query-generation" title="Link to this heading">¶</a></h2>
+<section id="generator">
+<h3>Generator<a class="headerlink" href="#generator" title="Link to this heading">¶</a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="pqg.Generator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pqg.</span></span><span class="sig-name descname"><span class="pre">Generator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">schema</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pqg.html#pqg.schema.Schema" title="pqg.schema.Schema"><span class="pre">Schema</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">query_structure</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pqg.html#pqg.query_structure.QueryStructure" title="pqg.query_structure.QueryStructure"><span class="pre">QueryStructure</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">with_status</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pqg/generator.html#Generator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pqg.Generator" title="Link to this definition">¶</a></dt>
+<dd><p>Generator for creating pools of pandas DataFrame queries.</p>
+<p>This class handles the generation of valid pandas DataFrame queries based on a provided
+schema and query structure parameters. It supports both parallel and sequential query
+generation with optional progress tracking.</p>
+<p>The generator can ensure that queries produce non-empty results by retrying failed
+generations, and supports formatting queries in both single-line and multi-line styles.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.Generator.schema">
+<span class="sig-name descname"><span class="pre">schema</span></span><a class="headerlink" href="#pqg.Generator.schema" title="Link to this definition">¶</a></dt>
+<dd><p>Schema defining the database structure and relationships</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.Generator.query_structure">
+<span class="sig-name descname"><span class="pre">query_structure</span></span><a class="headerlink" href="#pqg.Generator.query_structure" title="Link to this definition">¶</a></dt>
+<dd><p>Parameters controlling query complexity and features</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.Generator.sample_data">
+<span class="sig-name descname"><span class="pre">sample_data</span></span><a class="headerlink" href="#pqg.Generator.sample_data" title="Link to this definition">¶</a></dt>
+<dd><p>Dictionary mapping entity names to sample DataFrames</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.Generator.with_status">
+<span class="sig-name descname"><span class="pre">with_status</span></span><a class="headerlink" href="#pqg.Generator.with_status" title="Link to this definition">¶</a></dt>
+<dd><p>Whether to display progress bars during operations</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqg.Generator.generate">
+<span class="sig-name descname"><span class="pre">generate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pqg.html#pqg.generator.GenerateOptions" title="pqg.generator.GenerateOptions"><span class="pre">GenerateOptions</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="pqg.html#pqg.query_pool.QueryPool" title="pqg.query_pool.QueryPool"><span class="pre">QueryPool</span></a></span></span><a class="reference internal" href="_modules/pqg/generator.html#Generator.generate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pqg.Generator.generate" title="Link to this definition">¶</a></dt>
+<dd><p>Generate a pool of queries using parallel or sequential processing.</p>
+<p>This method creates multiple queries according to the specified options,
+either concurrently using a process pool or sequentially. Progress is
+tracked with a progress bar when with_status is True.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>options</strong> – Configuration options controlling generation behavior</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>QueryPool containing the generated queries and sample data</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When using parallel processing, the progress bar accurately tracks
+completion across all processes. The resulting QueryPool contains
+all successfully generated queries in an arbitrary order.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="generateoptions">
+<h3>GenerateOptions<a class="headerlink" href="#generateoptions" title="Link to this heading">¶</a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="pqg.GenerateOptions">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pqg.</span></span><span class="sig-name descname"><span class="pre">GenerateOptions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ensure_non_empty</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_line</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_processing</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_queries</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pqg/generator.html#GenerateOptions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pqg.GenerateOptions" title="Link to this definition">¶</a></dt>
+<dd><p>Configuration options for controlling query generation behavior.</p>
+<p>This class provides settings that determine how queries are generated
+and validated, including performance options like parallel processing.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.GenerateOptions.ensure_non_empty">
+<span class="sig-name descname"><span class="pre">ensure_non_empty</span></span><a class="headerlink" href="#pqg.GenerateOptions.ensure_non_empty" title="Link to this definition">¶</a></dt>
+<dd><p>If True, only generate queries that return data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.GenerateOptions.multi_line">
+<span class="sig-name descname"><span class="pre">multi_line</span></span><a class="headerlink" href="#pqg.GenerateOptions.multi_line" title="Link to this definition">¶</a></dt>
+<dd><p>If True, format queries with line breaks for readability</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.GenerateOptions.multi_processing">
+<span class="sig-name descname"><span class="pre">multi_processing</span></span><a class="headerlink" href="#pqg.GenerateOptions.multi_processing" title="Link to this definition">¶</a></dt>
+<dd><p>If True, generate queries in parallel</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.GenerateOptions.num_queries">
+<span class="sig-name descname"><span class="pre">num_queries</span></span><a class="headerlink" href="#pqg.GenerateOptions.num_queries" title="Link to this definition">¶</a></dt>
+<dd><p>Total number of queries to generate</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Example</p>
+<dl class="simple">
+<dt>options = GenerateOptions(</dt><dd><p>ensure_non_empty=True,
+num_queries=1000,
+multi_processing=True</p>
+</dd>
+</dl>
+<p>)
+generator.generate(options)</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pqg.GenerateOptions.from_args">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arguments</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pqg.html#pqg.arguments.Arguments" title="pqg.arguments.Arguments"><span class="pre">Arguments</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="pqg.html#pqg.generator.GenerateOptions" title="pqg.generator.GenerateOptions"><span class="pre">GenerateOptions</span></a></span></span><a class="reference internal" href="_modules/pqg/generator.html#GenerateOptions.from_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pqg.GenerateOptions.from_args" title="Link to this definition">¶</a></dt>
+<dd><p>Create GenerateOptions from command-line arguments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>arguments</strong> – Parsed command-line arguments</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>GenerateOptions configured according to provided arguments</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="querystructure">
+<h3>QueryStructure<a class="headerlink" href="#querystructure" title="Link to this heading">¶</a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="pqg.QueryStructure">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pqg.</span></span><span class="sig-name descname"><span class="pre">QueryStructure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">groupby_aggregation_probability</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_groupby_columns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_merges</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_projection_columns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_selection_conditions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">projection_probability</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selection_probability</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pqg/query_structure.html#QueryStructure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pqg.QueryStructure" title="Link to this definition">¶</a></dt>
+<dd><p>Configuration parameters controlling query generation behavior.</p>
+<p>This class encapsulates the probability and limit settings that determine
+what kinds of queries are generated. It controls aspects like how likely
+different operations are to appear and how complex they can be.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.QueryStructure.groupby_aggregation_probability">
+<span class="sig-name descname"><span class="pre">groupby_aggregation_probability</span></span><a class="headerlink" href="#pqg.QueryStructure.groupby_aggregation_probability" title="Link to this definition">¶</a></dt>
+<dd><p>Probability (0-1) of including a GROUP BY operation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.QueryStructure.max_groupby_columns">
+<span class="sig-name descname"><span class="pre">max_groupby_columns</span></span><a class="headerlink" href="#pqg.QueryStructure.max_groupby_columns" title="Link to this definition">¶</a></dt>
+<dd><p>Maximum number of columns that can be grouped on</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.QueryStructure.max_merges">
+<span class="sig-name descname"><span class="pre">max_merges</span></span><a class="headerlink" href="#pqg.QueryStructure.max_merges" title="Link to this definition">¶</a></dt>
+<dd><p>Maximum number of table joins allowed in a query</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.QueryStructure.max_projection_columns">
+<span class="sig-name descname"><span class="pre">max_projection_columns</span></span><a class="headerlink" href="#pqg.QueryStructure.max_projection_columns" title="Link to this definition">¶</a></dt>
+<dd><p>Maximum number of columns that can be selected</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.QueryStructure.max_selection_conditions">
+<span class="sig-name descname"><span class="pre">max_selection_conditions</span></span><a class="headerlink" href="#pqg.QueryStructure.max_selection_conditions" title="Link to this definition">¶</a></dt>
+<dd><p>Maximum number of WHERE clause conditions</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.QueryStructure.projection_probability">
+<span class="sig-name descname"><span class="pre">projection_probability</span></span><a class="headerlink" href="#pqg.QueryStructure.projection_probability" title="Link to this definition">¶</a></dt>
+<dd><p>Probability (0-1) of including a SELECT operation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.QueryStructure.selection_probability">
+<span class="sig-name descname"><span class="pre">selection_probability</span></span><a class="headerlink" href="#pqg.QueryStructure.selection_probability" title="Link to this definition">¶</a></dt>
+<dd><p>Probability (0-1) of including a WHERE operation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqg.QueryStructure.from_args">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arguments</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pqg.html#pqg.arguments.Arguments" title="pqg.arguments.Arguments"><span class="pre">Arguments</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="pqg.html#pqg.query_structure.QueryStructure" title="pqg.query_structure.QueryStructure"><span class="pre">QueryStructure</span></a></span></span><a class="reference internal" href="_modules/pqg/query_structure.html#QueryStructure.from_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pqg.QueryStructure.from_args" title="Link to this definition">¶</a></dt>
+<dd><p>Create a QueryStructure instance from command-line arguments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>arguments</strong> – Instance of Arguments containing parsed command-line parameters</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Instance configured according to the provided arguments</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pqg.QueryStructure" title="pqg.QueryStructure">QueryStructure</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+<section id="query-components">
+<h2>Query Components<a class="headerlink" href="#query-components" title="Link to this heading">¶</a></h2>
+<section id="query">
+<h3>Query<a class="headerlink" href="#query" title="Link to this heading">¶</a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="pqg.Query">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pqg.</span></span><span class="sig-name descname"><span class="pre">Query</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pqg.html#pqg.operation.Operation" title="pqg.operation.Operation"><span class="pre">Operation</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_line</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Set</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pqg/query.html#Query"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pqg.Query" title="Link to this definition">¶</a></dt>
+<dd><p>Represents a complete database query with tracking for query complexity.</p>
+<p>A query consists of a target entity and a sequence of operations to be
+applied to that entity. Query complexity is determined primarily by the
+number of merge operations and their nesting depth.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.Query.entity">
+<span class="sig-name descname"><span class="pre">entity</span></span><a class="headerlink" href="#pqg.Query.entity" title="Link to this definition">¶</a></dt>
+<dd><p>The name of the target entity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.Query.operations">
+<span class="sig-name descname"><span class="pre">operations</span></span><a class="headerlink" href="#pqg.Query.operations" title="Link to this definition">¶</a></dt>
+<dd><p>List of operations to apply.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[<a class="reference internal" href="pqg.html#pqg.operation.Operation" title="pqg.operation.Operation">Operation</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.Query.multi_line">
+<span class="sig-name descname"><span class="pre">multi_line</span></span><a class="headerlink" href="#pqg.Query.multi_line" title="Link to this definition">¶</a></dt>
+<dd><p>Whether to format output across multiple lines.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.Query.columns">
+<span class="sig-name descname"><span class="pre">columns</span></span><a class="headerlink" href="#pqg.Query.columns" title="Link to this definition">¶</a></dt>
+<dd><p>Columns available for operations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Set[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqg.Query.__eq__">
+<span class="sig-name descname"><span class="pre">__eq__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/pqg/query.html#Query.__eq__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pqg.Query.__eq__" title="Link to this definition">¶</a></dt>
+<dd><p>Equality comparison based on complexity and string representation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqg.Query.__hash__">
+<span class="sig-name descname"><span class="pre">__hash__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/pqg/query.html#Query.__hash__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pqg.Query.__hash__" title="Link to this definition">¶</a></dt>
+<dd><p>Hash based on complexity and string representation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqg.Query.__lt__">
+<span class="sig-name descname"><span class="pre">__lt__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/pqg/query.html#Query.__lt__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pqg.Query.__lt__" title="Link to this definition">¶</a></dt>
+<dd><p>Less than comparison based on complexity and string representation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqg.Query.__str__">
+<span class="sig-name descname"><span class="pre">__str__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/pqg/query.html#Query.__str__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pqg.Query.__str__" title="Link to this definition">¶</a></dt>
+<dd><p>Return str(self).</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pqg.Query.complexity">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">complexity</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pqg.Query.complexity" title="Link to this definition">¶</a></dt>
+<dd><p>Calculate query complexity based on all operations and their details.</p>
+<p>Complexity is determined by:
+1. Base complexity: Total number of operations
+2. Merge complexity:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Each merge adds weight of 3 (more complex than other operations)</p></li>
+<li><p>Additional complexity from nested queries</p></li>
+</ul>
+</div></blockquote>
+<ol class="arabic simple" start="3">
+<li><p>Selection complexity: Number of conditions in each selection</p></li>
+<li><p>Projection complexity: Number of columns being projected</p></li>
+<li><p>GroupBy complexity: Number of grouping columns plus weight of aggregation</p></li>
+</ol>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Complexity score for the query</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqg.Query.format_multi_line">
+<span class="sig-name descname"><span class="pre">format_multi_line</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_counter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/pqg/query.html#Query.format_multi_line"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pqg.Query.format_multi_line" title="Link to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Format the query across multiple lines for better readability.</p>
+<p>Transforms the query into a sequence of DataFrame operations where each
+operation is assigned to a numbered DataFrame variable (df1, df2, etc.).
+Handles nested operations by recursively formatting sub-queries and
+maintaining proper DataFrame references.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>start_counter (int): Initial counter value for DataFrame numbering. Defaults to 1.</p>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>Tuple[str, int]: A tuple containing:</dt><dd><ul class="simple">
+<li><p>The formatted multi-line query string</p></li>
+<li><p>The final counter value after processing all operations</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+<dt>Example:</dt><dd><p>For a query with multiple operations, might return:
+(“df1 = customer[customer[‘age’] &gt;= 25]</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="simple">
+<dt>“</dt><dd><p>“df2 = df1.merge(orders, left_on=’id’, right_on=’customer_id’)”,
+3)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pqg.Query.merge_count">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">merge_count</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pqg.Query.merge_count" title="Link to this definition">¶</a></dt>
+<dd><p>Count the total number of merge operations in the query, including nested merges.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Total number of merge operations</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pqg.Query.merge_entities">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">merge_entities</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Set</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#pqg.Query.merge_entities" title="Link to this definition">¶</a></dt>
+<dd><p>Get the set of all entities involved in this query, including
+the base entity and all merged entities.</p>
+<p>This property maintains a complete picture of table dependencies by tracking:
+1. The base entity of the query
+2. All entities that have been merged directly into this query
+3. All entities that have been merged into sub-queries (nested merges)</p>
+<p>The tracking helps prevent:
+- Circular dependencies (e.g., orders → customers → orders)
+- Redundant joins (e.g., merging the same table multiple times)
+- Invalid join paths</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A set of entity names (table names) that are part of this query’s join graph.
+Includes both the base entity and all merged entities.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Set[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="operations">
+<h3>Operations<a class="headerlink" href="#operations" title="Link to this heading">¶</a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="pqg.Selection">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pqg.</span></span><span class="sig-name descname"><span class="pre">Selection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conditions:</span> <span class="pre">~typing.List[~typing.Tuple[str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">~typing.Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">str</span> <span class="pre">|</span> <span class="pre">None]]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pqg/selection.html#Selection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pqg.Selection" title="Link to this definition">¶</a></dt>
+<dd><p>Represents a selection operation in a query.</p>
+<p>Attributes:
+conditions (List[Tuple[str, str, Any, str]]): List of selection conditions and operators.</p>
+<blockquote>
+<div><p>Each tuple contains (column, operation, value, next_condition_operator).
+The last tuple’s next_condition_operator is ignored.</p>
+</div></blockquote>
+<dl class="py method">
+<dt class="sig sig-object py" id="pqg.Selection.apply">
+<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/pqg/selection.html#Selection.apply"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pqg.Selection.apply" title="Link to this definition">¶</a></dt>
+<dd><p>Apply the operation to the given entity name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>entity</strong> – Name of the entity (table) to apply the operation to.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A pandas query string fragment representing this operation.
+For example: “.groupby([‘col’])” or “[[‘col1’, ‘col2’]]”</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pqg.Projection">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pqg.</span></span><span class="sig-name descname"><span class="pre">Projection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">columns:</span> <span class="pre">~typing.List[str]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pqg/projection.html#Projection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pqg.Projection" title="Link to this definition">¶</a></dt>
+<dd><p>Represents a projection operation in a query.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.Projection.columns">
+<span class="sig-name descname"><span class="pre">columns</span></span><a class="headerlink" href="#pqg.Projection.columns" title="Link to this definition">¶</a></dt>
+<dd><p>A set of column names to project.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Set[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqg.Projection.apply">
+<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/pqg/projection.html#Projection.apply"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pqg.Projection.apply" title="Link to this definition">¶</a></dt>
+<dd><p>Apply the operation to the given entity name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>entity</strong> – Name of the entity (table) to apply the operation to.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A pandas query string fragment representing this operation.
+For example: “.groupby([‘col’])” or “[[‘col1’, ‘col2’]]”</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pqg.GroupByAggregation">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pqg.</span></span><span class="sig-name descname"><span class="pre">GroupByAggregation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">group_by_columns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agg_function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pqg/group_by_aggregation.html#GroupByAggregation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pqg.GroupByAggregation" title="Link to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="pqg.GroupByAggregation.apply">
+<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/pqg/group_by_aggregation.html#GroupByAggregation.apply"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pqg.GroupByAggregation.apply" title="Link to this definition">¶</a></dt>
+<dd><p>Apply the operation to the given entity name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>entity</strong> – Name of the entity (table) to apply the operation to.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A pandas query string fragment representing this operation.
+For example: “.groupby([‘col’])” or “[[‘col1’, ‘col2’]]”</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pqg.Merge">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pqg.</span></span><span class="sig-name descname"><span class="pre">Merge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">right</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pqg.html#pqg.merge.Query" title="pqg.merge.Query"><span class="pre">pqg.merge.Query</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">left_on</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right_on</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pqg/merge.html#Merge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pqg.Merge" title="Link to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="pqg.Merge.apply">
+<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/pqg/merge.html#Merge.apply"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pqg.Merge.apply" title="Link to this definition">¶</a></dt>
+<dd><p>Apply the operation to the given entity name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>entity</strong> – Name of the entity (table) to apply the operation to.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A pandas query string fragment representing this operation.
+For example: “.groupby([‘col’])” or “[[‘col1’, ‘col2’]]”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pqg.Merge.entities">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">entities</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Set</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#pqg.Merge.entities" title="Link to this definition">¶</a></dt>
+<dd><p>Get the set of all entities involved in the right side of this merge operation.</p>
+<p>This property provides a complete view of all tables involved in the right-hand
+side of the merge, including:
+1. The immediate right entity being merged
+2. Any entities that have been merged into the right entity through nested merges</p>
+<p>The difference between this and Query.merge_entities is that this property only
+tracks entities from the right side of the merge operation, while merge_entities
+includes the base entity and all merged entities from both sides.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A set of entity names that are part of the right-hand side of
+this merge operation’s join graph.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Set[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+<section id="query-management">
+<h2>Query Management<a class="headerlink" href="#query-management" title="Link to this heading">¶</a></h2>
+<section id="querypool">
+<h3>QueryPool<a class="headerlink" href="#querypool" title="Link to this heading">¶</a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="pqg.QueryPool">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pqg.</span></span><span class="sig-name descname"><span class="pre">QueryPool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">queries</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pqg.html#pqg.query.Query" title="pqg.query.Query"><span class="pre">Query</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query_structure</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pqg.html#pqg.query_structure.QueryStructure" title="pqg.query_structure.QueryStructure"><span class="pre">QueryStructure</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">DataFrame</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_processing</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">with_status</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pqg/query_pool.html#QueryPool"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pqg.QueryPool" title="Link to this definition">¶</a></dt>
+<dd><p>Manages a collection of database queries with execution and analysis capabilities.</p>
+<p>Provides functionality for executing queries in parallel, filtering based on results,
+computing statistics, and managing query persistence. The pool maintains execution
+results to avoid redundant computation when performing multiple operations.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.QueryPool._queries">
+<span class="sig-name descname"><span class="pre">_queries</span></span><a class="headerlink" href="#pqg.QueryPool._queries" title="Link to this definition">¶</a></dt>
+<dd><p>List of Query objects in the pool</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.QueryPool._query_structure">
+<span class="sig-name descname"><span class="pre">_query_structure</span></span><a class="headerlink" href="#pqg.QueryPool._query_structure" title="Link to this definition">¶</a></dt>
+<dd><p>Parameters controlling query generation</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.QueryPool._sample_data">
+<span class="sig-name descname"><span class="pre">_sample_data</span></span><a class="headerlink" href="#pqg.QueryPool._sample_data" title="Link to this definition">¶</a></dt>
+<dd><p>Dictionary mapping entity names to sample DataFrames</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.QueryPool._results">
+<span class="sig-name descname"><span class="pre">_results</span></span><a class="headerlink" href="#pqg.QueryPool._results" title="Link to this definition">¶</a></dt>
+<dd><p>Cached query execution results (DataFrame/Series, error message)</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.QueryPool._with_status">
+<span class="sig-name descname"><span class="pre">_with_status</span></span><a class="headerlink" href="#pqg.QueryPool._with_status" title="Link to this definition">¶</a></dt>
+<dd><p>Whether to display progress bars during operations</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqg.QueryPool.__iter__">
+<span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pqg.html#pqg.query.Query" title="pqg.query.Query"><span class="pre">Query</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/pqg/query_pool.html#QueryPool.__iter__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pqg.QueryPool.__iter__" title="Link to this definition">¶</a></dt>
+<dd><p>Iterate over the queries in the pool.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqg.QueryPool.__len__">
+<span class="sig-name descname"><span class="pre">__len__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/pqg/query_pool.html#QueryPool.__len__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pqg.QueryPool.__len__" title="Link to this definition">¶</a></dt>
+<dd><p>Return the number of queries in the pool.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqg.QueryPool.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">force_execute</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_processes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Series</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/pqg/query_pool.html#QueryPool.execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pqg.QueryPool.execute" title="Link to this definition">¶</a></dt>
+<dd><p>Execute all queries against the sample data, either in parallel or sequentially.</p>
+<p>Evaluates queries using either multiprocessing for parallel execution or
+sequential processing. Results are cached to avoid re-execution unless
+explicitly requested.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>force_execute</strong> – If True, re-execute all queries even if results exist</p></li>
+<li><p><strong>num_processes</strong> – Number of parallel processes to use. Defaults to CPU count.
+Only used when multi_processing is True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of tuples containing (result, error) for each query</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqg.QueryPool.filter">
+<span class="sig-name descname"><span class="pre">filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filter_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pqg.html#pqg.arguments.QueryFilter" title="pqg.arguments.QueryFilter"><span class="pre">QueryFilter</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_execute</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/pqg/query_pool.html#QueryPool.filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pqg.QueryPool.filter" title="Link to this definition">¶</a></dt>
+<dd><p>Filter queries based on their execution results.</p>
+<p>Modifies the query pool in-place to keep only queries matching the filter
+criteria. Executes queries if results don’t exist.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filter_type</strong> – Criteria for keeping queries (NON_EMPTY, EMPTY, etc.)</p></li>
+<li><p><strong>force_execute</strong> – If True, re-execute queries before filtering</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqg.QueryPool.items">
+<span class="sig-name descname"><span class="pre">items</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pqg.html#pqg.query.Query" title="pqg.query.Query"><span class="pre">Query</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Series</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/pqg/query_pool.html#QueryPool.items"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pqg.QueryPool.items" title="Link to this definition">¶</a></dt>
+<dd><p>Iterate over query-result pairs.</p>
+<p>Each iteration yields a tuple containing a query and its execution result.
+If results haven’t been computed yet, executes the queries first.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Yields<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>tuple[Query, QueryResult]</em> – Pairs of (query, (result, error))</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqg.QueryPool.results">
+<span class="sig-name descname"><span class="pre">results</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Series</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/pqg/query_pool.html#QueryPool.results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pqg.QueryPool.results" title="Link to this definition">¶</a></dt>
+<dd><p>Iterate over query results.</p>
+<p>If results haven’t been computed yet, executes the queries first.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Yields<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>QueryResult</em> – Pairs of (result, error) for each query</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqg.QueryPool.save">
+<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">create_dirs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/pqg/query_pool.html#QueryPool.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pqg.QueryPool.save" title="Link to this definition">¶</a></dt>
+<dd><p>Save all queries to a file.</p>
+<p>Each query is saved on a separate line in its string representation.
+Empty queries are filtered out and whitespace is trimmed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>output_file</strong> – Path to the output file</p></li>
+<li><p><strong>create_dirs</strong> – If True, creates parent directories if needed</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqg.QueryPool.sort">
+<span class="sig-name descname"><span class="pre">sort</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/pqg/query_pool.html#QueryPool.sort"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pqg.QueryPool.sort" title="Link to this definition">¶</a></dt>
+<dd><p>Sort queries by their complexity.</p>
+<p>Orders queries based on their complexity score while maintaining the
+association between queries and their execution results if they exist.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqg.QueryPool.statistics">
+<span class="sig-name descname"><span class="pre">statistics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">force_execute</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pqg.query_pool.QueryStatistics" title="pqg.query_pool.QueryStatistics"><span class="pre">QueryStatistics</span></a></span></span><a class="reference internal" href="_modules/pqg/query_pool.html#QueryPool.statistics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pqg.QueryPool.statistics" title="Link to this definition">¶</a></dt>
+<dd><p>Generate comprehensive statistics about the query pool.</p>
+<p>Analyzes query characteristics and execution results to measure how well
+the generated queries match the target parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>force_execute</strong> – If True, re-execute queries before analysis</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Statistics comparing actual vs. target characteristics</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="queryfilter">
+<h3>QueryFilter<a class="headerlink" href="#queryfilter" title="Link to this heading">¶</a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="pqg.QueryFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pqg.</span></span><span class="sig-name descname"><span class="pre">QueryFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qualname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pqg/arguments.html#QueryFilter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pqg.QueryFilter" title="Link to this definition">¶</a></dt>
+<dd><p>Enum for query filter options</p>
+</dd></dl>
+
+</section>
+<section id="statistics">
+<h3>Statistics<a class="headerlink" href="#statistics" title="Link to this heading">¶</a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="pqg.query_pool.ExecutionStatistics">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pqg.query_pool.</span></span><span class="sig-name descname"><span class="pre">ExecutionStatistics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">successful:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">failed:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">non_empty:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">empty:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">errors:</span> <span class="pre">~collections.Counter[str]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pqg/query_pool.html#ExecutionStatistics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pqg.query_pool.ExecutionStatistics" title="Link to this definition">¶</a></dt>
+<dd><p>Statistics about query execution results.</p>
+<p>This class tracks success/failure rates and categorizes execution outcomes
+to provide insights into query generation quality.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.query_pool.ExecutionStatistics.successful">
+<span class="sig-name descname"><span class="pre">successful</span></span><a class="headerlink" href="#pqg.query_pool.ExecutionStatistics.successful" title="Link to this definition">¶</a></dt>
+<dd><p>Number of queries that executed without error</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.query_pool.ExecutionStatistics.failed">
+<span class="sig-name descname"><span class="pre">failed</span></span><a class="headerlink" href="#pqg.query_pool.ExecutionStatistics.failed" title="Link to this definition">¶</a></dt>
+<dd><p>Number of queries that raised an error</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.query_pool.ExecutionStatistics.non_empty">
+<span class="sig-name descname"><span class="pre">non_empty</span></span><a class="headerlink" href="#pqg.query_pool.ExecutionStatistics.non_empty" title="Link to this definition">¶</a></dt>
+<dd><p>Number of queries returning data (rows/values)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.query_pool.ExecutionStatistics.empty">
+<span class="sig-name descname"><span class="pre">empty</span></span><a class="headerlink" href="#pqg.query_pool.ExecutionStatistics.empty" title="Link to this definition">¶</a></dt>
+<dd><p>Number of queries returning empty results</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.query_pool.ExecutionStatistics.errors">
+<span class="sig-name descname"><span class="pre">errors</span></span><a class="headerlink" href="#pqg.query_pool.ExecutionStatistics.errors" title="Link to this definition">¶</a></dt>
+<dd><p>Count of each error type encountered</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Counter[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Example</p>
+<p>stats = ExecutionStatistics()
+stats.successful = 95
+stats.failed = 5
+stats.errors[“KeyError”] = 3
+print(stats)  # Shows execution summary with percentages</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pqg.query_pool.QueryStatistics">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pqg.query_pool.</span></span><span class="sig-name descname"><span class="pre">QueryStatistics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query_structure:</span> <span class="pre">~pqg.query_structure.QueryStructure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_queries:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queries_with_selection:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queries_with_projection:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queries_with_groupby:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queries_with_merge:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selection_conditions:</span> <span class="pre">~typing.List[int]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">projection_columns:</span> <span class="pre">~typing.List[int]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groupby_columns:</span> <span class="pre">~typing.List[int]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">merge_count:</span> <span class="pre">~typing.List[int]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">execution_results:</span> <span class="pre">~pqg.query_pool.ExecutionStatistics</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pqg/query_pool.html#QueryStatistics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pqg.query_pool.QueryStatistics" title="Link to this definition">¶</a></dt>
+<dd><p>Statistics comparing actual query characteristics against target parameters.</p>
+<p>Analyzes how closely generated queries match the desired structure parameters
+and collects distributions of various operation characteristics.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.query_pool.QueryStatistics.query_structure">
+<span class="sig-name descname"><span class="pre">query_structure</span></span><a class="headerlink" href="#pqg.query_pool.QueryStatistics.query_structure" title="Link to this definition">¶</a></dt>
+<dd><p>Target parameters for query generation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="pqg.html#pqg.query_structure.QueryStructure" title="pqg.query_structure.QueryStructure">pqg.query_structure.QueryStructure</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.query_pool.QueryStatistics.total_queries">
+<span class="sig-name descname"><span class="pre">total_queries</span></span><a class="headerlink" href="#pqg.query_pool.QueryStatistics.total_queries" title="Link to this definition">¶</a></dt>
+<dd><p>Total number of queries analyzed</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.query_pool.QueryStatistics.queries_with_selection">
+<span class="sig-name descname"><span class="pre">queries_with_selection</span></span><a class="headerlink" href="#pqg.query_pool.QueryStatistics.queries_with_selection" title="Link to this definition">¶</a></dt>
+<dd><p>Number of queries containing selection operations</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.query_pool.QueryStatistics.queries_with_projection">
+<span class="sig-name descname"><span class="pre">queries_with_projection</span></span><a class="headerlink" href="#pqg.query_pool.QueryStatistics.queries_with_projection" title="Link to this definition">¶</a></dt>
+<dd><p>Number of queries containing projection operations</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.query_pool.QueryStatistics.queries_with_groupby">
+<span class="sig-name descname"><span class="pre">queries_with_groupby</span></span><a class="headerlink" href="#pqg.query_pool.QueryStatistics.queries_with_groupby" title="Link to this definition">¶</a></dt>
+<dd><p>Number of queries containing groupby operations</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.query_pool.QueryStatistics.queries_with_merge">
+<span class="sig-name descname"><span class="pre">queries_with_merge</span></span><a class="headerlink" href="#pqg.query_pool.QueryStatistics.queries_with_merge" title="Link to this definition">¶</a></dt>
+<dd><p>Number of queries containing merge operations</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.query_pool.QueryStatistics.selection_conditions">
+<span class="sig-name descname"><span class="pre">selection_conditions</span></span><a class="headerlink" href="#pqg.query_pool.QueryStatistics.selection_conditions" title="Link to this definition">¶</a></dt>
+<dd><p>List of condition counts from each selection operation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.query_pool.QueryStatistics.projection_columns">
+<span class="sig-name descname"><span class="pre">projection_columns</span></span><a class="headerlink" href="#pqg.query_pool.QueryStatistics.projection_columns" title="Link to this definition">¶</a></dt>
+<dd><p>List of column counts from each projection operation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.query_pool.QueryStatistics.groupby_columns">
+<span class="sig-name descname"><span class="pre">groupby_columns</span></span><a class="headerlink" href="#pqg.query_pool.QueryStatistics.groupby_columns" title="Link to this definition">¶</a></dt>
+<dd><p>List of column counts from each groupby operation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.query_pool.QueryStatistics.merge_count">
+<span class="sig-name descname"><span class="pre">merge_count</span></span><a class="headerlink" href="#pqg.query_pool.QueryStatistics.merge_count" title="Link to this definition">¶</a></dt>
+<dd><p>List of merge counts from each query</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqg.query_pool.QueryStatistics.execution_results">
+<span class="sig-name descname"><span class="pre">execution_results</span></span><a class="headerlink" href="#pqg.query_pool.QueryStatistics.execution_results" title="Link to this definition">¶</a></dt>
+<dd><p>Statistics about query execution outcomes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pqg.query_pool.ExecutionStatistics" title="pqg.query_pool.ExecutionStatistics">pqg.query_pool.ExecutionStatistics</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+<section id="command-line-interface">
+<h2>Command Line Interface<a class="headerlink" href="#command-line-interface" title="Link to this heading">¶</a></h2>
+<p>The package provides a command-line interface through the <code class="docutils literal notranslate"><span class="pre">pqg</span></code> command.
+See the <a class="reference internal" href="quickstart.html#quickstart"><span class="std std-ref">Quickstart Guide</span></a> guide for common usage examples.</p>
+<section id="arguments">
+<h3>Arguments<a class="headerlink" href="#arguments" title="Link to this heading">¶</a></h3>
+<p>The following command-line arguments are available:</p>
+<dl class="option-list">
+<dt><kbd><span class="option">--disable-multi-processing</span></kbd></dt>
+<dd><p>Generate and execute queries sequentially</p>
+</dd>
+<dt><kbd><span class="option">--ensure-non-empty</span></kbd></dt>
+<dd><p>Only generate queries that return data</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>–filter {non-empty,empty,has-error,without-error}</dt><dd><p>Filter queries by execution results</p>
+</dd>
+</dl>
+<dl class="option-list">
+<dt><kbd><span class="option">--groupby-aggregation-probability <var>FLOAT</var></span></kbd></dt>
+<dd><p>Probability of including GROUP BY operations (default: 0.5)</p>
+</dd>
+<dt><kbd><span class="option">--max-groupby-columns <var>INT</var></span></kbd></dt>
+<dd><p>Maximum columns in GROUP BY clauses (default: 5)</p>
+</dd>
+<dt><kbd><span class="option">--max-merges <var>INT</var></span></kbd></dt>
+<dd><p>Maximum number of table joins (default: 2)</p>
+</dd>
+<dt><kbd><span class="option">--max-projection-columns <var>INT</var></span></kbd></dt>
+<dd><p>Maximum columns to select (default: 5)</p>
+</dd>
+<dt><kbd><span class="option">--max-selection-conditions <var>INT</var></span></kbd></dt>
+<dd><p>Maximum WHERE conditions (default: 5)</p>
+</dd>
+<dt><kbd><span class="option">--multi-line</span></kbd></dt>
+<dd><p>Format queries across multiple lines</p>
+</dd>
+<dt><kbd><span class="option">--num-queries <var>INT</var></span></kbd></dt>
+<dd><p>Number of queries to generate [required]</p>
+</dd>
+<dt><kbd><span class="option">--output-file <var>FILE</var></span></kbd></dt>
+<dd><p>Save queries to a file</p>
+</dd>
+<dt><kbd><span class="option">--projection-probability <var>FLOAT</var></span></kbd></dt>
+<dd><p>Probability of including projections (default: 0.5)</p>
+</dd>
+<dt><kbd><span class="option">--schema <var>FILE</var></span></kbd></dt>
+<dd><p>Schema definition file [required]</p>
+</dd>
+<dt><kbd><span class="option">--selection-probability <var>FLOAT</var></span></kbd></dt>
+<dd><p>Probability of including selections (default: 0.5)</p>
+</dd>
+<dt><kbd><span class="option">--sort</span></kbd></dt>
+<dd><p>Sort queries by complexity</p>
+</dd>
+<dt><kbd><span class="option">--verbose</span></kbd></dt>
+<dd><p>Print detailed information</p>
+</dd>
+</dl>
+</section>
+</section>
+<section id="error-handling">
+<h2>Error Handling<a class="headerlink" href="#error-handling" title="Link to this heading">¶</a></h2>
+<p>The following exceptions may be raised:</p>
+<dl class="simple">
+<dt>ValueError</dt><dd><p>Raised for invalid configurations or parameters</p>
+</dd>
+<dt>IOError</dt><dd><p>Raised for schema file read errors</p>
+</dd>
+</dl>
+</section>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Link to this heading">¶</a></h2>
+<p>See the <a class="reference internal" href="quickstart.html#quickstart"><span class="std std-ref">Quickstart Guide</span></a> guide for usage examples.</p>
+</section>
+</section>
+
+</div> 
+    </div>
+  </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">pqg</a></h1>
+   
+<p>
+  <iframe
+    src="https://ghbtns.com/github-btn.html?user=DISLMcGill&repo=pandas-query-generator&type=watch&count=true&size=large&v=2"
+    allowtransparency="true"
+    frameborder="0"
+    scrolling="0"
+    width="200px"
+    height="35px"
+  ></iframe>
+</p>
+   
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart Guide</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#schema-components">Schema Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#query-generation">Query Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#query-components">Query Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#query-management">Query Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#command-line-interface">Command Line Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#error-handling">Error Handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+</ul>
+ <div class="relations">
+  <h3>Related Topics</h3>
+  <ul>
+    <li>
+      <a href="index.html">Documentation overview</a>
+      <ul>
+            <li>
+              Previous:
+              <a
+                href="quickstart.html"
+                title="previous chapter"
+                >Quickstart Guide</a
+              >
+            </li>
+      </ul>
+    </li>
+  </ul>
+</div>    
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+<div class="footer">
+  &#169;2024, Liam Scalzulli. 
+  | Powered by
+  <a href="https://www.sphinx-doc.org/">Sphinx 8.1.3</a> &amp;
+  <a href="https://alabaster.readthedocs.io"
+    >Alabaster 1.0.0</a
+  >
+   |
+  <a
+    href="_sources/api_reference.rst.txt"
+    rel="nofollow"
+    >Page source</a
+  >
+</div>
+
+
+<a
+  href="https://github.com/DISLMcGill/pandas-query-generator"
+  class="github"
+>
+  <img
+    src="_static/github-banner.svg"
+    alt="Fork me on GitHub"
+    class="github"
+  />
+</a>
+ 
+  </body>
+</html>

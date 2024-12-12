@@ -1,266 +1,118 @@
-<!doctype html>
+<!DOCTYPE html>
 
 <html data-content_root="./" lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <meta content="width=device-width, initial-scale=1" name="viewport" />
-    <title>Welcome to pqg documentation — pqg documentation</title>
-    <link href="pygments.css?v=d1102ebc" rel="stylesheet" type="text/css" />
-    <link href="basic.css?v=686e5160" rel="stylesheet" type="text/css" />
-    <link href="alabaster.css?v=27fed22d" rel="stylesheet" type="text/css" />
-    <script src="documentation_options.js?v=5929fcd5"></script>
-    <script src="doctools.js?v=9bcbadda"></script>
-    <script src="sphinx_highlight.js?v=dc90522c"></script>
-    <link href="genindex.html" rel="index" title="Index" />
-    <link href="search.html" rel="search" title="Search" />
-    <link href="pqg.html" rel="next" title="pqg package" />
-    <link href="custom.css" rel="stylesheet" type="text/css" />
-  </head>
-  <body>
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body" role="main">
-            <section id="welcome-to-pqg-documentation">
-              <h1>
-                Welcome to pqg documentation<a
-                  class="headerlink"
-                  href="#welcome-to-pqg-documentation"
-                  title="Link to this heading"
-                  >¶</a
-                >
-              </h1>
-              <p>
-                pqg (Pandas Query Generator) is a tool for generating synthetic
-                pandas queries to help train machine learning models for query
-                cost estimation and cardinality prediction.
-              </p>
-              <section id="features">
-                <h2>
-                  Features<a
-                    class="headerlink"
-                    href="#features"
-                    title="Link to this heading"
-                    >¶</a
-                  >
-                </h2>
-                <ul class="simple">
-                  <li>
-                    <p>
-                      Generate complex pandas queries based on schema
-                      definitions
-                    </p>
-                  </li>
-                  <li>
-                    <p>
-                      Support for selections, projections, joins, and
-                      aggregations
-                    </p>
-                  </li>
-                  <li>
-                    <p>
-                      Configurable query complexity and operation probabilities
-                    </p>
-                  </li>
-                  <li><p>Built-in query execution and validation</p></li>
-                  <li><p>Both CLI and library interfaces</p></li>
-                </ul>
-              </section>
-              <section id="getting-started">
-                <h2>
-                  Getting Started<a
-                    class="headerlink"
-                    href="#getting-started"
-                    title="Link to this heading"
-                    >¶</a
-                  >
-                </h2>
-                <p>
-                  Check out the
-                  <span class="xref std std-ref">quickstart</span> guide or dive
-                  into the <span class="xref std std-ref">api_reference</span>.
-                </p>
-                <div class="toctree-wrapper compound">
-                  <p class="caption" role="heading">
-                    <span class="caption-text">Contents:</span>
-                  </p>
-                  <ul>
-                    <li class="toctree-l1">
-                      <a class="reference internal" href="pqg.html"
-                        >pqg package</a
-                      >
-                      <ul>
-                        <li class="toctree-l2">
-                          <a
-                            class="reference internal"
-                            href="pqg.html#submodules"
-                            >Submodules</a
-                          >
-                        </li>
-                        <li class="toctree-l2">
-                          <a
-                            class="reference internal"
-                            href="pqg.html#module-pqg.arguments"
-                            >pqg.arguments module</a
-                          >
-                        </li>
-                        <li class="toctree-l2">
-                          <a
-                            class="reference internal"
-                            href="pqg.html#module-pqg.entity"
-                            >pqg.entity module</a
-                          >
-                        </li>
-                        <li class="toctree-l2">
-                          <a
-                            class="reference internal"
-                            href="pqg.html#module-pqg.generator"
-                            >pqg.generator module</a
-                          >
-                        </li>
-                        <li class="toctree-l2">
-                          <a
-                            class="reference internal"
-                            href="pqg.html#module-pqg.group_by_aggregation"
-                            >pqg.group_by_aggregation module</a
-                          >
-                        </li>
-                        <li class="toctree-l2">
-                          <a
-                            class="reference internal"
-                            href="pqg.html#module-pqg.merge"
-                            >pqg.merge module</a
-                          >
-                        </li>
-                        <li class="toctree-l2">
-                          <a
-                            class="reference internal"
-                            href="pqg.html#module-pqg.operation"
-                            >pqg.operation module</a
-                          >
-                        </li>
-                        <li class="toctree-l2">
-                          <a
-                            class="reference internal"
-                            href="pqg.html#module-pqg.projection"
-                            >pqg.projection module</a
-                          >
-                        </li>
-                        <li class="toctree-l2">
-                          <a
-                            class="reference internal"
-                            href="pqg.html#module-pqg.query"
-                            >pqg.query module</a
-                          >
-                        </li>
-                        <li class="toctree-l2">
-                          <a
-                            class="reference internal"
-                            href="pqg.html#module-pqg.query_builder"
-                            >pqg.query_builder module</a
-                          >
-                        </li>
-                        <li class="toctree-l2">
-                          <a
-                            class="reference internal"
-                            href="pqg.html#module-pqg.query_pool"
-                            >pqg.query_pool module</a
-                          >
-                        </li>
-                        <li class="toctree-l2">
-                          <a
-                            class="reference internal"
-                            href="pqg.html#module-pqg.query_structure"
-                            >pqg.query_structure module</a
-                          >
-                        </li>
-                        <li class="toctree-l2">
-                          <a
-                            class="reference internal"
-                            href="pqg.html#module-pqg.schema"
-                            >pqg.schema module</a
-                          >
-                        </li>
-                        <li class="toctree-l2">
-                          <a
-                            class="reference internal"
-                            href="pqg.html#module-pqg.selection"
-                            >pqg.selection module</a
-                          >
-                        </li>
-                        <li class="toctree-l2">
-                          <a
-                            class="reference internal"
-                            href="pqg.html#module-pqg"
-                            >Module contents</a
-                          >
-                        </li>
-                      </ul>
-                    </li>
-                  </ul>
-                </div>
-              </section>
-            </section>
-          </div>
-        </div>
-      </div>
-      <div aria-label="Main" class="sphinxsidebar" role="navigation">
-        <div class="sphinxsidebarwrapper">
-          <h1 class="logo"><a href="#">pqg</a></h1>
-          <search id="searchbox" role="search" style="display: none">
-            <div class="searchformwrapper">
-              <form action="search.html" class="search" method="get">
-                <input
-                  aria-labelledby="searchlabel"
-                  autocapitalize="off"
-                  autocomplete="off"
-                  autocorrect="off"
-                  name="q"
-                  placeholder="Search"
-                  spellcheck="false"
-                  type="text"
-                />
-                <input type="submit" value="Go" />
-              </form>
-            </div>
-          </search>
-          <script>
-            document.getElementById('searchbox').style.display = 'block';
-          </script>
-          <h3>Navigation</h3>
-          <p class="caption" role="heading">
-            <span class="caption-text">Contents:</span>
-          </p>
-          <ul>
-            <li class="toctree-l1">
-              <a class="reference internal" href="pqg.html">pqg package</a>
-            </li>
-          </ul>
-          <div class="relations">
-            <h3>Related Topics</h3>
-            <ul>
-              <li>
-                <a href="#">Documentation overview</a>
-                <ul>
-                  <li>
-                    Next:
-                    <a href="pqg.html" title="next chapter">pqg package</a>
-                  </li>
-                </ul>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      ©2024, Liam Scalzulli. | Powered by
-      <a href="https://www.sphinx-doc.org/">Sphinx 8.1.3</a> &amp;
-      <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
-      |
-      <a href="index.rst.txt" rel="nofollow">Page source</a>
-    </div>
-  </body>
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Welcome to pqg documentation — pqg  documentation</title>
+<link href="pygments.css?v=d1102ebc" rel="stylesheet" type="text/css"/>
+<link href="basic.css?v=686e5160" rel="stylesheet" type="text/css"/>
+<link href="alabaster.css?v=ec641305" rel="stylesheet" type="text/css"/>
+<script src="documentation_options.js?v=5929fcd5"></script>
+<script src="doctools.js?v=9bcbadda"></script>
+<script src="sphinx_highlight.js?v=dc90522c"></script>
+<link href="genindex.html" rel="index" title="Index"/>
+<link href="search.html" rel="search" title="Search"/>
+<link href="quickstart.html" rel="next" title="Quickstart Guide"/>
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+</head><body>
+<div class="document">
+<div class="documentwrapper">
+<div class="bodywrapper">
+<div class="body" role="main">
+<section id="welcome-to-pqg-documentation">
+<h1>Welcome to pqg documentation<a class="headerlink" href="#welcome-to-pqg-documentation" title="Link to this heading">¶</a></h1>
+<p>pqg (Pandas Query Generator) is a tool for generating synthetic pandas queries to help
+train machine learning models for query cost estimation and cardinality prediction.</p>
+<section id="features">
+<h2>Features<a class="headerlink" href="#features" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Generate complex pandas queries based on schema definitions</p></li>
+<li><p>Support for selections, projections, joins, and aggregations</p></li>
+<li><p>Configurable query complexity and operation probabilities</p></li>
+<li><p>Built-in query execution and validation</p></li>
+<li><p>Both CLI and library interfaces</p></li>
+</ul>
+</section>
+<section id="getting-started">
+<h2>Getting Started<a class="headerlink" href="#getting-started" title="Link to this heading">¶</a></h2>
+<p>Check out the <a class="reference internal" href="quickstart.html#quickstart"><span class="std std-ref">Quickstart Guide</span></a> guide or dive into the <a class="reference internal" href="api_reference.html#api-reference"><span class="std std-ref">API Reference</span></a>.</p>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#basic-usage">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#schema-definition">Schema Definition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#advanced-usage">Advanced Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#next-steps">Next Steps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api_reference.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api_reference.html#schema-components">Schema Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference.html#query-generation">Query Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference.html#query-components">Query Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference.html#query-management">Query Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference.html#command-line-interface">Command Line Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference.html#error-handling">Error Handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference.html#examples">Examples</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+</section>
+</div>
+</div>
+</div>
+<div aria-label="Main" class="sphinxsidebar" role="navigation">
+<div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="#">pqg</a></h1>
+<p>
+<iframe allowtransparency="true" frameborder="0" height="35px" scrolling="0" src="https://ghbtns.com/github-btn.html?user=DISLMcGill&amp;repo=pandas-query-generator&amp;type=watch&amp;count=true&amp;size=large&amp;v=2" width="200px"></iframe>
+</p>
+<search id="searchbox" role="search" style="display: none">
+<div class="searchformwrapper">
+<form action="search.html" class="search" method="get">
+<input aria-labelledby="searchlabel" autocapitalize="off" autocomplete="off" autocorrect="off" name="q" placeholder="Search" spellcheck="false" type="text"/>
+<input type="submit" value="Go"/>
+</form>
+</div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_reference.html">API Reference</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+<li>
+<a href="#">Documentation overview</a>
+<ul>
+<li>
+              Next:
+              <a href="quickstart.html" title="next chapter">Quickstart Guide</a>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="clearer"></div>
+</div>
+<div class="footer">
+  ©2024, Liam Scalzulli. 
+  | Powered by
+  <a href="https://www.sphinx-doc.org/">Sphinx 8.1.3</a> &amp;
+  <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+   |
+  <a href="index.rst.txt" rel="nofollow">Page source</a>
+</div>
+<a class="github" href="https://github.com/DISLMcGill/pandas-query-generator">
+<img alt="Fork me on GitHub" class="github" src="github-banner.svg"/>
+</a>
+</body>
 </html>
