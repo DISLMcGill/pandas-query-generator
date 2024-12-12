@@ -163,26 +163,13 @@ print(*query_pool, sep='\n\n')
 ```
 
 Comprehensive internal documentation is generated using the
-[sphinx](https://www.sphinx-doc.org/en/master/index.html#) Python package.
-
-You can generate the documentation using the following command in the project root:
-
-```bash
-cd docs && uv run sphinx-build -M html source build
-```
-
-...then serve it with:
-
-```bash
-python3 -m http.server 8000 --directory docs/build/html
-```
-
-This will serve the documentation files at `http://localhost:8000`. Open it up
-in your preferred browser to see the generated site.
+[sphinx](https://www.sphinx-doc.org/en/master/index.html#) Python package, and a
+live instance is hosted at
+[https://dislmcgill.github.io/pandas-query-generator/docs/index.html](https://dislmcgill.github.io/pandas-query-generator/docs/index.html).
 
 ## How does it work?
 
-Check out the paper in the `/docs` folder for more information!
+Check out the [paper](https://github.com/DISLMcGill/pandas-query-generator/blob/master/docs/paper.pdf) in the `/docs` folder for more information!
 
 ## Prior Art
 
