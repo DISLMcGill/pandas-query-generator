@@ -6,7 +6,7 @@ import { ModeToggle } from './mode-toggle';
 export const Navbar = () => (
   <div className='flex items-center justify-between bg-card p-4'>
     <div>
-      <a href='/'>
+      <a href='/pandas-query-generator'>
         <p className='text-3xl font-semibold'>Pandas Query Generator 🐼</p>
       </a>
       <p className='text-md text-muted-foreground'>
