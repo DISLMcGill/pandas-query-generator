@@ -1,32 +1,31 @@
 <!doctype html>
 
-<html lang="en" data-content_root="../../">
+<html data-content_root="../../" lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pqg.arguments &#8212; pqg documentation</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>pqg.arguments — pqg documentation</title>
     <link
-      rel="stylesheet"
-      type="text/css"
       href="../../_static/pygments.css?v=d1102ebc"
-    />
-    <link
       rel="stylesheet"
       type="text/css"
+    />
+    <link
       href="../../_static/basic.css?v=686e5160"
-    />
-    <link
       rel="stylesheet"
       type="text/css"
+    />
+    <link
       href="../../_static/alabaster.css?v=27fed22d"
+      rel="stylesheet"
+      type="text/css"
     />
     <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" />
-
-    <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+    <link href="../../genindex.html" rel="index" title="Index" />
+    <link href="../../search.html" rel="search" title="Search" />
+    <link href="../../_static/custom.css" rel="stylesheet" type="text/css" />
   </head>
   <body>
     <div class="document">
@@ -45,9 +44,9 @@
 <div class="viewcode-block" id="HelpFormatter">
 <a class="viewcode-back" href="../../pqg.html#pqg.arguments.HelpFormatter">[docs]</a>
 <span class="k">class</span> <span class="nc">HelpFormatter</span><span class="p">(</span><span class="n">argparse</span><span class="o">.</span><span class="n">HelpFormatter</span><span class="p">):</span>
-<span class="w">  </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">  </span><span class="sd">"""</span>
 <span class="sd">  Custom help formatter that aligns option strings and help text with multi-line usage.</span>
-<span class="sd">  &quot;&quot;&quot;</span>
+<span class="sd">  """</span>
 
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
@@ -59,63 +58,63 @@
     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">prog</span><span class="p">,</span> <span class="n">indent_increment</span><span class="p">,</span> <span class="n">max_help_position</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span>
 
   <span class="k">def</span> <span class="nf">_format_usage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">usage</span><span class="p">,</span> <span class="n">actions</span><span class="p">,</span> <span class="n">groups</span><span class="p">,</span> <span class="n">prefix</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Format usage section with one flag per line.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">actions_str</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-      <span class="sa">f</span><span class="s1">&#39;[</span><span class="si">{</span><span class="n">a</span><span class="o">.</span><span class="n">option_strings</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">]&#39;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">a</span><span class="o">.</span><span class="n">required</span> <span class="k">else</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">a</span><span class="o">.</span><span class="n">option_strings</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span>
+<span class="sd">    """</span>
+    <span class="n">actions_str</span> <span class="o">=</span> <span class="s1">' '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+      <span class="sa">f</span><span class="s1">'[</span><span class="si">{</span><span class="n">a</span><span class="o">.</span><span class="n">option_strings</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">]'</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">a</span><span class="o">.</span><span class="n">required</span> <span class="k">else</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">a</span><span class="o">.</span><span class="n">option_strings</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">'</span>
       <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="p">[</span><span class="n">a</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">actions</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">argparse</span><span class="o">.</span><span class="n">_HelpAction</span><span class="p">)]</span>
     <span class="p">)</span>
 
-    <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;usage: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_prog</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">actions_str</span><span class="si">}</span><span class="se">\n\n</span><span class="s1">&#39;</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s1">'usage: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_prog</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">actions_str</span><span class="si">}</span><span class="se">\n\n</span><span class="s1">'</span>
 
   <span class="k">def</span> <span class="nf">_format_action_invocation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Action</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Formats the action invocation with simplified display.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">action</span><span class="o">.</span><span class="n">option_strings</span><span class="p">:</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_metavar_formatter</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">action</span><span class="o">.</span><span class="n">dest</span><span class="p">)(</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
     <span class="k">if</span> <span class="n">action</span><span class="o">.</span><span class="n">option_strings</span><span class="p">:</span>
       <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">argparse</span><span class="o">.</span><span class="n">_HelpAction</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s1">&#39;-h --help&#39;</span>
+        <span class="k">return</span> <span class="s1">'-h --help'</span>
       <span class="k">if</span> <span class="n">action</span><span class="o">.</span><span class="n">nargs</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">action</span><span class="o">.</span><span class="n">option_strings</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
       <span class="k">if</span> <span class="n">action</span><span class="o">.</span><span class="n">required</span><span class="p">:</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">action</span><span class="o">.</span><span class="n">option_strings</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">action</span><span class="o">.</span><span class="n">dest</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">action</span><span class="o">.</span><span class="n">option_strings</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">action</span><span class="o">.</span><span class="n">dest</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s1">'</span>
       <span class="k">return</span> <span class="n">action</span><span class="o">.</span><span class="n">option_strings</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
-    <span class="k">return</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">return</span> <span class="s1">''</span>
 
   <span class="k">def</span> <span class="nf">_format_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Action</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Formats each action (argument) with help text.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">help_text</span> <span class="o">=</span> <span class="p">(</span>
-      <span class="s1">&#39;Show this help message and exit&#39;</span>
+      <span class="s1">'Show this help message and exit'</span>
       <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">argparse</span><span class="o">.</span><span class="n">_HelpAction</span><span class="p">)</span>
-      <span class="k">else</span> <span class="p">(</span><span class="n">action</span><span class="o">.</span><span class="n">help</span> <span class="ow">or</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+      <span class="k">else</span> <span class="p">(</span><span class="n">action</span><span class="o">.</span><span class="n">help</span> <span class="ow">or</span> <span class="s1">''</span><span class="p">)</span>
     <span class="p">)</span>
 
     <span class="k">if</span> <span class="n">action</span><span class="o">.</span><span class="n">default</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">action</span><span class="o">.</span><span class="n">default</span> <span class="o">!=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">SUPPRESS</span><span class="p">:</span>
       <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">action</span><span class="o">.</span><span class="n">default</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
-        <span class="n">help_text</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">help_text</span><span class="si">}</span><span class="s1"> (default: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">action</span><span class="o">.</span><span class="n">default</span><span class="p">)</span><span class="si">}</span><span class="s1">)&#39;</span>
+        <span class="n">help_text</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">help_text</span><span class="si">}</span><span class="s1"> (default: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">action</span><span class="o">.</span><span class="n">default</span><span class="p">)</span><span class="si">}</span><span class="s1">)'</span>
       <span class="k">else</span><span class="p">:</span>
-        <span class="n">help_text</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">help_text</span><span class="si">}</span><span class="s1"> (default: </span><span class="si">{</span><span class="n">action</span><span class="o">.</span><span class="n">default</span><span class="si">}</span><span class="s1">)&#39;</span>
+        <span class="n">help_text</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">help_text</span><span class="si">}</span><span class="s1"> (default: </span><span class="si">{</span><span class="n">action</span><span class="o">.</span><span class="n">default</span><span class="si">}</span><span class="s1">)'</span>
 
-    <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;  </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_format_action_invocation</span><span class="p">(</span><span class="n">action</span><span class="p">)</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">help_text</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span></div>
+    <span class="k">return</span> <span class="sa">f</span><span class="s1">'  </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_format_action_invocation</span><span class="p">(</span><span class="n">action</span><span class="p">)</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">help_text</span><span class="si">}</span><span class="se">\n</span><span class="s1">'</span></div>
 
 
 
 <div class="viewcode-block" id="QueryFilter">
 <a class="viewcode-back" href="../../pqg.html#pqg.arguments.QueryFilter">[docs]</a>
 <span class="k">class</span> <span class="nc">QueryFilter</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
-<span class="w">  </span><span class="sd">&quot;&quot;&quot;Enum for query filter options&quot;&quot;&quot;</span>
+<span class="w">  </span><span class="sd">"""Enum for query filter options"""</span>
 
-  <span class="n">NON_EMPTY</span> <span class="o">=</span> <span class="s1">&#39;non-empty&#39;</span>
-  <span class="n">EMPTY</span> <span class="o">=</span> <span class="s1">&#39;empty&#39;</span>
-  <span class="n">HAS_ERROR</span> <span class="o">=</span> <span class="s1">&#39;has-error&#39;</span>
-  <span class="n">WITHOUT_ERROR</span> <span class="o">=</span> <span class="s1">&#39;without-error&#39;</span></div>
+  <span class="n">NON_EMPTY</span> <span class="o">=</span> <span class="s1">'non-empty'</span>
+  <span class="n">EMPTY</span> <span class="o">=</span> <span class="s1">'empty'</span>
+  <span class="n">HAS_ERROR</span> <span class="o">=</span> <span class="s1">'has-error'</span>
+  <span class="n">WITHOUT_ERROR</span> <span class="o">=</span> <span class="s1">'without-error'</span></div>
 
 
 
@@ -123,9 +122,9 @@
 <a class="viewcode-back" href="../../pqg.html#pqg.arguments.Arguments">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">Arguments</span><span class="p">:</span>
-<span class="w">  </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">  </span><span class="sd">"""</span>
 <span class="sd">  A wrapper class providing concrete types for parsed command-line arguments.</span>
-<span class="sd">  &quot;&quot;&quot;</span>
+<span class="sd">  """</span>
 
   <span class="n">disable_multi_processing</span><span class="p">:</span> <span class="nb">bool</span>
   <span class="nb">filter</span><span class="p">:</span> <span class="n">QueryFilter</span>
@@ -146,121 +145,121 @@
 <div class="viewcode-block" id="Arguments.from_args">
 <a class="viewcode-back" href="../../pqg.html#pqg.arguments.Arguments.from_args">[docs]</a>
   <span class="nd">@staticmethod</span>
-  <span class="k">def</span> <span class="nf">from_args</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="s1">&#39;Arguments&#39;</span><span class="p">:</span>
+  <span class="k">def</span> <span class="nf">from_args</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="s1">'Arguments'</span><span class="p">:</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span>
-      <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Pandas Query Generator CLI&#39;</span><span class="p">,</span>
+      <span class="n">description</span><span class="o">=</span><span class="s1">'Pandas Query Generator CLI'</span><span class="p">,</span>
       <span class="n">formatter_class</span><span class="o">=</span><span class="n">HelpFormatter</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-      <span class="s1">&#39;--disable-multi-processing&#39;</span><span class="p">,</span>
-      <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span>
-      <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Generate and execute queries in a consecutive fashion&#39;</span><span class="p">,</span>
+      <span class="s1">'--disable-multi-processing'</span><span class="p">,</span>
+      <span class="n">action</span><span class="o">=</span><span class="s1">'store_true'</span><span class="p">,</span>
+      <span class="n">help</span><span class="o">=</span><span class="s1">'Generate and execute queries in a consecutive fashion'</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-      <span class="s1">&#39;--filter&#39;</span><span class="p">,</span>
+      <span class="s1">'--filter'</span><span class="p">,</span>
       <span class="nb">type</span><span class="o">=</span><span class="n">QueryFilter</span><span class="p">,</span>
       <span class="n">choices</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">QueryFilter</span><span class="p">),</span>
       <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
       <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-      <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Filter generated queries by specific criteria&#39;</span><span class="p">,</span>
+      <span class="n">help</span><span class="o">=</span><span class="s1">'Filter generated queries by specific criteria'</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-      <span class="s1">&#39;--groupby-aggregation-probability&#39;</span><span class="p">,</span>
+      <span class="s1">'--groupby-aggregation-probability'</span><span class="p">,</span>
       <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
       <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
       <span class="n">default</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
-      <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Probability of including groupby aggregation operations&#39;</span><span class="p">,</span>
+      <span class="n">help</span><span class="o">=</span><span class="s1">'Probability of including groupby aggregation operations'</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-      <span class="s1">&#39;--max-groupby-columns&#39;</span><span class="p">,</span>
+      <span class="s1">'--max-groupby-columns'</span><span class="p">,</span>
       <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
       <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
       <span class="n">default</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
-      <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Maximum number of columns in group by operations&#39;</span><span class="p">,</span>
+      <span class="n">help</span><span class="o">=</span><span class="s1">'Maximum number of columns in group by operations'</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-      <span class="s1">&#39;--max-merges&#39;</span><span class="p">,</span>
+      <span class="s1">'--max-merges'</span><span class="p">,</span>
       <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
       <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
       <span class="n">default</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-      <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Maximum number of table merges allowed&#39;</span><span class="p">,</span>
+      <span class="n">help</span><span class="o">=</span><span class="s1">'Maximum number of table merges allowed'</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-      <span class="s1">&#39;--max-projection-columns&#39;</span><span class="p">,</span>
+      <span class="s1">'--max-projection-columns'</span><span class="p">,</span>
       <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
       <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
       <span class="n">default</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
-      <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Maximum number of columns to project&#39;</span><span class="p">,</span>
+      <span class="n">help</span><span class="o">=</span><span class="s1">'Maximum number of columns to project'</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-      <span class="s1">&#39;--max-selection-conditions&#39;</span><span class="p">,</span>
+      <span class="s1">'--max-selection-conditions'</span><span class="p">,</span>
       <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
       <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
       <span class="n">default</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
-      <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Maximum number of conditions in selection operations&#39;</span><span class="p">,</span>
+      <span class="n">help</span><span class="o">=</span><span class="s1">'Maximum number of conditions in selection operations'</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-      <span class="s1">&#39;--multi-line&#39;</span><span class="p">,</span>
-      <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span>
-      <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Format queries on multiple lines&#39;</span><span class="p">,</span>
+      <span class="s1">'--multi-line'</span><span class="p">,</span>
+      <span class="n">action</span><span class="o">=</span><span class="s1">'store_true'</span><span class="p">,</span>
+      <span class="n">help</span><span class="o">=</span><span class="s1">'Format queries on multiple lines'</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-      <span class="s1">&#39;--num-queries&#39;</span><span class="p">,</span>
+      <span class="s1">'--num-queries'</span><span class="p">,</span>
       <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
       <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-      <span class="n">help</span><span class="o">=</span><span class="s1">&#39;The number of queries to generate&#39;</span><span class="p">,</span>
+      <span class="n">help</span><span class="o">=</span><span class="s1">'The number of queries to generate'</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-      <span class="s1">&#39;--output-file&#39;</span><span class="p">,</span>
+      <span class="s1">'--output-file'</span><span class="p">,</span>
       <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
       <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-      <span class="n">default</span><span class="o">=</span><span class="s1">&#39;queries.txt&#39;</span><span class="p">,</span>
-      <span class="n">help</span><span class="o">=</span><span class="s1">&#39;The name of the file to write the results to&#39;</span><span class="p">,</span>
+      <span class="n">default</span><span class="o">=</span><span class="s1">'queries.txt'</span><span class="p">,</span>
+      <span class="n">help</span><span class="o">=</span><span class="s1">'The name of the file to write the results to'</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-      <span class="s1">&#39;--projection-probability&#39;</span><span class="p">,</span>
+      <span class="s1">'--projection-probability'</span><span class="p">,</span>
       <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
       <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
       <span class="n">default</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
-      <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Probability of including projection operations&#39;</span><span class="p">,</span>
+      <span class="n">help</span><span class="o">=</span><span class="s1">'Probability of including projection operations'</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-      <span class="s1">&#39;--schema&#39;</span><span class="p">,</span>
+      <span class="s1">'--schema'</span><span class="p">,</span>
       <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
       <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-      <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Path to the relational schema JSON file&#39;</span><span class="p">,</span>
+      <span class="n">help</span><span class="o">=</span><span class="s1">'Path to the relational schema JSON file'</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-      <span class="s1">&#39;--selection-probability&#39;</span><span class="p">,</span>
+      <span class="s1">'--selection-probability'</span><span class="p">,</span>
       <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
       <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
       <span class="n">default</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
-      <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Probability of including selection operations&#39;</span><span class="p">,</span>
+      <span class="n">help</span><span class="o">=</span><span class="s1">'Probability of including selection operations'</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-      <span class="s1">&#39;--sort&#39;</span><span class="p">,</span>
-      <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span>
-      <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Whether or not to sort the queries by complexity&#39;</span><span class="p">,</span>
+      <span class="s1">'--sort'</span><span class="p">,</span>
+      <span class="n">action</span><span class="o">=</span><span class="s1">'store_true'</span><span class="p">,</span>
+      <span class="n">help</span><span class="o">=</span><span class="s1">'Whether or not to sort the queries by complexity'</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-      <span class="s1">&#39;--verbose&#39;</span><span class="p">,</span>
-      <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span>
-      <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Print extra generation information and statistics&#39;</span><span class="p">,</span>
+      <span class="s1">'--verbose'</span><span class="p">,</span>
+      <span class="n">action</span><span class="o">=</span><span class="s1">'store_true'</span><span class="p">,</span>
+      <span class="n">help</span><span class="o">=</span><span class="s1">'Print extra generation information and statistics'</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">Arguments</span><span class="p">(</span><span class="o">**</span><span class="nb">vars</span><span class="p">(</span><span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()))</span></div>
@@ -271,22 +270,21 @@
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+      <div aria-label="Main" class="sphinxsidebar" role="navigation">
         <div class="sphinxsidebarwrapper">
           <h1 class="logo"><a href="../../index.html">pqg</a></h1>
-
-          <search id="searchbox" style="display: none" role="search">
+          <search id="searchbox" role="search" style="display: none">
             <div class="searchformwrapper">
-              <form class="search" action="../../search.html" method="get">
+              <form action="../../search.html" class="search" method="get">
                 <input
-                  type="text"
-                  name="q"
                   aria-labelledby="searchlabel"
+                  autocapitalize="off"
                   autocomplete="off"
                   autocorrect="off"
-                  autocapitalize="off"
-                  spellcheck="false"
+                  name="q"
                   placeholder="Search"
+                  spellcheck="false"
+                  type="text"
                 />
                 <input type="submit" value="Go" />
               </form>
@@ -306,7 +304,6 @@
               >
             </li>
           </ul>
-
           <div class="relations">
             <h3>Related Topics</h3>
             <ul>
@@ -326,7 +323,7 @@
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &#169;2024, Liam Scalzulli. | Powered by
+      ©2024, Liam Scalzulli. | Powered by
       <a href="https://www.sphinx-doc.org/">Sphinx 8.1.3</a> &amp;
       <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
     </div>

@@ -1,32 +1,31 @@
 <!doctype html>
 
-<html lang="en" data-content_root="../../">
+<html data-content_root="../../" lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pqg.query &#8212; pqg documentation</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>pqg.query — pqg documentation</title>
     <link
-      rel="stylesheet"
-      type="text/css"
       href="../../_static/pygments.css?v=d1102ebc"
-    />
-    <link
       rel="stylesheet"
       type="text/css"
+    />
+    <link
       href="../../_static/basic.css?v=686e5160"
-    />
-    <link
       rel="stylesheet"
       type="text/css"
+    />
+    <link
       href="../../_static/alabaster.css?v=27fed22d"
+      rel="stylesheet"
+      type="text/css"
     />
     <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" />
-
-    <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+    <link href="../../genindex.html" rel="index" title="Index" />
+    <link href="../../search.html" rel="search" title="Search" />
+    <link href="../../_static/custom.css" rel="stylesheet" type="text/css" />
   </head>
   <body>
     <div class="document">
@@ -48,7 +47,7 @@
 <div class="viewcode-block" id="Query">
 <a class="viewcode-back" href="../../pqg.html#pqg.query.Query">[docs]</a>
 <span class="k">class</span> <span class="nc">Query</span><span class="p">:</span>
-<span class="w">  </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">  </span><span class="sd">"""</span>
 <span class="sd">  Represents a complete database query with tracking for query complexity.</span>
 
 <span class="sd">  A query consists of a target entity and a sequence of operations to be</span>
@@ -61,7 +60,7 @@
 <span class="sd">    multi_line (bool): Whether to format output across multiple lines.</span>
 <span class="sd">    available_columns (Set[str]): Columns available for operations.</span>
 <span class="sd">    complexity (int): Measure of query complexity based on merge operations.</span>
-<span class="sd">  &quot;&quot;&quot;</span>
+<span class="sd">  """</span>
 
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
@@ -79,28 +78,28 @@
     <span class="k">return</span> <span class="p">(</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">format_multi_line</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
       <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">multi_line</span>
-      <span class="k">else</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="si">}{</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="p">)</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">operations</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+      <span class="k">else</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="si">}{</span><span class="s1">''</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="p">)</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">operations</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span>
     <span class="p">)</span>
 
   <span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Hash based on complexity and string representation.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Hash based on complexity and string representation."""</span>
     <span class="k">return</span> <span class="nb">hash</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">complexity</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)))</span>
 
   <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Equality comparison based on complexity and string representation.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Equality comparison based on complexity and string representation."""</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Query</span><span class="p">):</span>
       <span class="k">return</span> <span class="bp">NotImplemented</span>
     <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">complexity</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span> <span class="o">==</span> <span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">complexity</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">other</span><span class="p">))</span>
 
   <span class="k">def</span> <span class="fm">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Less than comparison based on complexity and string representation.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Less than comparison based on complexity and string representation."""</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Query</span><span class="p">):</span>
       <span class="k">return</span> <span class="bp">NotImplemented</span>
     <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">complexity</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">complexity</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">other</span><span class="p">))</span>
 
   <span class="nd">@property</span>
   <span class="k">def</span> <span class="nf">complexity</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Calculate query complexity based on all operations and their details.</span>
 
 <span class="sd">    Complexity is determined by:</span>
@@ -114,7 +113,7 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        int: Complexity score for the query</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span> <span class="nf">get_merge_complexity</span><span class="p">(</span><span class="n">op</span><span class="p">:</span> <span class="n">Operation</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
       <span class="k">return</span> <span class="p">(</span>
@@ -132,7 +131,7 @@
         <span class="k">return</span> <span class="mi">2</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">group_by_columns</span><span class="p">)</span>
       <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">Merge</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">get_merge_complexity</span><span class="p">(</span><span class="n">op</span><span class="p">)</span>
-      <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unsupported operation type&#39;</span><span class="p">)</span>
+      <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Unsupported operation type'</span><span class="p">)</span>
 
     <span class="n">base_complexity</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">operations</span><span class="p">)</span>
 
@@ -142,12 +141,12 @@
 
   <span class="nd">@property</span>
   <span class="k">def</span> <span class="nf">merge_count</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Count the total number of merge operations in the query, including nested merges.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">      int: Total number of merge operations</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span>
       <span class="mi">1</span> <span class="o">+</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">nested_op</span> <span class="ow">in</span> <span class="n">op</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">operations</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">nested_op</span><span class="p">,</span> <span class="n">Merge</span><span class="p">))</span>
       <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">Merge</span><span class="p">)</span>
@@ -157,7 +156,7 @@
 
   <span class="nd">@property</span>
   <span class="k">def</span> <span class="nf">merge_entities</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Get the set of all entities involved in this query, including</span>
 <span class="sd">    the base entity and all merged entities.</span>
 
@@ -173,9 +172,9 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">      Set[str]:</span>
-<span class="sd">        A set of entity names (table names) that are part of this query&#39;s join graph.</span>
+<span class="sd">        A set of entity names (table names) that are part of this query's join graph.</span>
 <span class="sd">        Includes both the base entity and all merged entities.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">merged</span> <span class="o">=</span> <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="p">}</span>
 
     <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">operations</span><span class="p">:</span>
@@ -187,7 +186,7 @@
 <div class="viewcode-block" id="Query.format_multi_line">
 <a class="viewcode-back" href="../../pqg.html#pqg.query.Query.format_multi_line">[docs]</a>
   <span class="k">def</span> <span class="nf">format_multi_line</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_counter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Format the query across multiple lines for better readability.</span>
 
 <span class="sd">    Transforms the query into a sequence of DataFrame operations where each</span>
@@ -205,33 +204,33 @@
 
 <span class="sd">    Example:</span>
 <span class="sd">      For a query with multiple operations, might return:</span>
-<span class="sd">      (&quot;df1 = customer[customer[&#39;age&#39;] &gt;= 25]\n&quot;</span>
-<span class="sd">       &quot;df2 = df1.merge(orders, left_on=&#39;id&#39;, right_on=&#39;customer_id&#39;)&quot;,</span>
+<span class="sd">      ("df1 = customer[customer['age'] &gt;= 25]\n"</span>
+<span class="sd">       "df2 = df1.merge(orders, left_on='id', right_on='customer_id')",</span>
 <span class="sd">       3)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">lines</span><span class="p">,</span> <span class="n">df_counter</span><span class="p">,</span> <span class="n">current_df</span> <span class="o">=</span> <span class="p">[],</span> <span class="n">start_counter</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">entity</span>
 
     <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">operations</span><span class="p">:</span>
       <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="p">(</span><span class="n">Selection</span><span class="p">,</span> <span class="n">Projection</span><span class="p">,</span> <span class="n">GroupByAggregation</span><span class="p">)):</span>
-        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;df</span><span class="si">{</span><span class="n">df_counter</span><span class="si">}</span><span class="s1"> = </span><span class="si">{</span><span class="n">current_df</span><span class="si">}{</span><span class="n">op</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">current_df</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="n">current_df</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;df</span><span class="si">{</span><span class="n">df_counter</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">'df</span><span class="si">{</span><span class="n">df_counter</span><span class="si">}</span><span class="s1"> = </span><span class="si">{</span><span class="n">current_df</span><span class="si">}{</span><span class="n">op</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">current_df</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+        <span class="n">current_df</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'df</span><span class="si">{</span><span class="n">df_counter</span><span class="si">}</span><span class="s1">'</span>
         <span class="n">df_counter</span> <span class="o">+=</span> <span class="mi">1</span>
       <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">Merge</span><span class="p">):</span>
         <span class="n">right_statements</span><span class="p">,</span> <span class="n">right_final_counter</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">format_multi_line</span><span class="p">(</span><span class="n">df_counter</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">right_statements</span><span class="p">:</span>
-          <span class="n">lines</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">right_statements</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">))</span>
+          <span class="n">lines</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">right_statements</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">))</span>
 
-        <span class="n">right_df</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;df</span><span class="si">{</span><span class="n">right_final_counter</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">right_df</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'df</span><span class="si">{</span><span class="n">right_final_counter</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="s1">'</span>
 
         <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-          <span class="sa">f</span><span class="s1">&#39;df</span><span class="si">{</span><span class="n">right_final_counter</span><span class="si">}</span><span class="s1"> = </span><span class="si">{</span><span class="n">current_df</span><span class="si">}</span><span class="s1">.merge(</span><span class="si">{</span><span class="n">right_df</span><span class="si">}</span><span class="s1">, &#39;</span>
-          <span class="sa">f</span><span class="s1">&#39;left_on=</span><span class="si">{</span><span class="n">op</span><span class="o">.</span><span class="n">left_on</span><span class="si">}</span><span class="s1">, right_on=</span><span class="si">{</span><span class="n">op</span><span class="o">.</span><span class="n">right_on</span><span class="si">}</span><span class="s1">)&#39;</span>
+          <span class="sa">f</span><span class="s1">'df</span><span class="si">{</span><span class="n">right_final_counter</span><span class="si">}</span><span class="s1"> = </span><span class="si">{</span><span class="n">current_df</span><span class="si">}</span><span class="s1">.merge(</span><span class="si">{</span><span class="n">right_df</span><span class="si">}</span><span class="s1">, '</span>
+          <span class="sa">f</span><span class="s1">'left_on=</span><span class="si">{</span><span class="n">op</span><span class="o">.</span><span class="n">left_on</span><span class="si">}</span><span class="s1">, right_on=</span><span class="si">{</span><span class="n">op</span><span class="o">.</span><span class="n">right_on</span><span class="si">}</span><span class="s1">)'</span>
         <span class="p">)</span>
 
-        <span class="n">current_df</span><span class="p">,</span> <span class="n">df_counter</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;df</span><span class="si">{</span><span class="n">right_final_counter</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">right_final_counter</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">current_df</span><span class="p">,</span> <span class="n">df_counter</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'df</span><span class="si">{</span><span class="n">right_final_counter</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span> <span class="n">right_final_counter</span> <span class="o">+</span> <span class="mi">1</span>
 
-    <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">),</span> <span class="n">df_counter</span></div>
+    <span class="k">return</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">),</span> <span class="n">df_counter</span></div>
 </div>
 
 </pre>
@@ -239,22 +238,21 @@
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+      <div aria-label="Main" class="sphinxsidebar" role="navigation">
         <div class="sphinxsidebarwrapper">
           <h1 class="logo"><a href="../../index.html">pqg</a></h1>
-
-          <search id="searchbox" style="display: none" role="search">
+          <search id="searchbox" role="search" style="display: none">
             <div class="searchformwrapper">
-              <form class="search" action="../../search.html" method="get">
+              <form action="../../search.html" class="search" method="get">
                 <input
-                  type="text"
-                  name="q"
                   aria-labelledby="searchlabel"
+                  autocapitalize="off"
                   autocomplete="off"
                   autocorrect="off"
-                  autocapitalize="off"
-                  spellcheck="false"
+                  name="q"
                   placeholder="Search"
+                  spellcheck="false"
+                  type="text"
                 />
                 <input type="submit" value="Go" />
               </form>
@@ -274,7 +272,6 @@
               >
             </li>
           </ul>
-
           <div class="relations">
             <h3>Related Topics</h3>
             <ul>
@@ -294,7 +291,7 @@
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &#169;2024, Liam Scalzulli. | Powered by
+      ©2024, Liam Scalzulli. | Powered by
       <a href="https://www.sphinx-doc.org/">Sphinx 8.1.3</a> &amp;
       <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
     </div>

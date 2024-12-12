@@ -36,7 +36,7 @@ fmt-web:
 generate-docs:
   cd docs && uv run sphinx-build -M html config build
   rm -rf www/public/docs
-  cp -r docs/build/html www/public/docs
+  uv run ./bin/convert-docs.py --source docs/build/html --output www/public/docs
 
 generate-example-output:
   ./bin/generate-example-output
