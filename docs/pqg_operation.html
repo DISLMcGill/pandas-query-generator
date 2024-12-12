@@ -1,28 +1,40 @@
-<!DOCTYPE html>
+<!doctype html>
 
 <html data-content_root="../../" lang="en">
-<head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>pqg.operation — pqg documentation</title>
-<link href="../../_static/pygments.css?v=d1102ebc" rel="stylesheet" type="text/css"/>
-<link href="../../_static/basic.css?v=686e5160" rel="stylesheet" type="text/css"/>
-<link href="../../_static/alabaster.css?v=27fed22d" rel="stylesheet" type="text/css"/>
-<script src="../../_static/documentation_options.js?v=5929fcd5"></script>
-<script src="../../_static/doctools.js?v=9bcbadda"></script>
-<script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-<link href="../../genindex.html" rel="index" title="Index"/>
-<link href="../../search.html" rel="search" title="Search"/>
-<link href="../../_static/custom.css" rel="stylesheet" type="text/css"/>
-</head>
-<body>
-<div class="document">
-<div class="documentwrapper">
-<div class="bodywrapper">
-<div class="body" role="main">
-<h1>Source code for pqg.operation</h1>
-<div class="highlight">
-<pre>
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>pqg.operation — pqg documentation</title>
+    <link
+      href="../../_static/pygments.css?v=d1102ebc"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="../../_static/basic.css?v=686e5160"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="../../_static/alabaster.css?v=27fed22d"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link href="../../genindex.html" rel="index" title="Index" />
+    <link href="../../search.html" rel="search" title="Search" />
+    <link href="../../_static/custom.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            <h1>Source code for pqg.operation</h1>
+            <div class="highlight">
+              <pre>
 <span></span><span class="kn">import</span> <span class="nn">typing</span> <span class="k">as</span> <span class="nn">t</span>
 <span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">abstractmethod</span>
 
@@ -32,7 +44,10 @@
 <span class="nd">@t</span><span class="o">.</span><span class="n">runtime_checkable</span>
 <span class="k">class</span> <span class="nc">Operation</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">Protocol</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">"""</span>
-<span class="sd">  Abstract base class for query operations.</span>
+<span class="sd">  Protocol defining the interface for query operations.</span>
+
+<span class="sd">  All query operations (Selection, Projection, GroupBy, etc.) must implement</span>
+<span class="sd">  this protocol to be compatible with the query builder and execution system.</span>
 <span class="sd">  """</span>
 
 <div class="viewcode-block" id="Operation.apply">
@@ -40,67 +55,79 @@
   <span class="nd">@abstractmethod</span>
   <span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Apply the operation to the given entity.</span>
+<span class="sd">    Apply the operation to the given entity name.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">      entity (str): The name of the entity to apply the operation to.</span>
+<span class="sd">      entity: Name of the entity (table) to apply the operation to.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">      str: The string representation of the applied operation.</span>
+<span class="sd">      A pandas query string fragment representing this operation.</span>
+<span class="sd">      For example: ".groupby(['col'])" or "[['col1', 'col2']]"</span>
 <span class="sd">    """</span>
     <span class="o">...</span></div>
 </div>
 
 </pre>
-</div>
-</div>
-</div>
-</div>
-<div aria-label="Main" class="sphinxsidebar" role="navigation">
-<div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../../index.html">pqg</a></h1>
-<search id="searchbox" role="search" style="display: none">
-<div class="searchformwrapper">
-<form action="../../search.html" class="search" method="get">
-<input aria-labelledby="searchlabel" autocapitalize="off" autocomplete="off" autocorrect="off" name="q" placeholder="Search" spellcheck="false" type="text"/>
-<input type="submit" value="Go"/>
-</form>
-</div>
-</search>
-<script>
-            document.getElementById("searchbox").style.display = "block";
+            </div>
+          </div>
+        </div>
+      </div>
+      <div aria-label="Main" class="sphinxsidebar" role="navigation">
+        <div class="sphinxsidebarwrapper">
+          <h1 class="logo"><a href="../../index.html">pqg</a></h1>
+          <search id="searchbox" role="search" style="display: none">
+            <div class="searchformwrapper">
+              <form action="../../search.html" class="search" method="get">
+                <input
+                  aria-labelledby="searchlabel"
+                  autocapitalize="off"
+                  autocomplete="off"
+                  autocorrect="off"
+                  name="q"
+                  placeholder="Search"
+                  spellcheck="false"
+                  type="text"
+                />
+                <input type="submit" value="Go" />
+              </form>
+            </div>
+          </search>
+          <script>
+            document.getElementById('searchbox').style.display = 'block';
           </script>
-<h3>Navigation</h3>
-<p class="caption" role="heading">
-<span class="caption-text">Contents:</span>
-</p>
-<ul>
-<li class="toctree-l1">
-<a class="reference internal" href="../../pqg.html">pqg package</a>
-</li>
-</ul>
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-<li>
-<a href="../../index.html">Documentation overview</a>
-<ul>
-<li>
-<a href="../index.html">Module code</a>
-<ul></ul>
-</li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="clearer"></div>
-</div>
-<div class="footer">
+          <h3>Navigation</h3>
+          <p class="caption" role="heading">
+            <span class="caption-text">Contents:</span>
+          </p>
+          <ul>
+            <li class="toctree-l1">
+              <a class="reference internal" href="../../pqg.html"
+                >pqg package</a
+              >
+            </li>
+          </ul>
+          <div class="relations">
+            <h3>Related Topics</h3>
+            <ul>
+              <li>
+                <a href="../../index.html">Documentation overview</a>
+                <ul>
+                  <li>
+                    <a href="../index.html">Module code</a>
+                    <ul></ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
       ©2024, Liam Scalzulli. | Powered by
       <a href="https://www.sphinx-doc.org/">Sphinx 8.1.3</a> &amp;
       <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
-</div>
-</body>
+    </div>
+  </body>
 </html>
