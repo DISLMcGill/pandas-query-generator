@@ -93,241 +93,959 @@ Search.setIndex({
     '__str__() (pqg.query method)': [[0, 'pqg.Query.__str__', false]],
     '_entity_map (pqg.schema attribute)': [
       [0, 'pqg.Schema._entity_map', false],
+      [3, 'pqg.Schema._entity_map', false],
+    ],
+    '_entity_map (pqg.schema.schema attribute)': [
+      [3, 'pqg.schema.Schema._entity_map', false],
+    ],
+    '_queries (pqg.query_pool.querypool attribute)': [
+      [3, 'pqg.query_pool.QueryPool._queries', false],
     ],
     '_queries (pqg.querypool attribute)': [
       [0, 'pqg.QueryPool._queries', false],
+      [3, 'pqg.QueryPool._queries', false],
+    ],
+    '_query_structure (pqg.query_pool.querypool attribute)': [
+      [3, 'pqg.query_pool.QueryPool._query_structure', false],
     ],
     '_query_structure (pqg.querypool attribute)': [
       [0, 'pqg.QueryPool._query_structure', false],
+      [3, 'pqg.QueryPool._query_structure', false],
+    ],
+    '_results (pqg.query_pool.querypool attribute)': [
+      [3, 'pqg.query_pool.QueryPool._results', false],
     ],
     '_results (pqg.querypool attribute)': [
       [0, 'pqg.QueryPool._results', false],
+      [3, 'pqg.QueryPool._results', false],
+    ],
+    '_sample_data (pqg.query_pool.querypool attribute)': [
+      [3, 'pqg.query_pool.QueryPool._sample_data', false],
     ],
     '_sample_data (pqg.querypool attribute)': [
       [0, 'pqg.QueryPool._sample_data', false],
+      [3, 'pqg.QueryPool._sample_data', false],
+    ],
+    '_with_status (pqg.query_pool.querypool attribute)': [
+      [3, 'pqg.query_pool.QueryPool._with_status', false],
     ],
     '_with_status (pqg.querypool attribute)': [
       [0, 'pqg.QueryPool._with_status', false],
+      [3, 'pqg.QueryPool._with_status', false],
+    ],
+    'agg_function (pqg.group_by_aggregation.groupbyaggregation attribute)': [
+      [3, 'pqg.group_by_aggregation.GroupByAggregation.agg_function', false],
+    ],
+    'agg_function (pqg.groupbyaggregation attribute)': [
+      [3, 'pqg.GroupByAggregation.agg_function', false],
+    ],
+    'apply() (pqg.group_by_aggregation.groupbyaggregation method)': [
+      [3, 'pqg.group_by_aggregation.GroupByAggregation.apply', false],
     ],
     'apply() (pqg.groupbyaggregation method)': [
       [0, 'pqg.GroupByAggregation.apply', false],
+      [3, 'pqg.GroupByAggregation.apply', false],
     ],
-    'apply() (pqg.merge method)': [[0, 'pqg.Merge.apply', false]],
-    'apply() (pqg.projection method)': [[0, 'pqg.Projection.apply', false]],
-    'apply() (pqg.selection method)': [[0, 'pqg.Selection.apply', false]],
+    'apply() (pqg.merge method)': [
+      [0, 'pqg.Merge.apply', false],
+      [3, 'pqg.Merge.apply', false],
+    ],
+    'apply() (pqg.merge.merge method)': [[3, 'pqg.merge.Merge.apply', false]],
+    'apply() (pqg.operation.operation method)': [
+      [3, 'pqg.operation.Operation.apply', false],
+    ],
+    'apply() (pqg.projection method)': [
+      [0, 'pqg.Projection.apply', false],
+      [3, 'pqg.Projection.apply', false],
+    ],
+    'apply() (pqg.projection.projection method)': [
+      [3, 'pqg.projection.Projection.apply', false],
+    ],
+    'apply() (pqg.selection method)': [
+      [0, 'pqg.Selection.apply', false],
+      [3, 'pqg.Selection.apply', false],
+    ],
+    'apply() (pqg.selection.selection method)': [
+      [3, 'pqg.selection.Selection.apply', false],
+    ],
+    'arguments (class in pqg.arguments)': [
+      [3, 'pqg.arguments.Arguments', false],
+    ],
+    'build() (pqg.query_builder.querybuilder method)': [
+      [3, 'pqg.query_builder.QueryBuilder.build', false],
+    ],
     'columns (pqg.projection attribute)': [
       [0, 'pqg.Projection.columns', false],
+      [3, 'id54', false],
+      [3, 'pqg.Projection.columns', false],
     ],
-    'columns (pqg.query attribute)': [[0, 'pqg.Query.columns', false]],
-    'complexity (pqg.query property)': [[0, 'pqg.Query.complexity', false]],
-    'data_ranges (pqg.entity property)': [[0, 'pqg.Entity.data_ranges', false]],
+    'columns (pqg.projection.projection attribute)': [
+      [3, 'id21', false],
+      [3, 'pqg.projection.Projection.columns', false],
+    ],
+    'columns (pqg.query attribute)': [
+      [0, 'pqg.Query.columns', false],
+      [3, 'pqg.Query.columns', false],
+    ],
+    'columns (pqg.query.query attribute)': [
+      [3, 'pqg.query.Query.columns', false],
+    ],
+    'complexity (pqg.query property)': [
+      [0, 'pqg.Query.complexity', false],
+      [3, 'pqg.Query.complexity', false],
+    ],
+    'complexity (pqg.query.query property)': [
+      [3, 'pqg.query.Query.complexity', false],
+    ],
+    'conditions (pqg.selection attribute)': [
+      [3, 'pqg.Selection.conditions', false],
+    ],
+    'conditions (pqg.selection.selection attribute)': [
+      [3, 'pqg.selection.Selection.conditions', false],
+    ],
+    'current_columns (pqg.query_builder.querybuilder attribute)': [
+      [3, 'pqg.query_builder.QueryBuilder.current_columns', false],
+    ],
+    'data_ranges (pqg.entity property)': [
+      [0, 'pqg.Entity.data_ranges', false],
+      [3, 'pqg.Entity.data_ranges', false],
+    ],
+    'data_ranges (pqg.entity.entity property)': [
+      [3, 'pqg.entity.Entity.data_ranges', false],
+    ],
+    'disable_multi_processing (pqg.arguments.arguments attribute)': [
+      [3, 'pqg.arguments.Arguments.disable_multi_processing', false],
+    ],
+    'empty (pqg.arguments.queryfilter attribute)': [
+      [3, 'pqg.arguments.QueryFilter.EMPTY', false],
+    ],
     'empty (pqg.query_pool.executionstatistics attribute)': [
       [0, 'pqg.query_pool.ExecutionStatistics.empty', false],
+      [3, 'id22', false],
+      [3, 'pqg.query_pool.ExecutionStatistics.empty', false],
+    ],
+    'empty (pqg.queryfilter attribute)': [[3, 'pqg.QueryFilter.EMPTY', false]],
+    'ensure_non_empty (pqg.arguments.arguments attribute)': [
+      [3, 'pqg.arguments.Arguments.ensure_non_empty', false],
     ],
     'ensure_non_empty (pqg.generateoptions attribute)': [
       [0, 'pqg.GenerateOptions.ensure_non_empty', false],
+      [3, 'id50', false],
+      [3, 'pqg.GenerateOptions.ensure_non_empty', false],
     ],
-    'entities (pqg.merge property)': [[0, 'pqg.Merge.entities', false]],
-    'entities (pqg.schema attribute)': [[0, 'pqg.Schema.entities', false]],
-    'entity (class in pqg)': [[0, 'pqg.Entity', false]],
-    'entity (pqg.query attribute)': [[0, 'pqg.Query.entity', false]],
+    'ensure_non_empty (pqg.generator.generateoptions attribute)': [
+      [3, 'id17', false],
+      [3, 'pqg.generator.GenerateOptions.ensure_non_empty', false],
+    ],
+    'entities (pqg.merge property)': [
+      [0, 'pqg.Merge.entities', false],
+      [3, 'pqg.Merge.entities', false],
+    ],
+    'entities (pqg.merge.merge property)': [
+      [3, 'pqg.merge.Merge.entities', false],
+    ],
+    'entities (pqg.schema attribute)': [
+      [0, 'pqg.Schema.entities', false],
+      [3, 'id75', false],
+      [3, 'pqg.Schema.entities', false],
+    ],
+    'entities (pqg.schema.schema attribute)': [
+      [3, 'id45', false],
+      [3, 'pqg.schema.Schema.entities', false],
+    ],
+    'entity (class in pqg)': [
+      [0, 'pqg.Entity', false],
+      [3, 'pqg.Entity', false],
+    ],
+    'entity (class in pqg.entity)': [[3, 'pqg.entity.Entity', false]],
+    'entity (pqg.merge.query attribute)': [
+      [3, 'pqg.merge.Query.entity', false],
+    ],
+    'entity (pqg.query attribute)': [
+      [0, 'pqg.Query.entity', false],
+      [3, 'pqg.Query.entity', false],
+    ],
+    'entity (pqg.query.query attribute)': [
+      [3, 'pqg.query.Query.entity', false],
+    ],
+    'entity (pqg.query_builder.querybuilder attribute)': [
+      [3, 'pqg.query_builder.QueryBuilder.entity', false],
+    ],
+    'entity_name (pqg.query_builder.querybuilder attribute)': [
+      [3, 'pqg.query_builder.QueryBuilder.entity_name', false],
+    ],
     'errors (pqg.query_pool.executionstatistics attribute)': [
       [0, 'pqg.query_pool.ExecutionStatistics.errors', false],
+      [3, 'id23', false],
+      [3, 'pqg.query_pool.ExecutionStatistics.errors', false],
     ],
-    'execute() (pqg.querypool method)': [[0, 'pqg.QueryPool.execute', false]],
+    'execute() (pqg.query_pool.querypool method)': [
+      [3, 'pqg.query_pool.QueryPool.execute', false],
+    ],
+    'execute() (pqg.querypool method)': [
+      [0, 'pqg.QueryPool.execute', false],
+      [3, 'pqg.QueryPool.execute', false],
+    ],
     'execution_results (pqg.query_pool.querystatistics attribute)': [
       [0, 'pqg.query_pool.QueryStatistics.execution_results', false],
+      [3, 'id27', false],
+      [3, 'pqg.query_pool.QueryStatistics.execution_results', false],
     ],
     'executionstatistics (class in pqg.query_pool)': [
       [0, 'pqg.query_pool.ExecutionStatistics', false],
+      [3, 'pqg.query_pool.ExecutionStatistics', false],
     ],
     'failed (pqg.query_pool.executionstatistics attribute)': [
       [0, 'pqg.query_pool.ExecutionStatistics.failed', false],
+      [3, 'id24', false],
+      [3, 'pqg.query_pool.ExecutionStatistics.failed', false],
     ],
-    'filter() (pqg.querypool method)': [[0, 'pqg.QueryPool.filter', false]],
+    'filter (pqg.arguments.arguments attribute)': [
+      [3, 'pqg.arguments.Arguments.filter', false],
+    ],
+    'filter() (pqg.query_pool.querypool method)': [
+      [3, 'pqg.query_pool.QueryPool.filter', false],
+    ],
+    'filter() (pqg.querypool method)': [
+      [0, 'pqg.QueryPool.filter', false],
+      [3, 'pqg.QueryPool.filter', false],
+    ],
     'foreign_keys (pqg.entity attribute)': [
       [0, 'pqg.Entity.foreign_keys', false],
+      [3, 'id46', false],
+      [3, 'pqg.Entity.foreign_keys', false],
+    ],
+    'foreign_keys (pqg.entity.entity attribute)': [
+      [3, 'id0', false],
+      [3, 'pqg.entity.Entity.foreign_keys', false],
+    ],
+    'format_multi_line() (pqg.merge.query method)': [
+      [3, 'pqg.merge.Query.format_multi_line', false],
     ],
     'format_multi_line() (pqg.query method)': [
       [0, 'pqg.Query.format_multi_line', false],
+      [3, 'pqg.Query.format_multi_line', false],
+    ],
+    'format_multi_line() (pqg.query.query method)': [
+      [3, 'pqg.query.Query.format_multi_line', false],
+    ],
+    'from_args() (pqg.arguments.arguments static method)': [
+      [3, 'pqg.arguments.Arguments.from_args', false],
     ],
     'from_args() (pqg.generateoptions static method)': [
       [0, 'pqg.GenerateOptions.from_args', false],
+      [3, 'pqg.GenerateOptions.from_args', false],
+    ],
+    'from_args() (pqg.generator.generateoptions static method)': [
+      [3, 'pqg.generator.GenerateOptions.from_args', false],
+    ],
+    'from_args() (pqg.query_structure.querystructure static method)': [
+      [3, 'pqg.query_structure.QueryStructure.from_args', false],
     ],
     'from_args() (pqg.querystructure static method)': [
       [0, 'pqg.QueryStructure.from_args', false],
+      [3, 'pqg.QueryStructure.from_args', false],
     ],
     'from_configuration() (pqg.entity static method)': [
       [0, 'pqg.Entity.from_configuration', false],
+      [3, 'pqg.Entity.from_configuration', false],
+    ],
+    'from_configuration() (pqg.entity.entity static method)': [
+      [3, 'pqg.entity.Entity.from_configuration', false],
     ],
     'from_dict() (pqg.schema static method)': [
       [0, 'pqg.Schema.from_dict', false],
+      [3, 'pqg.Schema.from_dict', false],
+    ],
+    'from_dict() (pqg.schema.schema static method)': [
+      [3, 'pqg.schema.Schema.from_dict', false],
     ],
     'from_file() (pqg.schema static method)': [
       [0, 'pqg.Schema.from_file', false],
+      [3, 'pqg.Schema.from_file', false],
     ],
-    'generate() (pqg.generator method)': [[0, 'pqg.Generator.generate', false]],
+    'from_file() (pqg.schema.schema static method)': [
+      [3, 'pqg.schema.Schema.from_file', false],
+    ],
+    'generate() (pqg.generator method)': [
+      [0, 'pqg.Generator.generate', false],
+      [3, 'pqg.Generator.generate', false],
+    ],
+    'generate() (pqg.generator.generator method)': [
+      [3, 'pqg.generator.Generator.generate', false],
+    ],
     'generate_dataframe() (pqg.entity method)': [
       [0, 'pqg.Entity.generate_dataframe', false],
+      [3, 'pqg.Entity.generate_dataframe', false],
     ],
-    'generateoptions (class in pqg)': [[0, 'pqg.GenerateOptions', false]],
-    'generator (class in pqg)': [[0, 'pqg.Generator', false]],
+    'generate_dataframe() (pqg.entity.entity method)': [
+      [3, 'pqg.entity.Entity.generate_dataframe', false],
+    ],
+    'generateoptions (class in pqg)': [
+      [0, 'pqg.GenerateOptions', false],
+      [3, 'pqg.GenerateOptions', false],
+    ],
+    'generateoptions (class in pqg.generator)': [
+      [3, 'pqg.generator.GenerateOptions', false],
+    ],
+    'generator (class in pqg)': [
+      [0, 'pqg.Generator', false],
+      [3, 'pqg.Generator', false],
+    ],
+    'generator (class in pqg.generator)': [
+      [3, 'pqg.generator.Generator', false],
+    ],
+    'group_by_columns (pqg.group_by_aggregation.groupbyaggregation attribute)':
+      [
+        [
+          3,
+          'pqg.group_by_aggregation.GroupByAggregation.group_by_columns',
+          false,
+        ],
+      ],
+    'group_by_columns (pqg.groupbyaggregation attribute)': [
+      [3, 'pqg.GroupByAggregation.group_by_columns', false],
+    ],
+    'groupby_aggregation_probability (pqg.arguments.arguments attribute)': [
+      [3, 'pqg.arguments.Arguments.groupby_aggregation_probability', false],
+    ],
+    'groupby_aggregation_probability (pqg.query_structure.querystructure attribute)':
+      [
+        [3, 'id38', false],
+        [
+          3,
+          'pqg.query_structure.QueryStructure.groupby_aggregation_probability',
+          false,
+        ],
+      ],
     'groupby_aggregation_probability (pqg.querystructure attribute)': [
       [0, 'pqg.QueryStructure.groupby_aggregation_probability', false],
+      [3, 'id68', false],
+      [3, 'pqg.QueryStructure.groupby_aggregation_probability', false],
     ],
     'groupby_columns (pqg.query_pool.querystatistics attribute)': [
       [0, 'pqg.query_pool.QueryStatistics.groupby_columns', false],
+      [3, 'id28', false],
+      [3, 'pqg.query_pool.QueryStatistics.groupby_columns', false],
     ],
-    'groupbyaggregation (class in pqg)': [[0, 'pqg.GroupByAggregation', false]],
+    'groupbyaggregation (class in pqg)': [
+      [0, 'pqg.GroupByAggregation', false],
+      [3, 'pqg.GroupByAggregation', false],
+    ],
+    'groupbyaggregation (class in pqg.group_by_aggregation)': [
+      [3, 'pqg.group_by_aggregation.GroupByAggregation', false],
+    ],
+    'has_error (pqg.arguments.queryfilter attribute)': [
+      [3, 'pqg.arguments.QueryFilter.HAS_ERROR', false],
+    ],
+    'has_error (pqg.queryfilter attribute)': [
+      [3, 'pqg.QueryFilter.HAS_ERROR', false],
+    ],
     'has_unique_primary_key (pqg.entity property)': [
       [0, 'pqg.Entity.has_unique_primary_key', false],
+      [3, 'pqg.Entity.has_unique_primary_key', false],
     ],
-    'items() (pqg.querypool method)': [[0, 'pqg.QueryPool.items', false]],
-    'max (pqg.propertydate attribute)': [[0, 'pqg.PropertyDate.max', false]],
-    'max (pqg.propertyfloat attribute)': [[0, 'pqg.PropertyFloat.max', false]],
-    'max (pqg.propertyint attribute)': [[0, 'pqg.PropertyInt.max', false]],
+    'has_unique_primary_key (pqg.entity.entity property)': [
+      [3, 'pqg.entity.Entity.has_unique_primary_key', false],
+    ],
+    'helpformatter (class in pqg.arguments)': [
+      [3, 'pqg.arguments.HelpFormatter', false],
+    ],
+    'items() (pqg.query_pool.querypool method)': [
+      [3, 'pqg.query_pool.QueryPool.items', false],
+    ],
+    'items() (pqg.querypool method)': [
+      [0, 'pqg.QueryPool.items', false],
+      [3, 'pqg.QueryPool.items', false],
+    ],
+    'left_on (pqg.merge attribute)': [[3, 'pqg.Merge.left_on', false]],
+    'left_on (pqg.merge.merge attribute)': [
+      [3, 'pqg.merge.Merge.left_on', false],
+    ],
+    'max (pqg.entity.propertydate attribute)': [
+      [3, 'id4', false],
+      [3, 'pqg.entity.PropertyDate.max', false],
+    ],
+    'max (pqg.entity.propertyfloat attribute)': [
+      [3, 'id9', false],
+      [3, 'pqg.entity.PropertyFloat.max', false],
+    ],
+    'max (pqg.entity.propertyint attribute)': [
+      [3, 'id12', false],
+      [3, 'pqg.entity.PropertyInt.max', false],
+    ],
+    'max (pqg.propertydate attribute)': [
+      [0, 'pqg.PropertyDate.max', false],
+      [3, 'id55', false],
+      [3, 'pqg.PropertyDate.max', false],
+    ],
+    'max (pqg.propertyfloat attribute)': [
+      [0, 'pqg.PropertyFloat.max', false],
+      [3, 'id60', false],
+      [3, 'pqg.PropertyFloat.max', false],
+    ],
+    'max (pqg.propertyint attribute)': [
+      [0, 'pqg.PropertyInt.max', false],
+      [3, 'id63', false],
+      [3, 'pqg.PropertyInt.max', false],
+    ],
+    'max_groupby_columns (pqg.arguments.arguments attribute)': [
+      [3, 'pqg.arguments.Arguments.max_groupby_columns', false],
+    ],
+    'max_groupby_columns (pqg.query_structure.querystructure attribute)': [
+      [3, 'id39', false],
+      [3, 'pqg.query_structure.QueryStructure.max_groupby_columns', false],
+    ],
     'max_groupby_columns (pqg.querystructure attribute)': [
       [0, 'pqg.QueryStructure.max_groupby_columns', false],
+      [3, 'id69', false],
+      [3, 'pqg.QueryStructure.max_groupby_columns', false],
+    ],
+    'max_merges (pqg.arguments.arguments attribute)': [
+      [3, 'pqg.arguments.Arguments.max_merges', false],
+    ],
+    'max_merges (pqg.query_structure.querystructure attribute)': [
+      [3, 'id40', false],
+      [3, 'pqg.query_structure.QueryStructure.max_merges', false],
     ],
     'max_merges (pqg.querystructure attribute)': [
       [0, 'pqg.QueryStructure.max_merges', false],
+      [3, 'id70', false],
+      [3, 'pqg.QueryStructure.max_merges', false],
+    ],
+    'max_projection_columns (pqg.arguments.arguments attribute)': [
+      [3, 'pqg.arguments.Arguments.max_projection_columns', false],
+    ],
+    'max_projection_columns (pqg.query_structure.querystructure attribute)': [
+      [3, 'id41', false],
+      [3, 'pqg.query_structure.QueryStructure.max_projection_columns', false],
     ],
     'max_projection_columns (pqg.querystructure attribute)': [
       [0, 'pqg.QueryStructure.max_projection_columns', false],
+      [3, 'id71', false],
+      [3, 'pqg.QueryStructure.max_projection_columns', false],
+    ],
+    'max_selection_conditions (pqg.arguments.arguments attribute)': [
+      [3, 'pqg.arguments.Arguments.max_selection_conditions', false],
+    ],
+    'max_selection_conditions (pqg.query_structure.querystructure attribute)': [
+      [3, 'id42', false],
+      [3, 'pqg.query_structure.QueryStructure.max_selection_conditions', false],
     ],
     'max_selection_conditions (pqg.querystructure attribute)': [
       [0, 'pqg.QueryStructure.max_selection_conditions', false],
+      [3, 'id72', false],
+      [3, 'pqg.QueryStructure.max_selection_conditions', false],
     ],
-    'merge (class in pqg)': [[0, 'pqg.Merge', false]],
-    'merge_count (pqg.query property)': [[0, 'pqg.Query.merge_count', false]],
+    'merge (class in pqg)': [
+      [0, 'pqg.Merge', false],
+      [3, 'pqg.Merge', false],
+    ],
+    'merge (class in pqg.merge)': [[3, 'pqg.merge.Merge', false]],
+    'merge_count (pqg.query property)': [
+      [0, 'pqg.Query.merge_count', false],
+      [3, 'pqg.Query.merge_count', false],
+    ],
+    'merge_count (pqg.query.query property)': [
+      [3, 'pqg.query.Query.merge_count', false],
+    ],
     'merge_count (pqg.query_pool.querystatistics attribute)': [
       [0, 'pqg.query_pool.QueryStatistics.merge_count', false],
+      [3, 'id29', false],
+      [3, 'pqg.query_pool.QueryStatistics.merge_count', false],
+    ],
+    'merge_entities (pqg.merge.query property)': [
+      [3, 'pqg.merge.Query.merge_entities', false],
     ],
     'merge_entities (pqg.query property)': [
       [0, 'pqg.Query.merge_entities', false],
+      [3, 'pqg.Query.merge_entities', false],
     ],
-    'min (pqg.propertydate attribute)': [[0, 'pqg.PropertyDate.min', false]],
-    'min (pqg.propertyfloat attribute)': [[0, 'pqg.PropertyFloat.min', false]],
-    'min (pqg.propertyint attribute)': [[0, 'pqg.PropertyInt.min', false]],
+    'merge_entities (pqg.query.query property)': [
+      [3, 'pqg.query.Query.merge_entities', false],
+    ],
+    'min (pqg.entity.propertydate attribute)': [
+      [3, 'id5', false],
+      [3, 'pqg.entity.PropertyDate.min', false],
+    ],
+    'min (pqg.entity.propertyfloat attribute)': [
+      [3, 'id10', false],
+      [3, 'pqg.entity.PropertyFloat.min', false],
+    ],
+    'min (pqg.entity.propertyint attribute)': [
+      [3, 'id13', false],
+      [3, 'pqg.entity.PropertyInt.min', false],
+    ],
+    'min (pqg.propertydate attribute)': [
+      [0, 'pqg.PropertyDate.min', false],
+      [3, 'id56', false],
+      [3, 'pqg.PropertyDate.min', false],
+    ],
+    'min (pqg.propertyfloat attribute)': [
+      [0, 'pqg.PropertyFloat.min', false],
+      [3, 'id61', false],
+      [3, 'pqg.PropertyFloat.min', false],
+    ],
+    'min (pqg.propertyint attribute)': [
+      [0, 'pqg.PropertyInt.min', false],
+      [3, 'id64', false],
+      [3, 'pqg.PropertyInt.min', false],
+    ],
+    module: [
+      [3, 'module-pqg', false],
+      [3, 'module-pqg.arguments', false],
+      [3, 'module-pqg.entity', false],
+      [3, 'module-pqg.generator', false],
+      [3, 'module-pqg.group_by_aggregation', false],
+      [3, 'module-pqg.merge', false],
+      [3, 'module-pqg.operation', false],
+      [3, 'module-pqg.projection', false],
+      [3, 'module-pqg.query', false],
+      [3, 'module-pqg.query_builder', false],
+      [3, 'module-pqg.query_pool', false],
+      [3, 'module-pqg.query_structure', false],
+      [3, 'module-pqg.schema', false],
+      [3, 'module-pqg.selection', false],
+    ],
+    'multi_line (pqg.arguments.arguments attribute)': [
+      [3, 'pqg.arguments.Arguments.multi_line', false],
+    ],
     'multi_line (pqg.generateoptions attribute)': [
       [0, 'pqg.GenerateOptions.multi_line', false],
+      [3, 'id51', false],
+      [3, 'pqg.GenerateOptions.multi_line', false],
     ],
-    'multi_line (pqg.query attribute)': [[0, 'pqg.Query.multi_line', false]],
+    'multi_line (pqg.generator.generateoptions attribute)': [
+      [3, 'id18', false],
+      [3, 'pqg.generator.GenerateOptions.multi_line', false],
+    ],
+    'multi_line (pqg.query attribute)': [
+      [0, 'pqg.Query.multi_line', false],
+      [3, 'pqg.Query.multi_line', false],
+    ],
+    'multi_line (pqg.query.query attribute)': [
+      [3, 'pqg.query.Query.multi_line', false],
+    ],
+    'multi_line (pqg.query_builder.querybuilder attribute)': [
+      [3, 'pqg.query_builder.QueryBuilder.multi_line', false],
+    ],
     'multi_processing (pqg.generateoptions attribute)': [
       [0, 'pqg.GenerateOptions.multi_processing', false],
+      [3, 'id52', false],
+      [3, 'pqg.GenerateOptions.multi_processing', false],
     ],
-    'name (pqg.entity attribute)': [[0, 'pqg.Entity.name', false]],
+    'multi_processing (pqg.generator.generateoptions attribute)': [
+      [3, 'id19', false],
+      [3, 'pqg.generator.GenerateOptions.multi_processing', false],
+    ],
+    'name (pqg.entity attribute)': [
+      [0, 'pqg.Entity.name', false],
+      [3, 'id47', false],
+      [3, 'pqg.Entity.name', false],
+    ],
+    'name (pqg.entity.entity attribute)': [
+      [3, 'id1', false],
+      [3, 'pqg.entity.Entity.name', false],
+    ],
+    'non_empty (pqg.arguments.queryfilter attribute)': [
+      [3, 'pqg.arguments.QueryFilter.NON_EMPTY', false],
+    ],
     'non_empty (pqg.query_pool.executionstatistics attribute)': [
       [0, 'pqg.query_pool.ExecutionStatistics.non_empty', false],
+      [3, 'id25', false],
+      [3, 'pqg.query_pool.ExecutionStatistics.non_empty', false],
+    ],
+    'non_empty (pqg.queryfilter attribute)': [
+      [3, 'pqg.QueryFilter.NON_EMPTY', false],
+    ],
+    'num_queries (pqg.arguments.arguments attribute)': [
+      [3, 'pqg.arguments.Arguments.num_queries', false],
     ],
     'num_queries (pqg.generateoptions attribute)': [
       [0, 'pqg.GenerateOptions.num_queries', false],
+      [3, 'id53', false],
+      [3, 'pqg.GenerateOptions.num_queries', false],
     ],
-    'operations (pqg.query attribute)': [[0, 'pqg.Query.operations', false]],
+    'num_queries (pqg.generator.generateoptions attribute)': [
+      [3, 'id20', false],
+      [3, 'pqg.generator.GenerateOptions.num_queries', false],
+    ],
+    'operation (class in pqg.operation)': [
+      [3, 'pqg.operation.Operation', false],
+    ],
+    'operations (pqg.merge.query attribute)': [
+      [3, 'pqg.merge.Query.operations', false],
+    ],
+    'operations (pqg.query attribute)': [
+      [0, 'pqg.Query.operations', false],
+      [3, 'pqg.Query.operations', false],
+    ],
+    'operations (pqg.query.query attribute)': [
+      [3, 'pqg.query.Query.operations', false],
+    ],
+    'operations (pqg.query_builder.querybuilder attribute)': [
+      [3, 'pqg.query_builder.QueryBuilder.operations', false],
+    ],
+    'output_file (pqg.arguments.arguments attribute)': [
+      [3, 'pqg.arguments.Arguments.output_file', false],
+    ],
+    pqg: [[3, 'module-pqg', false]],
+    'pqg.arguments': [[3, 'module-pqg.arguments', false]],
+    'pqg.entity': [[3, 'module-pqg.entity', false]],
+    'pqg.generator': [[3, 'module-pqg.generator', false]],
+    'pqg.group_by_aggregation': [[3, 'module-pqg.group_by_aggregation', false]],
+    'pqg.merge': [[3, 'module-pqg.merge', false]],
+    'pqg.operation': [[3, 'module-pqg.operation', false]],
+    'pqg.projection': [[3, 'module-pqg.projection', false]],
+    'pqg.query': [[3, 'module-pqg.query', false]],
+    'pqg.query_builder': [[3, 'module-pqg.query_builder', false]],
+    'pqg.query_pool': [[3, 'module-pqg.query_pool', false]],
+    'pqg.query_structure': [[3, 'module-pqg.query_structure', false]],
+    'pqg.schema': [[3, 'module-pqg.schema', false]],
+    'pqg.selection': [[3, 'module-pqg.selection', false]],
     'primary_key (pqg.entity attribute)': [
       [0, 'pqg.Entity.primary_key', false],
+      [3, 'id48', false],
+      [3, 'pqg.Entity.primary_key', false],
     ],
-    'projection (class in pqg)': [[0, 'pqg.Projection', false]],
+    'primary_key (pqg.entity.entity attribute)': [
+      [3, 'id2', false],
+      [3, 'pqg.entity.Entity.primary_key', false],
+    ],
+    'projection (class in pqg)': [
+      [0, 'pqg.Projection', false],
+      [3, 'pqg.Projection', false],
+    ],
+    'projection (class in pqg.projection)': [
+      [3, 'pqg.projection.Projection', false],
+    ],
     'projection_columns (pqg.query_pool.querystatistics attribute)': [
       [0, 'pqg.query_pool.QueryStatistics.projection_columns', false],
+      [3, 'id30', false],
+      [3, 'pqg.query_pool.QueryStatistics.projection_columns', false],
+    ],
+    'projection_probability (pqg.arguments.arguments attribute)': [
+      [3, 'pqg.arguments.Arguments.projection_probability', false],
+    ],
+    'projection_probability (pqg.query_structure.querystructure attribute)': [
+      [3, 'id43', false],
+      [3, 'pqg.query_structure.QueryStructure.projection_probability', false],
     ],
     'projection_probability (pqg.querystructure attribute)': [
       [0, 'pqg.QueryStructure.projection_probability', false],
+      [3, 'id73', false],
+      [3, 'pqg.QueryStructure.projection_probability', false],
     ],
-    'properties (pqg.entity attribute)': [[0, 'pqg.Entity.properties', false]],
-    'propertydate (class in pqg)': [[0, 'pqg.PropertyDate', false]],
-    'propertyenum (class in pqg)': [[0, 'pqg.PropertyEnum', false]],
-    'propertyfloat (class in pqg)': [[0, 'pqg.PropertyFloat', false]],
-    'propertyint (class in pqg)': [[0, 'pqg.PropertyInt', false]],
-    'propertystring (class in pqg)': [[0, 'pqg.PropertyString', false]],
+    'properties (pqg.entity attribute)': [
+      [0, 'pqg.Entity.properties', false],
+      [3, 'id49', false],
+      [3, 'pqg.Entity.properties', false],
+    ],
+    'properties (pqg.entity.entity attribute)': [
+      [3, 'id3', false],
+      [3, 'pqg.entity.Entity.properties', false],
+    ],
+    'propertydate (class in pqg)': [
+      [0, 'pqg.PropertyDate', false],
+      [3, 'pqg.PropertyDate', false],
+    ],
+    'propertydate (class in pqg.entity)': [
+      [3, 'pqg.entity.PropertyDate', false],
+    ],
+    'propertyenum (class in pqg)': [
+      [0, 'pqg.PropertyEnum', false],
+      [3, 'pqg.PropertyEnum', false],
+    ],
+    'propertyenum (class in pqg.entity)': [
+      [3, 'pqg.entity.PropertyEnum', false],
+    ],
+    'propertyfloat (class in pqg)': [
+      [0, 'pqg.PropertyFloat', false],
+      [3, 'pqg.PropertyFloat', false],
+    ],
+    'propertyfloat (class in pqg.entity)': [
+      [3, 'pqg.entity.PropertyFloat', false],
+    ],
+    'propertyint (class in pqg)': [
+      [0, 'pqg.PropertyInt', false],
+      [3, 'pqg.PropertyInt', false],
+    ],
+    'propertyint (class in pqg.entity)': [[3, 'pqg.entity.PropertyInt', false]],
+    'propertystring (class in pqg)': [
+      [0, 'pqg.PropertyString', false],
+      [3, 'pqg.PropertyString', false],
+    ],
+    'propertystring (class in pqg.entity)': [
+      [3, 'pqg.entity.PropertyString', false],
+    ],
     'queries_with_groupby (pqg.query_pool.querystatistics attribute)': [
       [0, 'pqg.query_pool.QueryStatistics.queries_with_groupby', false],
+      [3, 'id31', false],
+      [3, 'pqg.query_pool.QueryStatistics.queries_with_groupby', false],
     ],
     'queries_with_merge (pqg.query_pool.querystatistics attribute)': [
       [0, 'pqg.query_pool.QueryStatistics.queries_with_merge', false],
+      [3, 'id32', false],
+      [3, 'pqg.query_pool.QueryStatistics.queries_with_merge', false],
     ],
     'queries_with_projection (pqg.query_pool.querystatistics attribute)': [
       [0, 'pqg.query_pool.QueryStatistics.queries_with_projection', false],
+      [3, 'id33', false],
+      [3, 'pqg.query_pool.QueryStatistics.queries_with_projection', false],
     ],
     'queries_with_selection (pqg.query_pool.querystatistics attribute)': [
       [0, 'pqg.query_pool.QueryStatistics.queries_with_selection', false],
+      [3, 'id34', false],
+      [3, 'pqg.query_pool.QueryStatistics.queries_with_selection', false],
     ],
-    'query (class in pqg)': [[0, 'pqg.Query', false]],
+    'query (class in pqg)': [
+      [0, 'pqg.Query', false],
+      [3, 'pqg.Query', false],
+    ],
+    'query (class in pqg.merge)': [[3, 'pqg.merge.Query', false]],
+    'query (class in pqg.query)': [[3, 'pqg.query.Query', false]],
     'query_structure (pqg.generator attribute)': [
       [0, 'pqg.Generator.query_structure', false],
+      [3, 'pqg.Generator.query_structure', false],
+    ],
+    'query_structure (pqg.generator.generator attribute)': [
+      [3, 'pqg.generator.Generator.query_structure', false],
+    ],
+    'query_structure (pqg.query_builder.querybuilder attribute)': [
+      [3, 'pqg.query_builder.QueryBuilder.query_structure', false],
     ],
     'query_structure (pqg.query_pool.querystatistics attribute)': [
       [0, 'pqg.query_pool.QueryStatistics.query_structure', false],
+      [3, 'id35', false],
+      [3, 'pqg.query_pool.QueryStatistics.query_structure', false],
     ],
-    'queryfilter (class in pqg)': [[0, 'pqg.QueryFilter', false]],
-    'querypool (class in pqg)': [[0, 'pqg.QueryPool', false]],
+    'querybuilder (class in pqg.query_builder)': [
+      [3, 'pqg.query_builder.QueryBuilder', false],
+    ],
+    'queryfilter (class in pqg)': [
+      [0, 'pqg.QueryFilter', false],
+      [3, 'pqg.QueryFilter', false],
+    ],
+    'queryfilter (class in pqg.arguments)': [
+      [3, 'pqg.arguments.QueryFilter', false],
+    ],
+    'querypool (class in pqg)': [
+      [0, 'pqg.QueryPool', false],
+      [3, 'pqg.QueryPool', false],
+    ],
+    'querypool (class in pqg.query_pool)': [
+      [3, 'pqg.query_pool.QueryPool', false],
+    ],
     'querystatistics (class in pqg.query_pool)': [
       [0, 'pqg.query_pool.QueryStatistics', false],
+      [3, 'pqg.query_pool.QueryStatistics', false],
     ],
-    'querystructure (class in pqg)': [[0, 'pqg.QueryStructure', false]],
-    'results() (pqg.querypool method)': [[0, 'pqg.QueryPool.results', false]],
+    'querystructure (class in pqg)': [
+      [0, 'pqg.QueryStructure', false],
+      [3, 'pqg.QueryStructure', false],
+    ],
+    'querystructure (class in pqg.query_structure)': [
+      [3, 'pqg.query_structure.QueryStructure', false],
+    ],
+    'required_columns (pqg.query_builder.querybuilder attribute)': [
+      [3, 'pqg.query_builder.QueryBuilder.required_columns', false],
+    ],
+    'results() (pqg.query_pool.querypool method)': [
+      [3, 'pqg.query_pool.QueryPool.results', false],
+    ],
+    'results() (pqg.querypool method)': [
+      [0, 'pqg.QueryPool.results', false],
+      [3, 'pqg.QueryPool.results', false],
+    ],
+    'right (pqg.merge attribute)': [[3, 'pqg.Merge.right', false]],
+    'right (pqg.merge.merge attribute)': [[3, 'pqg.merge.Merge.right', false]],
+    'right_on (pqg.merge attribute)': [[3, 'pqg.Merge.right_on', false]],
+    'right_on (pqg.merge.merge attribute)': [
+      [3, 'pqg.merge.Merge.right_on', false],
+    ],
     'sample_data (pqg.generator attribute)': [
       [0, 'pqg.Generator.sample_data', false],
+      [3, 'pqg.Generator.sample_data', false],
     ],
-    'save() (pqg.querypool method)': [[0, 'pqg.QueryPool.save', false]],
-    'schema (class in pqg)': [[0, 'pqg.Schema', false]],
-    'schema (pqg.generator attribute)': [[0, 'pqg.Generator.schema', false]],
-    'selection (class in pqg)': [[0, 'pqg.Selection', false]],
+    'sample_data (pqg.generator.generator attribute)': [
+      [3, 'pqg.generator.Generator.sample_data', false],
+    ],
+    'save() (pqg.query_pool.querypool method)': [
+      [3, 'pqg.query_pool.QueryPool.save', false],
+    ],
+    'save() (pqg.querypool method)': [
+      [0, 'pqg.QueryPool.save', false],
+      [3, 'pqg.QueryPool.save', false],
+    ],
+    'schema (class in pqg)': [
+      [0, 'pqg.Schema', false],
+      [3, 'pqg.Schema', false],
+    ],
+    'schema (class in pqg.schema)': [[3, 'pqg.schema.Schema', false]],
+    'schema (pqg.arguments.arguments attribute)': [
+      [3, 'pqg.arguments.Arguments.schema', false],
+    ],
+    'schema (pqg.generator attribute)': [
+      [0, 'pqg.Generator.schema', false],
+      [3, 'pqg.Generator.schema', false],
+    ],
+    'schema (pqg.generator.generator attribute)': [
+      [3, 'pqg.generator.Generator.schema', false],
+    ],
+    'schema (pqg.query_builder.querybuilder attribute)': [
+      [3, 'pqg.query_builder.QueryBuilder.schema', false],
+    ],
+    'selection (class in pqg)': [
+      [0, 'pqg.Selection', false],
+      [3, 'pqg.Selection', false],
+    ],
+    'selection (class in pqg.selection)': [
+      [3, 'pqg.selection.Selection', false],
+    ],
     'selection_conditions (pqg.query_pool.querystatistics attribute)': [
       [0, 'pqg.query_pool.QueryStatistics.selection_conditions', false],
+      [3, 'id36', false],
+      [3, 'pqg.query_pool.QueryStatistics.selection_conditions', false],
+    ],
+    'selection_probability (pqg.arguments.arguments attribute)': [
+      [3, 'pqg.arguments.Arguments.selection_probability', false],
+    ],
+    'selection_probability (pqg.query_structure.querystructure attribute)': [
+      [3, 'id44', false],
+      [3, 'pqg.query_structure.QueryStructure.selection_probability', false],
     ],
     'selection_probability (pqg.querystructure attribute)': [
       [0, 'pqg.QueryStructure.selection_probability', false],
+      [3, 'id74', false],
+      [3, 'pqg.QueryStructure.selection_probability', false],
     ],
-    'sort() (pqg.querypool method)': [[0, 'pqg.QueryPool.sort', false]],
+    'sort (pqg.arguments.arguments attribute)': [
+      [3, 'pqg.arguments.Arguments.sort', false],
+    ],
+    'sort() (pqg.query_pool.querypool method)': [
+      [3, 'pqg.query_pool.QueryPool.sort', false],
+    ],
+    'sort() (pqg.querypool method)': [
+      [0, 'pqg.QueryPool.sort', false],
+      [3, 'pqg.QueryPool.sort', false],
+    ],
+    'starting_character (pqg.entity.propertystring attribute)': [
+      [3, 'id15', false],
+      [3, 'pqg.entity.PropertyString.starting_character', false],
+    ],
     'starting_character (pqg.propertystring attribute)': [
       [0, 'pqg.PropertyString.starting_character', false],
+      [3, 'id66', false],
+      [3, 'pqg.PropertyString.starting_character', false],
+    ],
+    'statistics() (pqg.query_pool.querypool method)': [
+      [3, 'pqg.query_pool.QueryPool.statistics', false],
     ],
     'statistics() (pqg.querypool method)': [
       [0, 'pqg.QueryPool.statistics', false],
+      [3, 'pqg.QueryPool.statistics', false],
     ],
     'successful (pqg.query_pool.executionstatistics attribute)': [
       [0, 'pqg.query_pool.ExecutionStatistics.successful', false],
+      [3, 'id26', false],
+      [3, 'pqg.query_pool.ExecutionStatistics.successful', false],
     ],
     'total_queries (pqg.query_pool.querystatistics attribute)': [
       [0, 'pqg.query_pool.QueryStatistics.total_queries', false],
+      [3, 'id37', false],
+      [3, 'pqg.query_pool.QueryStatistics.total_queries', false],
     ],
-    'type (pqg.propertydate attribute)': [[0, 'pqg.PropertyDate.type', false]],
-    'type (pqg.propertyenum attribute)': [[0, 'pqg.PropertyEnum.type', false]],
+    'type (pqg.entity.propertydate attribute)': [
+      [3, 'id6', false],
+      [3, 'pqg.entity.PropertyDate.type', false],
+    ],
+    'type (pqg.entity.propertyenum attribute)': [
+      [3, 'id7', false],
+      [3, 'pqg.entity.PropertyEnum.type', false],
+    ],
+    'type (pqg.entity.propertyfloat attribute)': [
+      [3, 'id11', false],
+      [3, 'pqg.entity.PropertyFloat.type', false],
+    ],
+    'type (pqg.entity.propertyint attribute)': [
+      [3, 'id14', false],
+      [3, 'pqg.entity.PropertyInt.type', false],
+    ],
+    'type (pqg.entity.propertystring attribute)': [
+      [3, 'id16', false],
+      [3, 'pqg.entity.PropertyString.type', false],
+    ],
+    'type (pqg.propertydate attribute)': [
+      [0, 'pqg.PropertyDate.type', false],
+      [3, 'id57', false],
+      [3, 'pqg.PropertyDate.type', false],
+    ],
+    'type (pqg.propertyenum attribute)': [
+      [0, 'pqg.PropertyEnum.type', false],
+      [3, 'id58', false],
+      [3, 'pqg.PropertyEnum.type', false],
+    ],
     'type (pqg.propertyfloat attribute)': [
       [0, 'pqg.PropertyFloat.type', false],
+      [3, 'id62', false],
+      [3, 'pqg.PropertyFloat.type', false],
     ],
-    'type (pqg.propertyint attribute)': [[0, 'pqg.PropertyInt.type', false]],
+    'type (pqg.propertyint attribute)': [
+      [0, 'pqg.PropertyInt.type', false],
+      [3, 'id65', false],
+      [3, 'pqg.PropertyInt.type', false],
+    ],
     'type (pqg.propertystring attribute)': [
       [0, 'pqg.PropertyString.type', false],
+      [3, 'id67', false],
+      [3, 'pqg.PropertyString.type', false],
+    ],
+    'values (pqg.entity.propertyenum attribute)': [
+      [3, 'id8', false],
+      [3, 'pqg.entity.PropertyEnum.values', false],
     ],
     'values (pqg.propertyenum attribute)': [
       [0, 'pqg.PropertyEnum.values', false],
+      [3, 'id59', false],
+      [3, 'pqg.PropertyEnum.values', false],
+    ],
+    'verbose (pqg.arguments.arguments attribute)': [
+      [3, 'pqg.arguments.Arguments.verbose', false],
     ],
     'with_status (pqg.generator attribute)': [
       [0, 'pqg.Generator.with_status', false],
+      [3, 'pqg.Generator.with_status', false],
+    ],
+    'with_status (pqg.generator.generator attribute)': [
+      [3, 'pqg.generator.Generator.with_status', false],
+    ],
+    'without_error (pqg.arguments.queryfilter attribute)': [
+      [3, 'pqg.arguments.QueryFilter.WITHOUT_ERROR', false],
+    ],
+    'without_error (pqg.queryfilter attribute)': [
+      [3, 'pqg.QueryFilter.WITHOUT_ERROR', false],
     ],
   },
   objects: {
     '': [[3, 0, 0, '-', 'pqg']],
     pqg: [
-      [0, 1, 1, '', 'Entity'],
-      [0, 1, 1, '', 'GenerateOptions'],
-      [0, 1, 1, '', 'Generator'],
-      [0, 1, 1, '', 'GroupByAggregation'],
-      [0, 1, 1, '', 'Merge'],
-      [0, 1, 1, '', 'Projection'],
-      [0, 1, 1, '', 'PropertyDate'],
-      [0, 1, 1, '', 'PropertyEnum'],
-      [0, 1, 1, '', 'PropertyFloat'],
-      [0, 1, 1, '', 'PropertyInt'],
-      [0, 1, 1, '', 'PropertyString'],
-      [0, 1, 1, '', 'Query'],
-      [0, 1, 1, '', 'QueryFilter'],
-      [0, 1, 1, '', 'QueryPool'],
-      [0, 1, 1, '', 'QueryStructure'],
-      [0, 1, 1, '', 'Schema'],
-      [0, 1, 1, '', 'Selection'],
+      [3, 1, 1, '', 'Entity'],
+      [3, 1, 1, '', 'GenerateOptions'],
+      [3, 1, 1, '', 'Generator'],
+      [3, 1, 1, '', 'GroupByAggregation'],
+      [3, 1, 1, '', 'Merge'],
+      [3, 1, 1, '', 'Projection'],
+      [3, 1, 1, '', 'PropertyDate'],
+      [3, 1, 1, '', 'PropertyEnum'],
+      [3, 1, 1, '', 'PropertyFloat'],
+      [3, 1, 1, '', 'PropertyInt'],
+      [3, 1, 1, '', 'PropertyString'],
+      [3, 1, 1, '', 'Query'],
+      [3, 1, 1, '', 'QueryFilter'],
+      [3, 1, 1, '', 'QueryPool'],
+      [3, 1, 1, '', 'QueryStructure'],
+      [3, 1, 1, '', 'Schema'],
+      [3, 1, 1, '', 'Selection'],
       [3, 0, 0, '-', 'arguments'],
       [3, 0, 0, '-', 'entity'],
       [3, 0, 0, '-', 'generator'],
@@ -345,81 +1063,81 @@ Search.setIndex({
     'pqg.Entity': [
       [0, 2, 1, '', '__eq__'],
       [0, 2, 1, '', '__hash__'],
-      [0, 3, 1, '', 'data_ranges'],
-      [0, 4, 1, '', 'foreign_keys'],
-      [0, 2, 1, '', 'from_configuration'],
-      [0, 2, 1, '', 'generate_dataframe'],
-      [0, 3, 1, '', 'has_unique_primary_key'],
-      [0, 4, 1, '', 'name'],
-      [0, 4, 1, '', 'primary_key'],
-      [0, 4, 1, '', 'properties'],
+      [3, 3, 1, '', 'data_ranges'],
+      [3, 4, 1, 'id46', 'foreign_keys'],
+      [3, 2, 1, '', 'from_configuration'],
+      [3, 2, 1, '', 'generate_dataframe'],
+      [3, 3, 1, '', 'has_unique_primary_key'],
+      [3, 4, 1, 'id47', 'name'],
+      [3, 4, 1, 'id48', 'primary_key'],
+      [3, 4, 1, 'id49', 'properties'],
     ],
     'pqg.GenerateOptions': [
-      [0, 4, 1, '', 'ensure_non_empty'],
-      [0, 2, 1, '', 'from_args'],
-      [0, 4, 1, '', 'multi_line'],
-      [0, 4, 1, '', 'multi_processing'],
-      [0, 4, 1, '', 'num_queries'],
+      [3, 4, 1, 'id50', 'ensure_non_empty'],
+      [3, 2, 1, '', 'from_args'],
+      [3, 4, 1, 'id51', 'multi_line'],
+      [3, 4, 1, 'id52', 'multi_processing'],
+      [3, 4, 1, 'id53', 'num_queries'],
     ],
     'pqg.Generator': [
-      [0, 2, 1, '', 'generate'],
-      [0, 4, 1, '', 'query_structure'],
-      [0, 4, 1, '', 'sample_data'],
-      [0, 4, 1, '', 'schema'],
-      [0, 4, 1, '', 'with_status'],
+      [3, 2, 1, '', 'generate'],
+      [3, 4, 1, '', 'query_structure'],
+      [3, 4, 1, '', 'sample_data'],
+      [3, 4, 1, '', 'schema'],
+      [3, 4, 1, '', 'with_status'],
     ],
     'pqg.GroupByAggregation': [
       [3, 4, 1, '', 'agg_function'],
-      [0, 2, 1, '', 'apply'],
+      [3, 2, 1, '', 'apply'],
       [3, 4, 1, '', 'group_by_columns'],
     ],
     'pqg.Merge': [
-      [0, 2, 1, '', 'apply'],
-      [0, 3, 1, '', 'entities'],
+      [3, 2, 1, '', 'apply'],
+      [3, 3, 1, '', 'entities'],
       [3, 4, 1, '', 'left_on'],
       [3, 4, 1, '', 'right'],
       [3, 4, 1, '', 'right_on'],
     ],
     'pqg.Projection': [
-      [0, 2, 1, '', 'apply'],
-      [0, 4, 1, '', 'columns'],
+      [3, 2, 1, '', 'apply'],
+      [3, 4, 1, 'id54', 'columns'],
     ],
     'pqg.PropertyDate': [
-      [0, 4, 1, '', 'max'],
-      [0, 4, 1, '', 'min'],
-      [0, 4, 1, '', 'type'],
+      [3, 4, 1, 'id55', 'max'],
+      [3, 4, 1, 'id56', 'min'],
+      [3, 4, 1, 'id57', 'type'],
     ],
     'pqg.PropertyEnum': [
-      [0, 4, 1, '', 'type'],
-      [0, 4, 1, '', 'values'],
+      [3, 4, 1, 'id58', 'type'],
+      [3, 4, 1, 'id59', 'values'],
     ],
     'pqg.PropertyFloat': [
-      [0, 4, 1, '', 'max'],
-      [0, 4, 1, '', 'min'],
-      [0, 4, 1, '', 'type'],
+      [3, 4, 1, 'id60', 'max'],
+      [3, 4, 1, 'id61', 'min'],
+      [3, 4, 1, 'id62', 'type'],
     ],
     'pqg.PropertyInt': [
-      [0, 4, 1, '', 'max'],
-      [0, 4, 1, '', 'min'],
-      [0, 4, 1, '', 'type'],
+      [3, 4, 1, 'id63', 'max'],
+      [3, 4, 1, 'id64', 'min'],
+      [3, 4, 1, 'id65', 'type'],
     ],
     'pqg.PropertyString': [
-      [0, 4, 1, '', 'starting_character'],
-      [0, 4, 1, '', 'type'],
+      [3, 4, 1, 'id66', 'starting_character'],
+      [3, 4, 1, 'id67', 'type'],
     ],
     'pqg.Query': [
       [0, 2, 1, '', '__eq__'],
       [0, 2, 1, '', '__hash__'],
       [0, 2, 1, '', '__lt__'],
       [0, 2, 1, '', '__str__'],
-      [0, 4, 1, '', 'columns'],
-      [0, 3, 1, '', 'complexity'],
-      [0, 4, 1, '', 'entity'],
-      [0, 2, 1, '', 'format_multi_line'],
-      [0, 3, 1, '', 'merge_count'],
-      [0, 3, 1, '', 'merge_entities'],
-      [0, 4, 1, '', 'multi_line'],
-      [0, 4, 1, '', 'operations'],
+      [3, 4, 1, '', 'columns'],
+      [3, 3, 1, '', 'complexity'],
+      [3, 4, 1, '', 'entity'],
+      [3, 2, 1, '', 'format_multi_line'],
+      [3, 3, 1, '', 'merge_count'],
+      [3, 3, 1, '', 'merge_entities'],
+      [3, 4, 1, '', 'multi_line'],
+      [3, 4, 1, '', 'operations'],
     ],
     'pqg.QueryFilter': [
       [3, 4, 1, '', 'EMPTY'],
@@ -430,40 +1148,40 @@ Search.setIndex({
     'pqg.QueryPool': [
       [0, 2, 1, '', '__iter__'],
       [0, 2, 1, '', '__len__'],
-      [0, 4, 1, '', '_queries'],
-      [0, 4, 1, '', '_query_structure'],
-      [0, 4, 1, '', '_results'],
-      [0, 4, 1, '', '_sample_data'],
-      [0, 4, 1, '', '_with_status'],
-      [0, 2, 1, '', 'execute'],
-      [0, 2, 1, '', 'filter'],
-      [0, 2, 1, '', 'items'],
-      [0, 2, 1, '', 'results'],
-      [0, 2, 1, '', 'save'],
-      [0, 2, 1, '', 'sort'],
-      [0, 2, 1, '', 'statistics'],
+      [3, 4, 1, '', '_queries'],
+      [3, 4, 1, '', '_query_structure'],
+      [3, 4, 1, '', '_results'],
+      [3, 4, 1, '', '_sample_data'],
+      [3, 4, 1, '', '_with_status'],
+      [3, 2, 1, '', 'execute'],
+      [3, 2, 1, '', 'filter'],
+      [3, 2, 1, '', 'items'],
+      [3, 2, 1, '', 'results'],
+      [3, 2, 1, '', 'save'],
+      [3, 2, 1, '', 'sort'],
+      [3, 2, 1, '', 'statistics'],
     ],
     'pqg.QueryStructure': [
-      [0, 2, 1, '', 'from_args'],
-      [0, 4, 1, '', 'groupby_aggregation_probability'],
-      [0, 4, 1, '', 'max_groupby_columns'],
-      [0, 4, 1, '', 'max_merges'],
-      [0, 4, 1, '', 'max_projection_columns'],
-      [0, 4, 1, '', 'max_selection_conditions'],
-      [0, 4, 1, '', 'projection_probability'],
-      [0, 4, 1, '', 'selection_probability'],
+      [3, 2, 1, '', 'from_args'],
+      [3, 4, 1, 'id68', 'groupby_aggregation_probability'],
+      [3, 4, 1, 'id69', 'max_groupby_columns'],
+      [3, 4, 1, 'id70', 'max_merges'],
+      [3, 4, 1, 'id71', 'max_projection_columns'],
+      [3, 4, 1, 'id72', 'max_selection_conditions'],
+      [3, 4, 1, 'id73', 'projection_probability'],
+      [3, 4, 1, 'id74', 'selection_probability'],
     ],
     'pqg.Schema': [
       [0, 2, 1, '', '__getitem__'],
       [0, 2, 1, '', '__iter__'],
       [0, 2, 1, '', '__len__'],
-      [0, 4, 1, '', '_entity_map'],
-      [0, 4, 1, '', 'entities'],
-      [0, 2, 1, '', 'from_dict'],
-      [0, 2, 1, '', 'from_file'],
+      [3, 4, 1, '', '_entity_map'],
+      [3, 4, 1, 'id75', 'entities'],
+      [3, 2, 1, '', 'from_dict'],
+      [3, 2, 1, '', 'from_file'],
     ],
     'pqg.Selection': [
-      [0, 2, 1, '', 'apply'],
+      [3, 2, 1, '', 'apply'],
       [3, 4, 1, '', 'conditions'],
     ],
     'pqg.arguments': [
@@ -609,16 +1327,16 @@ Search.setIndex({
       [3, 4, 1, '', 'schema'],
     ],
     'pqg.query_pool': [
-      [0, 1, 1, '', 'ExecutionStatistics'],
+      [3, 1, 1, '', 'ExecutionStatistics'],
       [3, 1, 1, '', 'QueryPool'],
-      [0, 1, 1, '', 'QueryStatistics'],
+      [3, 1, 1, '', 'QueryStatistics'],
     ],
     'pqg.query_pool.ExecutionStatistics': [
-      [0, 4, 1, '', 'empty'],
-      [0, 4, 1, '', 'errors'],
-      [0, 4, 1, '', 'failed'],
-      [0, 4, 1, '', 'non_empty'],
-      [0, 4, 1, '', 'successful'],
+      [3, 4, 1, 'id22', 'empty'],
+      [3, 4, 1, 'id23', 'errors'],
+      [3, 4, 1, 'id24', 'failed'],
+      [3, 4, 1, 'id25', 'non_empty'],
+      [3, 4, 1, 'id26', 'successful'],
     ],
     'pqg.query_pool.QueryPool': [
       [3, 4, 1, '', '_queries'],
@@ -635,17 +1353,17 @@ Search.setIndex({
       [3, 2, 1, '', 'statistics'],
     ],
     'pqg.query_pool.QueryStatistics': [
-      [0, 4, 1, '', 'execution_results'],
-      [0, 4, 1, '', 'groupby_columns'],
-      [0, 4, 1, '', 'merge_count'],
-      [0, 4, 1, '', 'projection_columns'],
-      [0, 4, 1, '', 'queries_with_groupby'],
-      [0, 4, 1, '', 'queries_with_merge'],
-      [0, 4, 1, '', 'queries_with_projection'],
-      [0, 4, 1, '', 'queries_with_selection'],
-      [0, 4, 1, '', 'query_structure'],
-      [0, 4, 1, '', 'selection_conditions'],
-      [0, 4, 1, '', 'total_queries'],
+      [3, 4, 1, 'id27', 'execution_results'],
+      [3, 4, 1, 'id28', 'groupby_columns'],
+      [3, 4, 1, 'id29', 'merge_count'],
+      [3, 4, 1, 'id30', 'projection_columns'],
+      [3, 4, 1, 'id31', 'queries_with_groupby'],
+      [3, 4, 1, 'id32', 'queries_with_merge'],
+      [3, 4, 1, 'id33', 'queries_with_projection'],
+      [3, 4, 1, 'id34', 'queries_with_selection'],
+      [3, 4, 1, 'id35', 'query_structure'],
+      [3, 4, 1, 'id36', 'selection_conditions'],
+      [3, 4, 1, 'id37', 'total_queries'],
     ],
     'pqg.query_structure': [[3, 1, 1, '', 'QueryStructure']],
     'pqg.query_structure.QueryStructure': [
