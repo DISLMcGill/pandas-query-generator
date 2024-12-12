@@ -20,7 +20,7 @@ export const Navbar = () => (
     <div className='flex items-center space-x-4'>
       <Button variant='outline' size='icon' asChild>
         <a
-          href='https://dislmcgill.github.io/pandas-query-generator/docs/index.html'
+          href='/pandas-query-generator/docs/index.html'
           target='_blank'
         >
           <Book className='h-4 w-4' />
