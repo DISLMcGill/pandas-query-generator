@@ -43,7 +43,7 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
 
         self.postMessage({
           type: 'result',
-          payload: pyodide.runPython(event.data.payload.code),
+          payload: await pyodide.runPythonAsync(event.data.payload.code),
         } satisfies WorkerResponse);
 
         break;
