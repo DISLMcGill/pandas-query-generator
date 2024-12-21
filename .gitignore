@@ -3,3 +3,4 @@
 /dist
 __pycache__/
 queries.txt
+/docs/build
