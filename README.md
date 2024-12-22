@@ -162,7 +162,7 @@ is hosted alongside the web playground.
 ## How does it work?
 
 Check out the [paper](https://github.com/DISLMcGill/pandas-query-generator/blob/master/docs/paper.pdf) in the
-docs folder or watch the [demo](https://www.youtube.com/watch?v=u3P-EHIwbO0) for more information.
+docs folder or watch the [demo](https://www.youtube.com/watch?v=u3P-EHIwbO0) for more information!
 
 ## Prior Art
 
