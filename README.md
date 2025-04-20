@@ -1,6 +1,8 @@
 ## Pandas Query Generator 🐼
 
-[![CI](https://github.com/DISLMcGill/pandas-query-generator/actions/workflows/ci.yaml/badge.svg)](https://github.com/DISLMcGill/pandas-query-generator/actions/workflows/ci.yaml)
+[![pypi](https://img.shields.io/pypi/v/pqg.svg)](https://pypi.org/project/pqg/)
+[![ci](https://github.com/DISLMcGill/pandas-query-generator/actions/workflows/ci.yaml/badge.svg)](https://github.com/DISLMcGill/pandas-query-generator/actions/workflows/ci.yaml)
+[![downloads](https://img.shields.io/pypi/dm/pqg.svg)](https://pypi.org/project/pqg/)
 
 Pandas Query Generator (**pqg**) is a tool designed to help users generate
 synthetic [pandas](https://pandas.pydata.org/) queries for training machine
