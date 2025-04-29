@@ -81,6 +81,7 @@ class Arguments:
   A wrapper class providing concrete types for parsed command-line arguments.
   """
 
+  deduplicate: bool
   disable_multi_processing: bool
   ensure_non_empty: bool
   filter: QueryFilter
@@ -103,6 +104,12 @@ class Arguments:
     parser = argparse.ArgumentParser(
       description='Pandas Query Generator CLI',
       formatter_class=HelpFormatter,
+    )
+
+    parser.add_argument(
+      '--deduplicate',
+      action='store_true',
+      help='Ensure generated query set does not contain any duplicate queries',
     )
 
     parser.add_argument(

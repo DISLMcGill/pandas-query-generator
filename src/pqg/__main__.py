@@ -33,6 +33,9 @@ def main() -> None:
   with timer(message):
     query_pool = generator.generate(GenerateOptions.from_args(arguments))
 
+    if arguments.deduplicate:
+      query_pool.deduplicate()
+
     if arguments.filter is not None:
       query_pool.filter(arguments.filter)
 
